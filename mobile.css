@@ -201,7 +201,7 @@ input[type=number] {
 
 .grid-item {
   font-family: monospace;
-  border: solid black 0.5vw;
+  border: solid black 0.15em;
   border-radius: 10px;
   margin: 0.7vw;
   background-color: white;
@@ -241,23 +241,42 @@ input[type=number] {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  background-color: #173d72;
-  box-shadow: 0px -6px 28px -6px rgba(0, 0, 0, 0.67);
+  align-items: center;
+  font-family: monospace;
+  font-size: 120%;
+  background-color: rgb(232, 232, 236);
+  box-shadow: 0px -6px 10px -6px rgba(0, 0, 0, 0.425);
   margin: 0;
   position: fixed;
   bottom: 0;
+  padding-top: 2vh;
   padding-bottom: 2vh;
   width: 100%;
-  height: 4vh;
+  height: 3.5vh;
 }
 
 .legend-item {
-  display: flex;
   width: 20px;
   height: 20px;
-  background-color: black;
   border-radius: 5px;
-  margin: 3px;
+  margin-left: 20px;
+  margin-right: 5px;
+}
+
+#orange {
+  background-color: #f29206;
+}
+
+#blue {
+  background-color: #173d72;
+}
+
+#lightblue {
+  background-color: rgb(111, 142, 245);
+}
+
+#grey {
+  background-color: grey;
 }
 
 .hidden {
