@@ -55,10 +55,11 @@ function limparLogin() {
 	pin3.value = ''
 	pin4.value = ''
 	inputMatricula.value = ''
-	document.querySelector('.legend').classList.remove('hidden')
+	toggleBackground()
 	login.classList.add('hidden')
 	modal.classList.add('hidden')
 	inputPassword.classList.add('hidden')
+	document.querySelector('#gridTPs').classList.remove('blur')
 	document.getElementById(buttonClicked).classList.remove('active-item')
 	document.getElementById('idEmUso').innerText = ''
 	document.getElementById('idEmUso').classList.add('hidden')
@@ -69,7 +70,6 @@ function verificarTP(index) {
 	var tp = tps[index].status
 	buttonClicked = tp.tp
 	document.getElementById(buttonClicked).classList.add('active-item')
-	document.querySelector('.legend').classList.add('hidden')
 	document.getElementById('numeroTP').innerText = tp.tp
 	switch (tp.status) {
 		case 'Em uso':
@@ -91,6 +91,7 @@ function verificarTP(index) {
 	setTimeout(() => {
 		modal.classList.remove('hidden')
 		login.classList.remove('hidden')
+		toggleBackground()
 		inputMatricula.focus()
 		// setTimeout(() => {
 		// }, 100);
@@ -99,6 +100,21 @@ function verificarTP(index) {
 	//   limparLogin()
 	//   modal.classList.add('hidden')
 	// }, 18 * 1000);
+}
+
+var title = document.querySelector('.title')
+var legend = document.querySelector('.legend')
+
+function toggleBackground() {
+	if (legend.classList.contains('blur')) {
+		title.classList.remove('blur')
+		grid.classList.remove('blur')
+		legend.classList.remove('blur')
+	} else {
+		title.classList.add('blur')
+		grid.classList.add('blur')
+		legend.classList.add('blur')
+	}
 }
 
 inputMatricula.addEventListener('input', e => {

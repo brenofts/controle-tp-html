@@ -10,8 +10,23 @@
 	</head>
 	<body>
 		<center>
-			<div class="title">
-				Controle de TPs
+			<div class="main">
+				<div class="title">
+					Controle de TPs
+				</div>
+				<div class="hidden grid" id="gridTPs">
+				</div>
+				<div id="error"></div>
+				<div class="legend hidden">
+					<span class="legend-item" id="orange"></span>
+					Em uso
+					<span class="legend-item" id="blue"></span>
+					Devolvido
+					<span class="legend-item" id="lightblue"></span>
+					Transporte
+					<span class="legend-item" id="grey"></span>
+					Bloqueado
+				</div>
 			</div>
 			<div class="modal hidden" id="modal">
 				<div class="login-card" id="loginCard">
@@ -33,27 +48,9 @@
 								<input class="unit" inputmode="numeric"  maxlength="1" autocomplete="off" type="text" id="pin3">
 							
 								<input class="unit" inputmode="numeric"  maxlength="1" autocomplete="off" type="text" id="pin4">
-							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-	
-			</div>
-			<div class="main">
-				<div class="hidden grid" id="gridTPs">
-				</div>
-			</div>
-			<div id="error"></div>
-			<div class="legend hidden">
-				<span class="legend-item" id="orange"></span>
-				Em uso
-				<span class="legend-item" id="blue"></span>
-				Devolvido
-				<span class="legend-item" id="lightblue"></span>
-				Transporte
-				<span class="legend-item" id="grey"></span>
-				Bloqueado
 			</div>
 		</center>
 
