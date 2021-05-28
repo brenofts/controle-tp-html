@@ -44,6 +44,7 @@ firebase
 				grid.innerHTML += item
 			})
 			grid.classList.remove('hidden')
+			document.querySelector('.legend').classList.remove('hidden')
 		})
 	})
 	.catch(e => console.warn(e.message))
@@ -54,6 +55,7 @@ function limparLogin() {
 	pin3.value = ''
 	pin4.value = ''
 	inputMatricula.value = ''
+	document.querySelector('.legend').classList.remove('hidden')
 	login.classList.add('hidden')
 	modal.classList.add('hidden')
 	inputPassword.classList.add('hidden')
@@ -67,6 +69,7 @@ function verificarTP(index) {
 	var tp = tps[index].status
 	buttonClicked = tp.tp
 	document.getElementById(buttonClicked).classList.add('active-item')
+	document.querySelector('.legend').classList.add('hidden')
 	document.getElementById('numeroTP').innerText = tp.tp
 	switch (tp.status) {
 		case 'Em uso':

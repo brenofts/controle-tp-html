@@ -15,9 +15,7 @@
 	font-size: 5vw;
   padding-top: 5vw;
   padding-bottom: 1vw;
-	border-bottom-left-radius: 7px;
-	border-bottom-right-radius: 7px;
-	box-shadow: 0px 6px 28px -6px rgba(0, 0, 0, 0.67);
+	box-shadow: 0px 6px 12px -6px rgba(0, 0, 0, 0.67);
 	background-color: #173d72;
 	color: #f29206;
 }
@@ -50,11 +48,11 @@
   background-color: gray;
   color: black;
   position: fixed;
-  top: 10vh;
+  top: 18vh;
   padding-top: 20px;
   font-size: 5vh;
   border: solid 0.5vw #f29206;
-  border-radius: 20px;
+  border-radius: 2%;
   animation: animatecard 0.4s;
 }
 
@@ -200,41 +198,39 @@ input[type=number] {
 }
 
 .grid-item {
-  font-family: monospace;
-  border: solid black 0.15em;
-  border-radius: 10px;
+  font-family: arial;
+  border: solid lightgray 0.05em;
+  border-bottom-width: 0.3em;
+  border-radius: 0.2em;
+  color: black;
   margin: 0.7vw;
-  background-color: white;
-  font-size: 150%;
+  background-color: rgb(232, 232, 236);
+  font-size: 120%;
   text-align: center;
-  padding: 8px;
+  padding: 5px;
   transition: 0.2s;
 }
 
 .em-uso {
-  border-color: #f29206;
-  color: #f29206;
+  border-bottom-color: #f29206;
 }
 
 .devolvido {
-  border-color: #173d72;
-  color: #173d72;
+  border-bottom-color: #173d72;
 }
 
 .transporte {
-  border-color: rgb(111, 142, 245);
-  color: rgb(111, 142, 245);
+  border-bottom-color: rgb(111, 142, 245);
 }
 
 .bloqueado {
-  border-color: grey;
-  color: grey;
+  border-bottom-color: grey;
 }
 
 .active-item {
   background-color: #173d72;
   color: #f29206;
-  border-color: #173d72;
+  border-bottom-color: #f29206;
 }
 
 .legend {
@@ -243,7 +239,7 @@ input[type=number] {
   justify-content: center;
   align-items: center;
   font-family: monospace;
-  font-size: 120%;
+  font-size: 100%;
   background-color: rgb(232, 232, 236);
   box-shadow: 0px -6px 10px -6px rgba(0, 0, 0, 0.425);
   margin: 0;
@@ -252,12 +248,13 @@ input[type=number] {
   padding-top: 2vh;
   padding-bottom: 2vh;
   width: 100%;
-  height: 3.5vh;
+  height: 2.7vh;
+  animation: fade 1s;
 }
 
 .legend-item {
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
   border-radius: 5px;
   margin-left: 20px;
   margin-right: 5px;
