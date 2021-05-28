@@ -194,7 +194,7 @@ input[type=number] {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  width: 90vw;
+  width: 95vw;
   border: 0;
   margin-top: 15vw;
 }
