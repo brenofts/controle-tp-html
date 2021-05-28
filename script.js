@@ -105,6 +105,9 @@ inputMatricula.addEventListener('input', e => {
 	} else {
 		inputPassword.classList.add('hidden')
 	}
+	if(inputMatricula.value.length == 5) {
+		pin1.focus()
+	}
 })
 
 inputMatricula.addEventListener('keydown', e => {
