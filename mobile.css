@@ -147,11 +147,6 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* .unit {
-  -webkit-text-security: disc;
-  caret-color: transparent;
-} */
-
 .unit:focus {
   background-color: #f29206;
   border-color: #173d72;
@@ -159,7 +154,8 @@ input[type=number] {
 
 .unit {
   outline-style: none;
-  font-size: 3vh;
+  font-size: 2vh;
+  height: 3vh;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -172,6 +168,7 @@ input[type=number] {
   border: solid white 2px;
   -webkit-text-security: disc;
   caret-color: transparent;
+  color: rgb(196, 196, 196);
 }
 
 .password {
