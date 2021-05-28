@@ -1,4 +1,6 @@
 var buttonClicked
+var counter = document.getElementById('counter')
+var counterArray = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 var pin1 = document.getElementById('pin1')
 var pin2 = document.getElementById('pin2')
 var pin3 = document.getElementById('pin3')
@@ -38,7 +40,8 @@ firebase
 					default:
 						break
 				}
-				grid.innerHTML += `<div id="${tp.tp}" onclick="verificarTP(${index})" class="grid-item ${className}">${tp.tp} </div>`
+				var item = `<div id="${tp.tp}" onclick="verificarTP(${index})" class="grid-item ${className}">${tp.tp} </div>`
+				grid.innerHTML += item
 			})
 			grid.classList.remove('hidden')
 		})
@@ -55,37 +58,44 @@ function limparLogin() {
 	modal.classList.add('hidden')
 	inputPassword.classList.add('hidden')
 	document.getElementById(buttonClicked).classList.remove('active-item')
+	document.getElementById('idEmUso').innerText = ''
+	document.getElementById('idEmUso').classList.add('hidden')
+	// remove listeners : elem.replaceWith(elem.cloneNode(true))
 }
 
 function verificarTP(index) {
 	var tp = tps[index].status
 	buttonClicked = tp.tp
 	document.getElementById(buttonClicked).classList.add('active-item')
-	document.getElementById('numeroTP').innerText = tp.status
+	document.getElementById('numeroTP').innerText = tp.tp
 	switch (tp.status) {
 		case 'Em uso':
+			document.getElementById('action').innerText = 'Devolver'
+			document.getElementById('idEmUso').innerText = tp.id
+			document.getElementById('idEmUso').classList.remove('hidden')
 			console.warn('Devolver', tp.tp, tp.id)
 			break
-		case 'Devolvido':
+			case 'Devolvido':
+			document.getElementById('action').innerText = 'Retirar'
 			console.warn('Retirar', tp.tp)
 			break
-		default:
+			default:
+			document.getElementById('action').innerText = tp.status
       console.warn(tp.tp, tp.status)
 			break
 	}
 	console.log(tp)
 	setTimeout(() => {
     modal.classList.remove('hidden')
-    setTimeout(() => {
-      login.classList.remove('hidden')
-      inputMatricula.focus()
-    }, 400);
-	}, 200)
+		login.classList.remove('hidden')
+		inputMatricula.focus()
+    // setTimeout(() => {
+    // }, 100);
+	}, 100)
 	// setTimeout(() => {
 	//   limparLogin()
 	//   modal.classList.add('hidden')
-	//   document.getElementById(numTP).classList.remove('active-item')
-	// }, 15 * 1000);
+	// }, 18 * 1000);
 }
 
 inputMatricula.addEventListener('input', e => {
@@ -97,11 +107,22 @@ inputMatricula.addEventListener('input', e => {
 	}
 })
 
+inputMatricula.addEventListener('keydown', e => {
+	if (e.target.value.length > 2 && e.keyCode === 13) {
+		pin1.focus()
+	}
+})
+
 pin1.addEventListener('focus', e => {
 	e.preventDefault()
 	if (pin1.value.length == 1) {
 		pin1.value = ''
 	}
+	e.target.addEventListener('keydown', press => {
+		if ( press.keyCode === 8 ) {
+			inputMatricula.focus()
+		}
+	})
 })
 
 pin2.addEventListener('focus', e => {
@@ -109,6 +130,11 @@ pin2.addEventListener('focus', e => {
 	if (pin2.value.length == 1) {
 		pin2.value = ''
 	}
+	e.target.addEventListener('keydown', press => {
+		if ( press.keyCode === 8 ) {
+			pin1.focus()
+		}
+	})
 })
 
 pin3.addEventListener('focus', e => {
@@ -116,6 +142,11 @@ pin3.addEventListener('focus', e => {
 	if (pin3.value.length == 1) {
 		pin3.value = ''
 	}
+	e.target.addEventListener('keydown', press => {
+		if ( press.keyCode === 8 ) {
+			pin2.focus()
+		}
+	})
 })
 
 pin4.addEventListener('focus', e => {
@@ -123,6 +154,11 @@ pin4.addEventListener('focus', e => {
 	if (pin4.value.length == 1) {
 		pin4.value = ''
 	}
+	e.target.addEventListener('keydown', press => {
+		if ( press.keyCode === 8 ) {
+			pin3.focus()
+		}
+	})
 })
 
 pin1.addEventListener('input', e => {
@@ -153,7 +189,7 @@ pin4.addEventListener('input', e => {
 		setTimeout(() => {
 			alert('Registro efetivado')
 			limparLogin()
-		}, 100)
+		}, 100);
 	}
 })
 

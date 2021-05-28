@@ -15,23 +15,24 @@
 			</div>
 			<div class="modal hidden" id="modal">
 				<div class="login-card" id="loginCard">
+					<span id="counter"></span>
+					<div id="infoLogin">
+						<h3 id="action"></h3>
+						<h3 id="numeroTP"></h3>
+						<h3 class="hidden" id="idEmUso"></h3>
+					</div>
 					<div class="hidden" id="login">
-						<span id="numeroTP"></span>
-						<div class="input">
-							<input maxlength="5" class="matricula" autocomplete="off" type="text" id="inputMatricula">
-						</div>
+						
+							<input class="input" maxlength="5" inputmode="numeric" placeholder="Matrícula" class="matricula" autocomplete="off" type="text" id="inputMatricula">
+						
 						<div id="password" class="password hidden">
-							<div class="pin">
-								<input class="unit" maxlength="1" autofill="off" autocomplete="off" type="password" id="pin1">
-							</div>
-							<div class="pin">
-								<input class="unit" maxlength="1" autocomplete="off" type="password" id="pin2">
-							</div>
-							<div class="pin">
-								<input class="unit" maxlength="1" autocomplete="off" type="password" id="pin3">
-							</div>
-							<div class="pin">
-								<input class="unit" maxlength="1" autocomplete="off" type="password" id="pin4">
+								<input class="unit" inputmode="numeric"  maxlength="1" autofill="off" autocomplete="off" type="number" id="pin1">
+			
+								<input class="unit" inputmode="numeric"  maxlength="1" autocomplete="off" type="number" id="pin2">
+						
+								<input class="unit" inputmode="numeric"  maxlength="1" autocomplete="off" type="number" id="pin3">
+							
+								<input class="unit" inputmode="numeric"  maxlength="1" autocomplete="off" type="number" id="pin4">
 							</div>
 						</div>
 					</div>

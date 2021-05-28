@@ -18,8 +18,6 @@
 	border-bottom-left-radius: 7px;
 	border-bottom-right-radius: 7px;
 	box-shadow: 0px 6px 28px -6px rgba(0, 0, 0, 0.67);
-	-webkit-box-shadow: 0px 6px 28px -6px rgba(0, 0, 0, 0.67);
-	-moz-box-shadow: 0px 6px 28px -6px rgba(0, 0, 0, 0.67);
 	background-color: #173d72;
 	color: #f29206;
 }
@@ -28,7 +26,8 @@
   position: fixed;
   top: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   background-color: rgba(0,0,0,0.7);
   height: 100%;
@@ -37,24 +36,34 @@
 }
 
 @keyframes animatecard {
-  from {opacity:0; height: 47vh; width: 57vw;}
-  to {opacity:1; height: 50vh; width: 60vw;}
+  from {opacity:0; height: 320px; width: 55vw;}
+  to {opacity:1; height: 335px; width: 60vw;}
 }
 
 .login-card {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start ;
   align-items: center;
-  height: 50vh;
+  height: 335px;
   width: 60vw;
   background-color: gray;
   color: black;
   position: fixed;
+  top: 10vh;
+  padding-top: 20px;
   font-size: 5vh;
   border: solid 0.5vw #f29206;
   border-radius: 20px;
   animation: animatecard 0.4s;
+}
+
+#counter {
+  font-size: 7vw;
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  color: #f29206;
 }
 
 @keyframes fade {
@@ -62,13 +71,43 @@
   to {opacity: 1;}
 }
 
-#login {
-  animation: fade 0.4s;
+h3 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 3vh;
+  width: auto;
 }
 
-input {
+#infoLogin {
+  width: 40vw;
+}
+
+#action {
+  color: white;
+  background-color: #173d72;
+  padding-top: 8px;
+}
+
+#numeroTP {
+  font-size: 5vh;
+  color: #f29206;
+  background-color: #173d72;
+  padding: 3px 17px 8px 17px;
+}
+
+#idEmUso {
+  color: #173d72;
+  background-color: #f29206;
+  border:#173d72 solid 3px;
+  padding: 3px 17px 3px 17px;
+}
+
+#login {
+  animation: fade 2s;
+}
+
+/* input {
   background-color: transparent;
-  font-size: 6vh;
+  font-size: 3vh;
   font-family: monospace;
   text-align: center;
   color: #173d72;
@@ -76,9 +115,15 @@ input {
 
 input:focus {
   outline-style: none;
-}
+} */
 
 .input {
+  outline-style: none;
+  background-color: transparent;
+  font-size: 3vh;
+  font-family: monospace;
+  text-align: center;
+  color: #173d72;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -90,9 +135,34 @@ input:focus {
   width: 33vw;
 }
 
-.pin {
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* .unit {
+  -webkit-text-security: disc;
+  caret-color: transparent;
+} */
+
+.unit:focus {
+  background-color: #f29206;
+  border-color: #173d72;
+}
+
+.unit {
+  outline-style: none;
+  font-size: 3vh;
   display: flex;
   justify-content: center;
+  text-align: center;
   align-items: center;
   background-color: lightgray;
   width: 5vw;
@@ -100,6 +170,8 @@ input:focus {
   padding: 5px;
   border-radius: 5px;
   border: solid white 2px;
+  -webkit-text-security: disc;
+  caret-color: transparent;
 }
 
 .password {
