@@ -59,7 +59,6 @@ function limparLogin() {
 	login.classList.add('hidden')
 	modal.classList.add('hidden')
 	inputPassword.classList.add('hidden')
-	document.querySelector('#gridTPs').classList.remove('blur')
 	document.getElementById(buttonClicked).classList.remove('active-item')
 	document.getElementById('idEmUso').innerText = ''
 	document.getElementById('idEmUso').classList.add('hidden')
