@@ -9,7 +9,6 @@ var inputPassword = document.getElementById('password')
 var inputMatricula = document.getElementById('inputMatricula')
 var grid = document.getElementById('gridTPs')
 var modal = document.getElementById('modal')
-var loginCard = document.getElementById('loginCard')
 var login = document.getElementById('login')
 var tps = []
 
@@ -17,16 +16,27 @@ firebase
 	.auth()
 	.signInAnonymously()
 	.then(() => {
-		realtime.ref('tps').on('value', data => {
-			tps = Object.values(data.val())
+		realtime.ref('tps').on('value', snapshot => {
+			tps = Object.values(snapshot.val())
 			grid.innerHTML = ''
 			tps.map(tp => {
 				var index = tps.indexOf(tp)
 				var className
 				var status = tp.status.status
+				var data = new Date(tp.status.data).getTime()
+				var agora = new Date().getTime()
+				var periodoEmMS = agora - data
+				var umDiaEmMS = 1000 * 60 * 60 * 24
+				var dias = Math.floor(periodoEmMS / umDiaEmMS)
 				switch (status) {
 					case 'Em uso':
-						className = 'em-uso'
+						if (dias == 0 || dias == 1) {
+							className = 'green'
+						} else if (dias == 2 || dias == 3) {
+							className = 'yellow'
+						} else if (dias > 3) {
+							className = 'red'
+						}
 						break
 					case 'Devolvido':
 						className = 'devolvido'
@@ -213,6 +223,12 @@ pin4.addEventListener('input', e => {
 		}, 100)
 	}
 })
+
+// modal.addEventListener('click', e => {
+// 	e.preventDefault()
+// 	modal.classList.add('hidden')
+// 	limparLogin()
+// })
 
 window.addEventListener('click', e => {
 	e.preventDefault()
