@@ -48,14 +48,15 @@ body {
   flex-direction: column;
   justify-content: flex-start ;
   align-items: center;
-  height: 280px;
+  min-height: 140px;
+  max-height: 280px;
   width: 275px;
   background-color: gray;
   color: black;
   position: fixed;
   top: 18vh;
   padding-top: 20px;
-  font-size: 5vh;
+  font-size: 20pt;
   border: solid 0.5vw #f29206;
   border-radius: 2%;
   /* animation: animatecard 0.4s; */
@@ -81,7 +82,7 @@ h3 {
 }
 
 #infoLogin {
-  width: 40vw;
+  width:85%;
 }
 
 #action {
@@ -91,7 +92,7 @@ h3 {
 }
 
 #numeroTP {
-  font-size: 5vh;
+  font-size: 25pt;
   color: #f29206;
   background-color: #173d72;
   padding: 3px 17px 8px 17px;
@@ -123,7 +124,7 @@ input:focus {
 .input {
   outline-style: none;
   background-color: transparent;
-  font-size: 3vh;
+  font-size: 18pt;
   font-family: monospace;
   text-align: center;
   color: #173d72;
@@ -131,11 +132,12 @@ input:focus {
   justify-content: center;
   align-items: center;
   background-color: lightgray;
-  margin: 1vw;
+  margin: 10px;
+  margin-bottom: 20px;
   border-radius: 5px;
   border: solid white 2px;
   padding: 5px;
-  width: 33vw;
+  width: 75%;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -155,28 +157,29 @@ input[type=number] {
   border-color: #173d72;
 }
 
+
 .unit {
   outline-style: none;
-  font-size: 3vh;
+  font-size: 17pt;
   display: flex;
   justify-content: center;
   text-align: center;
   align-items: center;
   background-color: lightgray;
-  width: 5vw;
-  margin: 1vw;
   padding: 5px;
   border-radius: 5px;
   border: solid white 2px;
   -webkit-text-security: disc;
   caret-color: transparent;
-  color: rgb(196, 196, 196);
+  color: white;
 }
 
 .password {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: 80%;
+  margin-bottom: 20px;
 }
 
 .matricula {width: 30vw;}
