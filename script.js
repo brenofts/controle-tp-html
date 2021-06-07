@@ -1,7 +1,7 @@
 var buttonClicked
 var btnUltimos = document.getElementById('ultimos')
 var ultimosCard = document.querySelector('.ultimos-card')
-var ultimosList = document.querySelector('.ultimos-list')
+var ultimosList = document.getElementById('ultimos-list')
 var pin1 = document.getElementById('pin1')
 var pin2 = document.getElementById('pin2')
 var pin3 = document.getElementById('pin3')
@@ -71,6 +71,8 @@ function limparLogin() {
 	pin3.value = ''
 	pin4.value = ''
 	inputMatricula.value = ''
+	document.body.style.overflow = 'scroll'
+	document.querySelector('.down').style.opacity = 0
 	toggleBackground()
 	login.classList.add('hidden')
 	loginCard.classList.remove('blur')
@@ -83,6 +85,7 @@ function limparLogin() {
 }
 
 function verificarTP(index) {
+	document.body.style.overflow = 'hidden'
 	var tp = tps[index].status
 	buttonClicked = tp.tp
 	document.getElementById(buttonClicked).classList.add('active-item')
@@ -244,8 +247,7 @@ window.addEventListener('click', e => {
 			loginCard.classList.remove('disable')
 			ultimosCard.classList.add('hidden')
 			inputMatricula.focus()
-		}
-		else {
+		} else {
 			modal.classList.add('hidden')
 			limparLogin()
 		}
@@ -257,26 +259,73 @@ btnUltimos.addEventListener('click', () => {
 	loginCard.classList.add('disable')
 	ultimosCard.classList.remove('hidden')
 	ultimosList.innerHTML = ''
-	realtime.ref('historico').once('value').then(snap => {
-		const historico = Object.values(snap.val())
-		var buscarTP = (tp) => tp.tp == buttonClicked
-		var registros = historico.filter(buscarTP)
-		var ultimosRegistros = registros.slice(Math.max(registros.length - 10, 0)).reverse()
-		if (ultimosRegistros.length > 0) {
-			ultimosRegistros.map(tp => {
-				var data = new Date(tp.data).toLocaleString()
-				var listItem = `
-					<div class="item">
-					<span>${tp.status}</span>
-					<span>${tp.id}</span>
-					<span>${data}</span>
-					<span>${tp.posto}</span>
-					</div>
-				`
-				ultimosList.innerHTML += listItem
+	realtime
+		.ref('historico')
+		.once('value')
+		.then(snap => {
+			const historico = Object.values(snap.val())
+			var buscarTP = tp => tp.tp == buttonClicked
+			var registros = historico.filter(buscarTP)
+			var ultimosRegistros = registros.slice(Math.max(registros.length - 20, 0)).reverse()
+			if (ultimosRegistros.length > 0) {
+				ultimosRegistros.map(tp => {
+					var data = new Date(tp.data).toLocaleString()
+					var className
+					var listItem
+					switch (tp.status) {
+						case 'Devolvido':
+							className = 'item-devolvido'
+							listItem = `
+							<div class="item ${className}">
+							<span>${tp.status}</span>
+							<span>${tp.id}</span>
+							<span>GERENTE/IT: ${tp.gerente}</span>
+							<span>${data}</span>
+							<span>${tp.posto}</span>
+							</div>
+						`
+							break;
+							case 'Em uso':
+								className = 'item-em-uso'
+								listItem = `
+								<div class="item ${className}">
+								<span>${tp.status}</span>
+								<span>${tp.id}</span>
+								<span>${data}</span>
+								<span>${tp.posto}</span>
+								</div>
+							`
+							break
+					
+						default:
+							break;
+					}
+					ultimosList.innerHTML += listItem
+				})
+			} else {
+				ultimosList.innerHTML = 'Não há registros'
+			}
+			if (ultimosRegistros.length > 3) {
+				document.querySelector('.down').style.opacity = 1
+			}
+			const divList = ultimosList.children
+			const lastDiv = divList[divList.length - 3]
+
+			ultimosList.addEventListener('scroll', e => {
+				if (e.target.scrollTop > 20) {
+					document.querySelector('.up').style.opacity = 1
+				} 
+				else {
+					document.querySelector('.up').style.opacity = 0
+				}
+				if (ultimosRegistros.length > 3) {
+					if (e.target.scrollTop > lastDiv.offsetTop) {
+						document.querySelector('.down').style.opacity = 0
+					}
+					if (e.target.scrollTop < lastDiv.offsetTop) {
+						document.querySelector('.down').style.opacity = 1
+					}
+				}
 			})
-		} else {
-			ultimosList.innerHTML = 'Não há registros'
-		}
-	})
+		})
 })

@@ -97,10 +97,10 @@ body {
   width: 95%;
   position: relative;
   z-index: 3;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
   overflow-y: scroll;
-  margin-top: 7px;
+  margin-top: 3px;
 }
 
 .ultimos-list::-webkit-scrollbar {
@@ -120,6 +120,13 @@ body {
   font-size: 10pt;
   font-family: monospace;
   border-radius: 6px;
+}
+
+.ultimos-list .item-devolvido {
+  background-color: #315fa0;
+}
+.ultimos-list .item-em-uso {
+  background-color: #3771c2;
 }
 
 .login-card {
@@ -145,12 +152,21 @@ body {
 #ultimos {
   font-size: 18pt;
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 7px;
+  right: 10px;
   color:white;
   background-color: #f29206;
-  padding: 8px 10px;
+  padding: 6px;
   border-radius: 30%;
+}
+
+.up {
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+.down {
+  opacity: 0;
+  transform: rotate(90deg);
 }
 
 @keyframes fade {
