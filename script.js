@@ -262,17 +262,21 @@ btnUltimos.addEventListener('click', () => {
 		var buscarTP = (tp) => tp.tp == buttonClicked
 		var registros = historico.filter(buscarTP)
 		var ultimosRegistros = registros.slice(Math.max(registros.length - 10, 0)).reverse()
-		ultimosRegistros.map(tp => {
-			var data = new Date(tp.data).toLocaleString()
-			var listItem = `
-				<div class="item">
-				<span>${tp.status}</span>
-				<span>${tp.id}</span>
-				<span>${data}</span>
-				<span>${tp.posto}</span>
-				</div>
-			`
-			ultimosList.innerHTML += listItem
-		})
+		if (ultimosRegistros.length > 0) {
+			ultimosRegistros.map(tp => {
+				var data = new Date(tp.data).toLocaleString()
+				var listItem = `
+					<div class="item">
+					<span>${tp.status}</span>
+					<span>${tp.id}</span>
+					<span>${data}</span>
+					<span>${tp.posto}</span>
+					</div>
+				`
+				ultimosList.innerHTML += listItem
+			})
+		} else {
+			ultimosList.innerHTML = 'Não há registros'
+		}
 	})
 })

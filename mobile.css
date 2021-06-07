@@ -87,6 +87,7 @@ body {
   border: 1px solid #173d72;
   box-shadow: #173d72 0px 0px 3px 2px;
   color: #f29206;
+  padding-top: 2px;
   font-family: monospace;
   text-transform: uppercase;
 }
@@ -114,9 +115,9 @@ body {
   padding: 1em;
   background-color: #315fa0;
   color: white;
-  height: 25%;
+  height: auto;
   margin-bottom: 0.3em;
-  font-size: 13pt;
+  font-size: 10pt;
   font-family: monospace;
   border-radius: 6px;
 }
