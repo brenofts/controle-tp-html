@@ -305,11 +305,11 @@ btnUltimos.addEventListener('click', () => {
 			} else {
 				ultimosList.innerHTML = 'Não há registros'
 			}
-			if (ultimosRegistros.length > 3) {
+			if (ultimosRegistros.length > 4) {
 				document.querySelector('.down').style.opacity = 1
 			}
 			const divList = ultimosList.children
-			const lastDiv = divList[divList.length - 3]
+			const lastDiv = divList[divList.length - 4]
 
 			ultimosList.addEventListener('scroll', e => {
 				if (e.target.scrollTop > 20) {
