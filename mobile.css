@@ -79,13 +79,13 @@ body {
   margin-left: -180px;
   background-color: #173d72;
   width: 360px;
-  height: 440px;
+  height: 510px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #f29206;
-  padding-top: 2px;
+  padding-top: 4px;
   font-family: monospace;
   text-transform: uppercase;
 }
@@ -115,7 +115,7 @@ body {
   color: white;
   height: auto;
   margin-bottom: 0.3em;
-  font-size: 10pt;
+  font-size: 13pt;
   font-family: monospace;
   border-radius: 6px;
 }
@@ -156,7 +156,7 @@ body {
   background-color: #f29206;
   height: 30px;
   width: 30px;
-  padding-top: 3px;
+  padding-top: 2px;
   border-radius: 30%;
 }
 
