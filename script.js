@@ -1,5 +1,7 @@
 var buttonClicked
-var ultimos = document.getElementById('ultimos')
+var btnUltimos = document.getElementById('ultimos')
+var ultimosCard = document.querySelector('.ultimos-card')
+var ultimosList = document.querySelector('.ultimos-list')
 var pin1 = document.getElementById('pin1')
 var pin2 = document.getElementById('pin2')
 var pin3 = document.getElementById('pin3')
@@ -239,6 +241,9 @@ window.addEventListener('click', e => {
 	if (e.target == modal) {
 		if (loginCard.classList.contains('blur')) {
 			loginCard.classList.remove('blur')
+			loginCard.classList.remove('disable')
+			ultimosCard.classList.add('hidden')
+			inputMatricula.focus()
 		}
 		else {
 			modal.classList.add('hidden')
@@ -247,6 +252,27 @@ window.addEventListener('click', e => {
 	}
 })
 
-ultimos.addEventListener('click', () => {
+btnUltimos.addEventListener('click', () => {
 	loginCard.classList.add('blur')
+	loginCard.classList.add('disable')
+	ultimosCard.classList.remove('hidden')
+	ultimosList.innerHTML = ''
+	realtime.ref('historico').once('value').then(snap => {
+		const historico = Object.values(snap.val())
+		var buscarTP = (tp) => tp.tp == buttonClicked
+		var registros = historico.filter(buscarTP)
+		var ultimosRegistros = registros.slice(Math.max(registros.length - 10, 0)).reverse()
+		ultimosRegistros.map(tp => {
+			var data = new Date(tp.data).toLocaleString()
+			var listItem = `
+				<div class="item">
+				<span>${tp.status}</span>
+				<span>${tp.id}</span>
+				<span>${data}</span>
+				<span>${tp.posto}</span>
+				</div>
+			`
+			ultimosList.innerHTML += listItem
+		})
+	})
 })
