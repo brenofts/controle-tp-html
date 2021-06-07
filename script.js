@@ -1,6 +1,5 @@
 var buttonClicked
-var counter = document.getElementById('counter')
-var counterArray = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+var ultimos = document.getElementById('ultimos')
 var pin1 = document.getElementById('pin1')
 var pin2 = document.getElementById('pin2')
 var pin3 = document.getElementById('pin3')
@@ -9,8 +8,13 @@ var inputPassword = document.getElementById('password')
 var inputMatricula = document.getElementById('inputMatricula')
 var grid = document.getElementById('gridTPs')
 var modal = document.getElementById('modal')
+var loginCard = document.getElementById('loginCard')
 var login = document.getElementById('login')
 var tps = []
+var message = document.getElementById('message')
+var textMessage = document.getElementById('text-message')
+var title = document.querySelector('.title')
+var legend = document.querySelector('.legend')
 
 firebase
 	.auth()
@@ -67,6 +71,7 @@ function limparLogin() {
 	inputMatricula.value = ''
 	toggleBackground()
 	login.classList.add('hidden')
+	loginCard.classList.remove('blur')
 	modal.classList.add('hidden')
 	inputPassword.classList.add('hidden')
 	document.getElementById(buttonClicked).classList.remove('active-item')
@@ -110,9 +115,6 @@ function verificarTP(index) {
 	//   modal.classList.add('hidden')
 	// }, 18 * 1000);
 }
-
-var title = document.querySelector('.title')
-var legend = document.querySelector('.legend')
 
 function toggleBackground() {
 	if (legend.classList.contains('blur')) {
@@ -218,6 +220,8 @@ pin4.addEventListener('input', e => {
 	if (pin4.value.length == 1) {
 		pin4.blur()
 		setTimeout(() => {
+			// message.style.display = 'flex'
+			// modal.style.display = 'none'
 			alert('Registro efetivado')
 			limparLogin()
 		}, 100)
@@ -233,7 +237,16 @@ pin4.addEventListener('input', e => {
 window.addEventListener('click', e => {
 	e.preventDefault()
 	if (e.target == modal) {
-		modal.classList.add('hidden')
-		limparLogin()
+		if (loginCard.classList.contains('blur')) {
+			loginCard.classList.remove('blur')
+		}
+		else {
+			modal.classList.add('hidden')
+			limparLogin()
+		}
 	}
+})
+
+ultimos.addEventListener('click', () => {
+	loginCard.classList.add('blur')
 })
