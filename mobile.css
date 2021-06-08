@@ -10,19 +10,51 @@ body {
 
 .title {
   font-family: arial;
-  margin: 0;
   position: fixed;
   z-index: 2;
   top: 0;
-  text-align: left;
   width: 100%;
 	font-size: 18pt;
-  padding-top: 25px;
-  padding-bottom: 1vw;
 	box-shadow: 0px 6px 12px -6px rgba(0, 0, 0, 0.67);
 	background-color: #173d72;
 	color: #f29206;
-  text-indent: 25px;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+}
+
+.title span {
+  margin-left: 30px;
+}
+
+.container {
+  height: 25px;
+  width: 25px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+  margin-right: 45px;
+}
+
+.rotate {
+  transform: rotate(135deg);
+}
+
+.vertical {
+  height: 4px;
+  width: 100%;
+  background: #f29206;
+  transform: rotate(90deg) translateX(1px);
+}
+.horizontal {
+  height: 4px;
+  width: 100%;
+  background: #f29206;
+  transform: translateY(-4px);
 }
 
 .modal {
@@ -73,19 +105,19 @@ body {
 .ultimos-card {
   position: fixed;
   z-index: 3;
-  top: 45%;
+  top: 35%;
   left: 50%;
-  margin-top: -120px;
+  margin-top: -125px;
   margin-left: -180px;
   background-color: #173d72;
   width: 360px;
-  height: 510px;
+  height: 530px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #f29206;
-  padding-top: 4px;
+  padding-top: 9px;
   font-family: monospace;
   text-transform: uppercase;
 }
@@ -139,7 +171,7 @@ body {
   color: black;
   position: fixed;
   z-index: 1;
-  top: 18vh;
+  top: 10vh;
   padding-top: 20px;
   font-size: 20pt;
   border: solid 0.5vw #f29206;
@@ -156,7 +188,7 @@ body {
   background-color: #f29206;
   height: 30px;
   width: 30px;
-  padding-top: 2px;
+  padding-top: 1px;
   border-radius: 30%;
 }
 

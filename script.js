@@ -111,14 +111,11 @@ function verificarTP(index) {
 		modal.classList.remove('hidden')
 		login.classList.remove('hidden')
 		toggleBackground()
-		inputMatricula.focus()
-		// setTimeout(() => {
-		// }, 100);
 	}, 100)
-	// setTimeout(() => {
-	//   limparLogin()
-	//   modal.classList.add('hidden')
-	// }, 18 * 1000);
+	setTimeout(() => {
+		inputMatricula.focus()
+	}, 1300);
+
 }
 
 function toggleBackground() {
@@ -312,13 +309,13 @@ btnUltimos.addEventListener('click', () => {
 			const lastDiv = divList[divList.length - 4]
 
 			ultimosList.addEventListener('scroll', e => {
-				if (e.target.scrollTop > 20) {
+				if (e.target.scrollTop > 40) {
 					document.querySelector('.up').style.opacity = 1
 				} 
 				else {
 					document.querySelector('.up').style.opacity = 0
 				}
-				if (ultimosRegistros.length > 3) {
+				if (ultimosRegistros.length > 4) {
 					if (e.target.scrollTop > lastDiv.offsetTop) {
 						document.querySelector('.down').style.opacity = 0
 					}
@@ -328,4 +325,17 @@ btnUltimos.addEventListener('click', () => {
 				}
 			})
 		})
+})
+
+var plusSign = document.querySelector('.container')
+var active = false
+
+plusSign.addEventListener('click', e => {
+  if (!active) {
+    plusSign.classList.add('rotate')
+    active = true
+  } else {
+    plusSign.classList.remove('rotate')
+    active = false
+  }
 })
