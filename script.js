@@ -86,7 +86,6 @@ function limparLogin() {
 	document.getElementById(buttonClicked).classList.remove('active-item')
 	document.getElementById('idEmUso').innerText = ''
 	document.getElementById('idEmUso').classList.add('hidden')
-	// remove listeners : elem.replaceWith(elem.cloneNode(true))
 }
 
 function verificarTP(index) {
@@ -119,7 +118,7 @@ function verificarTP(index) {
 	}, 100)
 	setTimeout(() => {
 		inputMatricula.focus()
-	}, 1300);
+	}, 650);
 
 }
 
