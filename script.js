@@ -328,14 +328,18 @@ btnUltimos.addEventListener('click', () => {
 })
 
 var plusSign = document.querySelector('.container')
+var vertical = document.querySelector('.vertical')
+var horizontal = document.querySelector('.horizontal')
 var active = false
 
 plusSign.addEventListener('click', e => {
   if (!active) {
-    plusSign.classList.add('rotate')
+    horizontal.classList.add('rotatex')
+    vertical.classList.add('rotatey')
     active = true
   } else {
-    plusSign.classList.remove('rotate')
+    horizontal.classList.remove('rotatex')
+    vertical.classList.remove('rotatey')
     active = false
   }
 })

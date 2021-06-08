@@ -40,21 +40,29 @@ body {
   margin-right: 45px;
 }
 
-.rotate {
-  transform: rotate(135deg);
-}
 
 .vertical {
-  height: 4px;
-  width: 100%;
+  position: fixed;
+  height: 2px;
+  width: 20px;
   background: #f29206;
-  transform: rotate(90deg) translateX(1px);
+  transform: rotate(90deg);
+  transition: all 0.3s ease-in-out;
 }
 .horizontal {
-  height: 4px;
-  width: 100%;
+  position: fixed;
+  height: 2px;
+  width: 20px;
   background: #f29206;
-  transform: translateY(-4px);
+  transition: all 0.3s ease-in-out;
+}
+.rotatey {
+  transform: rotate(135deg);
+  transform-origin: center center ;
+}
+.rotatex {
+  transform: rotate(225deg);
+  transform-origin: center center;
 }
 
 .modal {
