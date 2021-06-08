@@ -118,7 +118,7 @@ function verificarTP(index) {
 	}, 100)
 	setTimeout(() => {
 		inputMatricula.focus()
-	}, 650);
+	}, 400);
 
 }
 
