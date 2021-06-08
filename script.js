@@ -17,53 +17,58 @@ var message = document.getElementById('message')
 var textMessage = document.getElementById('text-message')
 var title = document.querySelector('.title')
 var legend = document.querySelector('.legend')
+var loading = document.querySelector('.loading')
 
-firebase
-	.auth()
-	.signInAnonymously()
-	.then(() => {
-		realtime.ref('tps').on('value', snapshot => {
-			tps = Object.values(snapshot.val())
-			grid.innerHTML = ''
-			tps.map(tp => {
-				var index = tps.indexOf(tp)
-				var className
-				var status = tp.status.status
-				var data = new Date(tp.status.data).getTime()
-				var agora = new Date().getTime()
-				var periodoEmMS = agora - data
-				var umDiaEmMS = 1000 * 60 * 60 * 24
-				var dias = Math.floor(periodoEmMS / umDiaEmMS)
-				switch (status) {
-					case 'Em uso':
-						if (dias == 0 || dias == 1) {
-							className = 'green'
-						} else if (dias == 2 || dias == 3) {
-							className = 'yellow'
-						} else if (dias > 3) {
-							className = 'red'
-						}
-						break
-					case 'Devolvido':
-						className = 'devolvido'
-						break
-					case 'Bloqueado':
-						className = 'bloqueado'
-						break
-					case 'Transporte':
-						className = 'transporte'
-						break
-					default:
-						break
-				}
-				var item = `<div id="${tp.tp}" onclick="verificarTP(${index})" class="grid-item ${className}">${tp.tp} </div>`
-				grid.innerHTML += item
+document.addEventListener('DOMContentLoaded', () => {
+	firebase
+		.auth()
+		.signInAnonymously()
+		.then(() => {
+			realtime.ref('tps').on('value', snapshot => {
+				tps = Object.values(snapshot.val())
+				grid.innerHTML = ''
+				tps.map(tp => {
+					var index = tps.indexOf(tp)
+					var className
+					var status = tp.status.status
+					var data = new Date(tp.status.data).getTime()
+					var agora = new Date().getTime()
+					var periodoEmMS = agora - data
+					var umDiaEmMS = 1000 * 60 * 60 * 24
+					var dias = Math.floor(periodoEmMS / umDiaEmMS)
+					switch (status) {
+						case 'Em uso':
+							if (dias == 0 || dias == 1) {
+								className = 'green'
+							} else if (dias == 2 || dias == 3) {
+								className = 'yellow'
+							} else if (dias > 3) {
+								className = 'red'
+							}
+							break
+						case 'Devolvido':
+							className = 'devolvido'
+							break
+						case 'Bloqueado':
+							className = 'bloqueado'
+							break
+						case 'Transporte':
+							className = 'transporte'
+							break
+						default:
+							break
+					}
+					var item = `<div id="${tp.tp}" onclick="verificarTP(${index})" class="grid-item ${className}">${tp.tp} </div>`
+					grid.innerHTML += item
+				})
+				loading.classList.add('hidden')
+				grid.classList.remove('hidden')
+				document.querySelector('.legend').classList.remove('hidden')
 			})
-			grid.classList.remove('hidden')
-			document.querySelector('.legend').classList.remove('hidden')
 		})
-	})
-	.catch(e => console.warn(e.message))
+		.catch(e => console.warn(e.message))
+})
+
 
 function limparLogin() {
 	pin1.value = ''
@@ -343,3 +348,4 @@ plusSign.addEventListener('click', e => {
     active = false
   }
 })
+
