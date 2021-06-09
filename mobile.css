@@ -58,6 +58,12 @@ body {
   font-size: 15pt;
   font-family: arial;
   margin: 15px;
+  padding: 5px 30px;
+  border: 2px solid transparent;
+}
+
+.btn-busca:active, .btn-senhas:active {
+  color: rgb(232, 232, 236);
 }
 
 .container {
@@ -419,9 +425,9 @@ input[type=number] {
 }
 
 .grid {
-  position: fixed;
+  position: relative;
   z-index: 1;
-  top: 10vh;
+  top: 7vh;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
