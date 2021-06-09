@@ -15,9 +15,14 @@ var login = document.getElementById('login')
 var tps = []
 var message = document.getElementById('message')
 var textMessage = document.getElementById('text-message')
-var title = document.querySelector('.title')
+var title = document.getElementById('title')
 var legend = document.querySelector('.legend')
 var loading = document.querySelector('.loading')
+var plusSign = document.getElementById('plusContainer')
+var vertical = document.querySelector('.vertical')
+var horizontal = document.querySelector('.horizontal')
+var active = false
+var menu = document.querySelector('.menu')
 
 document.addEventListener('DOMContentLoaded', () => {
 	firebase
@@ -110,7 +115,6 @@ function verificarTP(index) {
 			console.warn(tp.tp, tp.status)
 			break
 	}
-	console.log(tp)
 	setTimeout(() => {
 		modal.classList.remove('hidden')
 		login.classList.remove('hidden')
@@ -331,19 +335,26 @@ btnUltimos.addEventListener('click', () => {
 		})
 })
 
-var plusSign = document.querySelector('.container')
-var vertical = document.querySelector('.vertical')
-var horizontal = document.querySelector('.horizontal')
-var active = false
-
 plusSign.addEventListener('click', e => {
   if (!active) {
     horizontal.classList.add('rotatex')
     vertical.classList.add('rotatey')
+		grid.style.animation = 'fadeout 0.5s'
+		menu.style.animation = 'show-menu 0.5s'
+		setTimeout(() => {
+			grid.style.display = 'none'
+			menu.style.top = 0
+		}, 400);
     active = true
   } else {
-    horizontal.classList.remove('rotatex')
+		horizontal.classList.remove('rotatex')
     vertical.classList.remove('rotatey')
+		grid.style.animation = 'fade 0.5s'
+		menu.style.animation = 'hide-menu 0.5s'
+		grid.style.display = 'flex'
+		setTimeout(() => {
+			menu.style.top = -100 + 'vh'
+		}, 400);
     active = false
   }
 })
