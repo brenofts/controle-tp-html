@@ -350,7 +350,7 @@ function toggleMenu() {
 	document.body.style.overflow = 'hidden'
 	horizontal.classList.toggle('rotatex')
 	vertical.classList.toggle('rotatey')
-	grid.classList.toggle('blur')
+	//grid.classList.toggle('blur')
 	grid.classList.toggle('disable')
 	legend.classList.toggle('blur')
 	if (!activeMenu) {
@@ -377,3 +377,10 @@ function Navigate(screen) {
 	clear()
 	screen.style.display = 'flex'
 }
+
+
+// class Screen {
+// 	constructor(element) {
+// 		document.querySelector(element)
+// 	}
+// }
