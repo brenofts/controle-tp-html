@@ -560,8 +560,8 @@ input[type=number] {
 }
 
 .blur {
-  filter: grayscale(100%);
-  opacity: 0.5;
+  filter: grayscale(75%);
+  opacity: 0.3;
 }
 
 .disable {
