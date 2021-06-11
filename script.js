@@ -130,7 +130,6 @@ function verificarTP(index) {
 	setTimeout(() => {
 		inputMatricula.focus()
 	}, 400);
-
 }
 
 function toggleBackground() {
@@ -343,6 +342,12 @@ title.children[0].addEventListener('click', () => Navigate(inicio))
 
 
 function toggleMenu() {
+	window.scrollTo({
+		top: 0,
+		left: 0,
+		behavior: "smooth"
+	})
+	document.body.style.overflow = 'hidden'
 	horizontal.classList.toggle('rotatex')
 	vertical.classList.toggle('rotatey')
 	grid.classList.toggle('blur')
@@ -356,6 +361,7 @@ function toggleMenu() {
 		activeMenu = true
 	} else {
 		menu.style.animation = 'hide-menu 0.5s'
+		document.body.style.overflow = 'scroll'
 		setTimeout(() => {
 			menu.style.top = -100 + 'vh'
 		}, 400);
