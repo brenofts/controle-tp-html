@@ -560,7 +560,7 @@ input[type=number] {
 }
 
 .blur {
-  filter: blur(2px) grayscale(100%);
+  filter: grayscale(100%);
 }
 
 .disable {
