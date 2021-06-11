@@ -260,8 +260,8 @@ window.addEventListener('click', e => {
 })
 
 btnUltimos.addEventListener('click', () => {
-	loginCard.classList.add('blur')
-	loginCard.classList.add('disable')
+	loginCard.classList.add('blur', 'disable')
+	//loginCard.classList.add('disable')
 	ultimosCard.classList.remove('hidden')
 	ultimosList.innerHTML = ''
 	realtime
