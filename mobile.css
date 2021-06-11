@@ -561,6 +561,7 @@ input[type=number] {
 
 .blur {
   filter: grayscale(100%);
+  opacity: 0.5;
 }
 
 .disable {
