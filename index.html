@@ -19,7 +19,7 @@
 						</div>
 				</div>
 				<div class="menu">
-					<div class="btn-busca">
+					<div class="btn" id="btn-busca">
 						<span class="icon-busca">
 							<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
 								<g>
@@ -32,7 +32,7 @@
 						</span>
 						<span>Buscas</span>
 					</div>
-					<div class="btn-senhas">
+					<div class="btn" id="btn-senhas">
 						<span class="icon-senhas">
 							<svg width="35" height="30" xmlns="http://www.w3.org/2000/svg">
 
@@ -63,24 +63,30 @@
 					<div class="bar-3"></div>
 					<div class="bar-4"></div>
 				</div>
-				<div class="hidden grid" id="gridTPs">
-				</div>
-				<div id="error"></div>
-				<div class="legend hidden">
-					<span class="legend-item" id="um-dia"></span>
-					1 dia
-					<span class="legend-item" id="tres-dias"></span>
-					2/3 dias
-					<span class="legend-item" id="quatro-dias"></span>
-					4+ dias
-					<span class="legend-item" id="blue"></span>
-					Devolvido
-					<span class="legend-item" id="lightblue"></span>
-					Transporte
-					<span class="legend-item" id="grey"></span>
-					Bloqueado
+				<div class="canvas">
+					<div class="screen" id="inicio">
+						<div class="hidden grid" id="gridTPs">
+						</div>			
+						<div class="legend hidden">
+							<span class="legend-item" id="um-dia"></span>
+							1 dia
+							<span class="legend-item" id="tres-dias"></span>
+							2/3 dias
+							<span class="legend-item" id="quatro-dias"></span>
+							4+ dias
+							<span class="legend-item" id="blue"></span>
+							Devolvido
+							<span class="legend-item" id="lightblue"></span>
+							Transporte
+							<span class="legend-item" id="grey"></span>
+							Bloqueado
+						</div>
+					</div>
+					<div class="screen" id="senhas">SENHAS</div>
+					<div class="screen" id="busca">BUSCA</div>
 				</div>
 			</div>
+			<div id="error"></div>
 			<div class="ultimos-card hidden">
 				Últimos registros
 				<span class="up">&#10217;</span>

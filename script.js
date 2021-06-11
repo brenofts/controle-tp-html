@@ -10,10 +10,12 @@ var inputPassword = document.getElementById('password')
 var inputMatricula = document.getElementById('inputMatricula')
 var grid = document.getElementById('gridTPs')
 var modal = document.getElementById('modal')
+var canvas = document.querySelector('.canvas')
 var loginCard = document.getElementById('loginCard')
 var login = document.getElementById('login')
 var tps = []
 var message = document.getElementById('message')
+var inicio = document.getElementById('inicio')
 var textMessage = document.getElementById('text-message')
 var title = document.getElementById('title')
 var legend = document.querySelector('.legend')
@@ -21,8 +23,13 @@ var loading = document.querySelector('.loading')
 var plusSign = document.getElementById('plusContainer')
 var vertical = document.querySelector('.vertical')
 var horizontal = document.querySelector('.horizontal')
-var active = false
+var activeMenu = false
 var menu = document.querySelector('.menu')
+var btnBusca = document.querySelector('#btn-busca')
+var busca = document.querySelector('#busca')
+var btnSenhas = document.querySelector('#btn-senhas')
+var senhas = document.querySelector('#senhas')
+
 
 document.addEventListener('DOMContentLoaded', () => {
 	firebase
@@ -127,15 +134,9 @@ function verificarTP(index) {
 }
 
 function toggleBackground() {
-	if (legend.classList.contains('blur')) {
-		title.classList.remove('blur')
-		grid.classList.remove('blur')
-		legend.classList.remove('blur')
-	} else {
-		title.classList.add('blur')
-		grid.classList.add('blur')
-		legend.classList.add('blur')
-	}
+	title.classList.toggle('blur')
+	grid.classList.toggle('blur')
+	legend.classList.toggle('blur')
 }
 
 inputMatricula.addEventListener('input', e => {
@@ -335,27 +336,38 @@ btnUltimos.addEventListener('click', () => {
 		})
 })
 
-plusSign.addEventListener('click', e => {
-  if (!active) {
-    horizontal.classList.add('rotatex')
-    vertical.classList.add('rotatey')
-		grid.style.animation = 'fadeout 0.5s'
+plusSign.addEventListener('click', () => toggleMenu())
+btnBusca.addEventListener('click', () => Navigate(busca))
+btnSenhas.addEventListener('click', () => Navigate(senhas))
+title.children[0].addEventListener('click', () => Navigate(inicio))
+
+
+function toggleMenu() {
+	horizontal.classList.toggle('rotatex')
+	vertical.classList.toggle('rotatey')
+	grid.classList.toggle('blur')
+	grid.classList.toggle('disable')
+	legend.classList.toggle('blur')
+	if (!activeMenu) {
 		menu.style.animation = 'show-menu 0.5s'
 		setTimeout(() => {
-			grid.style.display = 'none'
-			menu.style.top = 0
+			menu.style.top = '45px'
 		}, 400);
-    active = true
-  } else {
-		horizontal.classList.remove('rotatex')
-    vertical.classList.remove('rotatey')
-		grid.style.animation = 'fade 0.5s'
+		activeMenu = true
+	} else {
 		menu.style.animation = 'hide-menu 0.5s'
-		grid.style.display = 'flex'
 		setTimeout(() => {
 			menu.style.top = -100 + 'vh'
 		}, 400);
-    active = false
-  }
-})
+		activeMenu = false
+	}
+}
 
+var screens = Array.from(document.querySelector('.canvas').children)
+var clear = () => screens.map(screen => screen.style.display = 'none')
+
+function Navigate(screen) {
+	activeMenu ? toggleMenu() : null
+	clear()
+	screen.style.display = 'flex'
+}
