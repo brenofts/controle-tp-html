@@ -28,8 +28,8 @@ body {
   /* padding: 22px 15px; */
 }
 
-.title span {
-  margin-left: 30px;
+#btn-inicio {
+  padding: 22px 22px;
 }
 
 .menu {
@@ -68,10 +68,6 @@ body {
 
 .btn:active, #btn-inicio:active{
   color: rgb(232, 232, 236);
-}
-
-#btn-inicio {
-  padding: 22px 15px;
 }
 
 .container {
