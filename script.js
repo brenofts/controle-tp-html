@@ -29,7 +29,28 @@ var btnBusca = document.querySelector('#btn-busca')
 var busca = document.querySelector('#busca')
 var btnSenhas = document.querySelector('#btn-senhas')
 var senhas = document.querySelector('#senhas')
+var updateTime = document.querySelector('.update-time')
 
+const reload = () => document.location.reload()
+var diferencaHora
+
+const ajustarHora = () => {
+	return new Promise((resolve, reject) => {
+		if (new Date().getTimezoneOffset() == 180) {
+			realtime.ref('.info/serverTimeOffset').once('value', snap => {
+				diferencaHora = snap.val()
+			})
+			resolve(diferencaHora)
+		} else {
+			reject('Verifique as configurações de fuso horário.')
+		}
+	})
+}
+
+if (new Date().getTimezoneOffset() !== 180) {
+	alert('Verifique as configurações de fuso horário.')
+	reload()
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 	firebase
@@ -38,6 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		.then(() => {
 			realtime.ref('tps').on('value', snapshot => {
 				tps = Object.values(snapshot.val())
+				realtime
+					.ref('.info/serverTimeOffset')
+					.once('value', snap => (diferencaHora = snap.val()))
+					.then()
+					.catch(e => alert(e.message))
+				updateTime.innerHTML = 'Atualizado em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString()
 				grid.innerHTML = ''
 				tps.map(tp => {
 					var index = tps.indexOf(tp)
@@ -80,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		})
 		.catch(e => console.warn(e.message))
 })
-
 
 function limparLogin() {
 	pin1.value = ''
@@ -129,7 +155,7 @@ function verificarTP(index) {
 	}, 100)
 	setTimeout(() => {
 		inputMatricula.focus()
-	}, 400);
+	}, 400)
 }
 
 function toggleBackground() {
@@ -261,7 +287,6 @@ window.addEventListener('click', e => {
 
 btnUltimos.addEventListener('click', () => {
 	loginCard.classList.add('blur', 'disable')
-	//loginCard.classList.add('disable')
 	ultimosCard.classList.remove('hidden')
 	ultimosList.innerHTML = ''
 	realtime
@@ -289,10 +314,10 @@ btnUltimos.addEventListener('click', () => {
 							<span>${tp.posto}</span>
 							</div>
 						`
-							break;
-							case 'Em uso':
-								className = 'item-em-uso'
-								listItem = `
+							break
+						case 'Em uso':
+							className = 'item-em-uso'
+							listItem = `
 								<div class="item ${className}">
 								<span>${tp.status}</span>
 								<span>${tp.id}</span>
@@ -301,9 +326,9 @@ btnUltimos.addEventListener('click', () => {
 								</div>
 							`
 							break
-					
+
 						default:
-							break;
+							break
 					}
 					ultimosList.innerHTML += listItem
 				})
@@ -319,8 +344,7 @@ btnUltimos.addEventListener('click', () => {
 			ultimosList.addEventListener('scroll', e => {
 				if (e.target.scrollTop > 40) {
 					document.querySelector('.up').style.opacity = 1
-				} 
-				else {
+				} else {
 					document.querySelector('.up').style.opacity = 0
 				}
 				if (ultimosRegistros.length > 4) {
@@ -340,12 +364,11 @@ btnBusca.addEventListener('click', () => Navigate(busca))
 btnSenhas.addEventListener('click', () => Navigate(senhas))
 title.children[0].addEventListener('click', () => Navigate(inicio))
 
-
 function toggleMenu() {
 	window.scrollTo({
 		top: 0,
 		left: 0,
-		behavior: "smooth"
+		behavior: 'smooth',
 	})
 	document.body.style.overflow = 'hidden'
 	horizontal.classList.toggle('rotatex')
@@ -357,27 +380,26 @@ function toggleMenu() {
 		menu.style.animation = 'show-menu 0.5s'
 		setTimeout(() => {
 			menu.style.top = '45px'
-		}, 400);
+		}, 400)
 		activeMenu = true
 	} else {
 		menu.style.animation = 'hide-menu 0.5s'
 		document.body.style.overflow = 'scroll'
 		setTimeout(() => {
 			menu.style.top = -100 + 'vh'
-		}, 400);
+		}, 400)
 		activeMenu = false
 	}
 }
 
 var screens = Array.from(document.querySelector('.canvas').children)
-var clear = () => screens.map(screen => screen.style.display = 'none')
+var clear = () => screens.map(screen => (screen.style.display = 'none'))
 
 function Navigate(screen) {
 	activeMenu ? toggleMenu() : null
 	clear()
 	screen.style.display = 'flex'
 }
-
 
 // class Screen {
 // 	constructor(element) {
