@@ -25,7 +25,7 @@ body {
   display: inline-flex;
   justify-content: space-between;
   align-items: center;
-  padding: 22px 15px;
+  /* padding: 22px 15px; */
 }
 
 .title span {
@@ -70,6 +70,10 @@ body {
   color: rgb(232, 232, 236);
 }
 
+#btn-inicio {
+  padding: 22px 15px;
+}
+
 .container {
   height: 30px;
   width: 30px;
@@ -79,7 +83,8 @@ body {
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease-in-out;
-  margin-right: 45px;
+  margin-right: 5px;
+  padding: 22px 22px;
 }
 
 .vertical {
@@ -100,10 +105,14 @@ body {
 .rotatey {
   transform: rotate(135deg);
   transform-origin: center center ;
+  background: white;
+  width: 20px;
 }
 .rotatex {
   transform: rotate(225deg);
   transform-origin: center center;
+  background: white;
+  width: 20px;
 }
 
 .modal {
