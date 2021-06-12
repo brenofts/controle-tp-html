@@ -342,7 +342,7 @@ btnUltimos.addEventListener('click', () => {
 			const lastDiv = divList[divList.length - 4]
 
 			ultimosList.addEventListener('scroll', e => {
-				if (e.target.scrollTop > 40) {
+				if (e.target.scrollTop > 60) {
 					document.querySelector('.up').style.opacity = 1
 				} else {
 					document.querySelector('.up').style.opacity = 0
