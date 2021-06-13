@@ -122,6 +122,7 @@ body {
   height: 120%;
   width: 100%;
   animation: fade 0.7s;
+  background: rgb(0,0,0,0.7);
 }
 
 @keyframes animatecard {
@@ -185,6 +186,11 @@ body {
   overflow: hidden;
   overflow-y: scroll;
   margin-top: 3px;
+  box-shadow: inset 0 0 5px black;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
 }
 
 .ultimos-list::-webkit-scrollbar {
@@ -192,6 +198,8 @@ body {
 }
 
 .ultimos-list .item {
+  position: relative;
+  z-index: -2;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -200,7 +208,7 @@ body {
   background-color: #315fa0;
   color: white;
   height: auto;
-  margin-bottom: 0.3em;
+  /* margin-top: 0.2em; */
   font-size: 13pt;
   font-family: monospace;
   border-radius: 6px;
@@ -237,14 +245,19 @@ body {
 #ultimos {
   font-size: 15pt;
   position: absolute;
-  top: 7px;
-  right: 10px;
+  /* top: 7px; */
+  /* right: 10px; */
   color:white;
   background-color: #f29206;
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
   padding-top: 1px;
-  border-radius: 30%;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-10px) translateX(110px);
 }
 
 .up {
@@ -574,7 +587,8 @@ input[type=number] {
 }
 
 .blur {
-  filter: grayscale(70%) ;
+  filter: grayscale(70%);
+  
 }
 
 .disable {

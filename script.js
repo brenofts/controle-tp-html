@@ -1,3 +1,8 @@
+if (new Date().getTimezoneOffset() !== 180) {
+	alert('Verifique as configurações de fuso horário.')
+	reload()
+}
+
 var buttonClicked
 var btnUltimos = document.getElementById('ultimos')
 var ultimosCard = document.querySelector('.ultimos-card')
@@ -16,6 +21,7 @@ var login = document.getElementById('login')
 var tps = []
 var message = document.getElementById('message')
 var inicio = document.getElementById('inicio')
+var btnInicio = document.getElementById('btn-inicio')
 var textMessage = document.getElementById('text-message')
 var title = document.getElementById('title')
 var legend = document.querySelector('.legend')
@@ -30,6 +36,7 @@ var busca = document.querySelector('#busca')
 var btnSenhas = document.querySelector('#btn-senhas')
 var senhas = document.querySelector('#senhas')
 var updateTime = document.querySelector('.update-time')
+var main = document.querySelector('.main')
 
 const reload = () => document.location.reload()
 var diferencaHora
@@ -47,12 +54,7 @@ const ajustarHora = () => {
 	})
 }
 
-if (new Date().getTimezoneOffset() !== 180) {
-	alert('Verifique as configurações de fuso horário.')
-	reload()
-}
-
-document.addEventListener('DOMContentLoaded', () => {
+function updateGrid() {	
 	firebase
 		.auth()
 		.signInAnonymously()
@@ -105,8 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
 				document.querySelector('.legend').classList.remove('hidden')
 			})
 		})
-		.catch(e => console.warn(e.message))
-})
+		.catch(e => console.warn(e.message))	
+}
+
+
+document.addEventListener('DOMContentLoaded', updateGrid)
+
+btnInicio.addEventListener('click', updateGrid)
 
 function limparLogin() {
 	pin1.value = ''
@@ -373,9 +380,8 @@ function toggleMenu() {
 	document.body.style.overflow = 'hidden'
 	horizontal.classList.toggle('rotatex')
 	vertical.classList.toggle('rotatey')
-	grid.classList.toggle('blur')
-	grid.classList.toggle('disable')
-	legend.classList.toggle('blur')
+	canvas.classList.toggle('blur')
+	canvas.classList.toggle('disable')
 	if (!activeMenu) {
 		menu.style.animation = 'show-menu 0.5s'
 		setTimeout(() => {
