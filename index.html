@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="mobile.css" />
-		<link rel="stylesheet" href="desktop.css" />
+		<!-- <link rel="stylesheet" href="desktop.css" /> -->
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
@@ -19,6 +19,23 @@
 						</div>
 				</div>
 				<div class="menu">
+					<div class="btn" id="btn-controle">
+						<span class="icon-controle">
+							<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+								<g>
+								 <title>Layer 1</title>
+								 <line stroke-width="4" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_3" y2="4.31236" x2="28.05096" y1="4.31236" x1="1.94904" stroke="#173d72" fill="none"/>
+								 <line stroke-width="2" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_4" y2="10.68731" x2="28.05096" y1="10.68731" x1="1.94904" stroke="#173d72" fill="none"/>
+								 <line stroke-width="2" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_5" y2="14.74978" x2="28.05096" y1="14.74978" x1="1.94904" stroke="#173d72" fill="none"/>
+								 <line stroke-width="2" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_6" y2="18.74975" x2="28.05096" y1="18.74975" x1="1.94904" stroke="#173d72" fill="none"/>
+								 <line stroke-width="2" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_7" y2="22.74972" x2="28.05096" y1="22.74972" x1="1.94904" stroke="#173d72" fill="none"/>
+								 <line stroke-width="2" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_8" y2="26.81219" x2="28.05096" y1="26.81219" x1="1.94904" stroke="#173d72" fill="none"/>
+								</g>
+							 
+							 </svg>
+						</span>
+						<span>Controle</span>
+					</div>
 					<div class="btn" id="btn-busca">
 						<span class="icon-busca">
 							<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
@@ -64,8 +81,8 @@
 					<div class="bar-4"></div>
 				</div>
 				<div class="canvas">
+					<div class="update-time"></div>
 					<div class="screen" id="inicio">
-						<div class="update-time"></div>
 						<div class="hidden grid" id="gridTPs">
 						</div>			
 						<div class="legend hidden">
@@ -84,7 +101,41 @@
 						</div>
 					</div>
 					<div class="screen" id="senhas">SENHAS</div>
-					<div class="screen" id="busca">BUSCA</div>
+					<div class="screen" id="busca">BUSCAS</div>
+					<div class="screen" id="controle">
+						<table>
+							<thead>
+								<tr>
+									<th>TP</th>
+									<th>Status</th>
+									<th>Dias</th>
+									<th>Data</th>
+									<th>Hora</th>
+									<th>Piloto</th>
+									<th>Gerente</th>
+									<th>Posto</th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+						<div class="legend">
+							<span class="legend-item" id="um-dia"></span>
+							1 dia
+							<span class="legend-item" id="tres-dias"></span>
+							2/3 dias
+							<span class="legend-item" id="quatro-dias"></span>
+							4+ dias
+							<span class="legend-item" id="blue"></span>
+							Devolvido
+							<span class="legend-item" id="lightblue"></span>
+							Transporte
+							<span class="legend-item" id="grey"></span>
+							Bloqueado
+						</div>
+					</div>
+					<div class="screen" id="outros">OUTROS</div>
 				</div>
 			</div>
 			<div id="error"></div>

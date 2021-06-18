@@ -35,6 +35,9 @@ var btnBusca = document.querySelector('#btn-busca')
 var busca = document.querySelector('#busca')
 var btnSenhas = document.querySelector('#btn-senhas')
 var senhas = document.querySelector('#senhas')
+var btnControle = document.querySelector('#btn-controle')
+var controle = document.querySelector('#controle')
+var table = document.querySelector('tbody')
 var updateTime = document.querySelector('.update-time')
 var main = document.querySelector('.main')
 
@@ -54,7 +57,7 @@ const ajustarHora = () => {
 	})
 }
 
-function updateGrid() {	
+function updateGrid() {
 	firebase
 		.auth()
 		.signInAnonymously()
@@ -107,9 +110,8 @@ function updateGrid() {
 				document.querySelector('.legend').classList.remove('hidden')
 			})
 		})
-		.catch(e => console.warn(e.message))	
+		.catch(e => console.warn(e.message))
 }
-
 
 document.addEventListener('DOMContentLoaded', updateGrid)
 
@@ -294,7 +296,7 @@ window.addEventListener('click', e => {
 
 btnUltimos.addEventListener('click', () => {
 	loginCard.classList.add('blur', 'disable')
-	ultimosCard.classList.remove('hidden')
+	// ultimosCard.classList.remove('hidden')
 	ultimosList.innerHTML = ''
 	realtime
 		.ref('historico')
@@ -313,24 +315,24 @@ btnUltimos.addEventListener('click', () => {
 						case 'Devolvido':
 							className = 'item-devolvido'
 							listItem = `
-							<div class="item ${className}">
-							<span>${tp.status}</span>
-							<span>${tp.id}</span>
-							<span>GERENTE/IT: ${tp.gerente}</span>
-							<span>${data}</span>
-							<span>${tp.posto}</span>
-							</div>
+						<div class="item ${className}">
+						<span>${tp.status}</span>
+						<span>${tp.id}</span>
+						<span>GERENTE/IT: ${tp.gerente}</span>
+						<span>${data}</span>
+						<span>${tp.posto}</span>
+						</div>
 						`
 							break
 						case 'Em uso':
 							className = 'item-em-uso'
 							listItem = `
-								<div class="item ${className}">
-								<span>${tp.status}</span>
-								<span>${tp.id}</span>
-								<span>${data}</span>
-								<span>${tp.posto}</span>
-								</div>
+							<div class="item ${className}">
+							<span>${tp.status}</span>
+							<span>${tp.id}</span>
+							<span>${data}</span>
+							<span>${tp.posto}</span>
+							</div>
 							`
 							break
 
@@ -363,12 +365,71 @@ btnUltimos.addEventListener('click', () => {
 					}
 				}
 			})
+			ultimosCard.classList.remove('hidden')
 		})
 })
 
 plusSign.addEventListener('click', () => toggleMenu())
 btnBusca.addEventListener('click', () => Navigate(busca))
 btnSenhas.addEventListener('click', () => Navigate(senhas))
+btnControle.addEventListener('click', () => {
+	Navigate(controle)
+	ajustarHora().then(() => {
+		realtime.ref('tps').on('value', (snap) => {
+			const tps = Object.values(snap.val())
+			updateTime.innerHTML = 'Atualizado em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString()
+			table.innerHTML = ''
+			tps.map(tp => {
+				var status = tp.status.status
+				var hoje = new Date().getTime()
+				var evento = new Date(tp.status.data).getTime()
+				var diferencaEmMs = hoje - evento
+				var umDiaEmMs = 1000 * 3600 * 24
+				var dias = Math.floor(diferencaEmMs / umDiaEmMs)
+				var className
+				switch (status) {
+					case 'Em uso':
+						if (dias == 0 || dias == 1) {
+							className = 'tr-green'
+						} else if (dias == 2 || dias == 3) {
+							className = 'tr-yellow'
+						} else if (dias > 3) {
+							className = 'tr-red'
+						}
+						break
+					case 'Devolvido':
+						className = 'tr-devolvido'
+						break
+					case 'Bloqueado':
+						className = 'tr-bloqueado'
+						break
+					case 'Transporte':
+						className = 'tr-transporte'
+						break
+					default:
+						break
+					}
+				var tr = `
+					<tr class="${className}">
+					<td><strong>${tp.tp}</strong></td>
+					<td>${tp.status.status}</td>
+					<td>${dias}</td>
+					<td>${new Date(tp.status.data).toLocaleDateString()}</td>
+					<td>${new Date(tp.status.data).toLocaleTimeString()}</td>
+					<td>${tp.status.id}</td>
+					<td>${tp.status.gerente}</td>
+					<td>${tp.status.posto}</td>
+					</tr>
+				`
+				table.innerHTML += tr
+			})
+		})
+	}).catch(e => {
+		alert(e)
+		reload()
+	})
+})
+
 title.children[0].addEventListener('click', () => Navigate(inicio))
 
 function toggleMenu() {
@@ -398,7 +459,7 @@ function toggleMenu() {
 	}
 }
 
-var screens = Array.from(document.querySelector('.canvas').children)
+var screens = Array.from(document.querySelectorAll('.screen'))
 var clear = () => screens.map(screen => (screen.style.display = 'none'))
 
 function Navigate(screen) {
@@ -406,9 +467,3 @@ function Navigate(screen) {
 	clear()
 	screen.style.display = 'flex'
 }
-
-// class Screen {
-// 	constructor(element) {
-// 		document.querySelector(element)
-// 	}
-// }
