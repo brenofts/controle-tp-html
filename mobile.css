@@ -6,6 +6,7 @@
 
 body {
 	height: 100%;
+	font-family: sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -77,6 +78,89 @@ body {
 .btn:active,
 #btn-inicio:active {
 	color: rgb(232, 232, 236);
+}
+
+#busca {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+.screen-title {
+	margin: 10px;
+	padding: 5px;
+	font-size: 12pt;
+	border-bottom: #f29206 2px solid;
+}
+
+.menu-busca {
+	display: flex;
+	flex-direction: row;
+	gap: 3vw;
+	padding: 10px;
+	background: ghostwhite;
+	border: 1px solid #173d72;
+	border-radius: 3px;
+	margin-bottom: 15px;
+}
+
+[class*='busca-'] {
+	display: none;
+}
+
+.form-matricula-buscar {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.form-matricula-buscar label {
+	position: absolute;
+	color: #173d72;
+	pointer-events: none;
+	transition: all .3s ;
+	font-size: 12pt;
+}
+
+.form-matricula-buscar input {
+	background: rgb(232, 232, 236);
+	border: lightgray 1px solid;
+	border-bottom: 3px solid #173d72;
+	border-radius: 3px;
+	height: 3rem;
+	width: 13rem;
+	font-size: 20pt;
+	text-align: center;
+	color: #173d72;
+	outline: none;
+}
+
+.form-matricula-buscar input:focus ~ label,
+.form-matricula-buscar input:valid ~ label {
+	transform: translateY(38px);
+	color: lightgray;
+	font-size: 11pt;
+}
+
+.form-matricula-buscar span {
+	position: absolute;
+	transform: translateX(5rem);
+	
+}
+
+.btn-b {
+	padding: 12px;
+	background: #f29206;
+	border-radius: 3px;
+	font-size: 10pt;
+}
+
+.btn-b:active {
+	opacity: 0.7;
 }
 
 .container {
@@ -174,7 +258,6 @@ body {
 	color: #f29206;
 	animation: fade 2.5s;
 	font-size: 15pt;
-	font-family: Arial, Helvetica, sans-serif;
 }
 
 .ultimos-card {
@@ -299,7 +382,6 @@ body {
 }
 
 h3 {
-	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14pt;
 }
 
@@ -436,17 +518,13 @@ input[type='number'] {
 	transition: all 0.5s;
 }
 
-#controle {
-	font-family: sans-serif;
-}
-
 table {
 	margin: 0 10px 6.3vh 10px;
 }
 
 thead {
 	position: sticky;
-	top: 9.5vh
+	top: 10vh
 }
 
 th {
@@ -545,9 +623,10 @@ td {
 	font-size: 80%;
 	color: rgb(161, 161, 161);
 	position: sticky;
-	top: 8.2vh;
+	z-index: 2;
+	top: 8.5vh;
 	width: 100%;
-	background: white;
+	background: rgba(255, 255, 255, 0.5);
 }
 
 .grid {

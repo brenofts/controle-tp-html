@@ -37,7 +37,8 @@ var btnSenhas = document.querySelector('#btn-senhas')
 var senhas = document.querySelector('#senhas')
 var btnControle = document.querySelector('#btn-controle')
 var controle = document.querySelector('#controle')
-var table = document.querySelector('tbody')
+var tabelaControle = document.querySelector('#tabela-controle')
+var tabelaHistorico = document.querySelector('#tabela-historico')
 var updateTime = document.querySelector('.update-time')
 var main = document.querySelector('.main')
 
@@ -67,9 +68,10 @@ function updateGrid() {
 				realtime
 					.ref('.info/serverTimeOffset')
 					.once('value', snap => (diferencaHora = snap.val()))
-					.then()
+					.then(() => {
+						updateTime.innerHTML = 'Atualizado em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString()
+					})
 					.catch(e => alert(e.message))
-				updateTime.innerHTML = 'Atualizado em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString()
 				grid.innerHTML = ''
 				tps.map(tp => {
 					var index = tps.indexOf(tp)
@@ -378,7 +380,7 @@ btnControle.addEventListener('click', () => {
 		realtime.ref('tps').on('value', (snap) => {
 			const tps = Object.values(snap.val())
 			updateTime.innerHTML = 'Atualizado em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString()
-			table.innerHTML = ''
+			tabelaControle.innerHTML = ''
 			tps.map(tp => {
 				var status = tp.status.status
 				var hoje = new Date().getTime()
@@ -421,7 +423,7 @@ btnControle.addEventListener('click', () => {
 					<td>${tp.status.posto}</td>
 					</tr>
 				`
-				table.innerHTML += tr
+				tabelaControle.innerHTML += tr
 			})
 		})
 	}).catch(e => {
@@ -459,11 +461,53 @@ function toggleMenu() {
 	}
 }
 
-var screens = Array.from(document.querySelectorAll('.screen'))
-var clear = () => screens.map(screen => (screen.style.display = 'none'))
-
 function Navigate(screen) {
 	activeMenu ? toggleMenu() : null
-	clear()
+	var screens = Array.from(document.querySelectorAll('.screen'))
+	screens.map(screen => screen.style.display = 'none')
 	screen.style.display = 'flex'
 }
+
+
+var buscaTodos = document.querySelector('.busca-todos')
+var buscaData = document.querySelector('.busca-data')
+var buscaMatricula = document.querySelector('.busca-matricula')
+var buscaPosto = document.querySelector('.busca-posto')
+
+
+function abrirBusca(tipo) {
+	var buscas = Array.from(document.querySelector('.canvas-busca').children)
+	buscas.map(busca => busca.style.display = 'none')
+	tipo.style.display = 'flex'	
+}
+
+document.querySelector('.menu-busca').children[0].addEventListener('click', () => {
+	abrirBusca(buscaTodos)
+	ajustarHora().then(() => {
+		realtime.ref('historico').on('value', snap => {
+			var historico = Object.values(snap.val())
+			updateTime.innerHTML = 'Atualizado em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString()
+			tabelaHistorico.innerHTML = ''
+			historico.reverse().map(registro => {
+				var tr = `
+						<tr class="tr-devolvido">
+						<td><strong>${registro.tp}</strong></td>
+						<td>${registro.status}</td>
+						<td>${new Date(registro.data).toLocaleDateString()}</td>
+						<td>${new Date(registro.data).toLocaleTimeString()}</td>
+						<td>${registro.id}</td>
+						<td>${registro.gerente}</td>
+						<td>${registro.posto}</td>
+						</tr>
+					`
+				tabelaHistorico.innerHTML += tr
+			})
+		})
+	}).catch(e => {
+		alert(e)
+		reload()
+	})
+})
+document.querySelector('.menu-busca').children[1].addEventListener('click', () => abrirBusca(buscaData))
+document.querySelector('.menu-busca').children[2].addEventListener('click', () => abrirBusca(buscaMatricula))
+document.querySelector('.menu-busca').children[3].addEventListener('click', () => abrirBusca(buscaPosto))
