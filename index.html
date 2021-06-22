@@ -23,7 +23,6 @@
 						<span class="icon-controle">
 							<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
 								<g>
-								 <title>Layer 1</title>
 								 <line stroke-width="4" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_3" y2="4.31236" x2="28.05096" y1="4.31236" x1="1.94904" stroke="#173d72" fill="none"/>
 								 <line stroke-width="2" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_4" y2="10.68731" x2="28.05096" y1="10.68731" x1="1.94904" stroke="#173d72" fill="none"/>
 								 <line stroke-width="2" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_5" y2="14.74978" x2="28.05096" y1="14.74978" x1="1.94904" stroke="#173d72" fill="none"/>
@@ -40,7 +39,6 @@
 						<span class="icon-busca">
 							<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
 								<g>
-								 <title>Layer 1</title>
 								 <ellipse fill="#000000" cx="18.53125" cy="11.53125" id="svg_2" rx="10.90625" ry="10.90625" stroke="#173d72" fill-opacity="0"/>
 								 <line fill="none" stroke="#173d72" x1="-0.03125" y1="30.0625" x2="10.74388" y2="19.28736" id="svg_6" stroke-width="3"/>
 								</g>
@@ -54,7 +52,6 @@
 							<svg width="35" height="30" xmlns="http://www.w3.org/2000/svg">
 
 								<g>
-								 <title>Layer 1</title>
 								 <line fill-opacity="0" stroke="#173d72" id="svg_24" y2="0.5" x2="11.21875" y1="6.5625" x1="11.21875" fill="none"/>
 								 <line fill-opacity="0" stroke="#173d72" id="svg_25" y2="4.02517" x2="32.84464" y1="0.91648" x1="10.84464" fill="none"/>
 								 <line fill-opacity="0" stroke="#173d72" id="svg_27" y2="28.82678" x2="32.47204" y1="3.4375" x1="32.47204" fill="none"/>
@@ -104,39 +101,35 @@
 					<div class="screen" id="busca">
 						<span class="screen-title">BUSCAS</span>
 						<div class="menu-busca">
-							<div class="btn-b">TODOS</div>
 							<div class="btn-b">DATA</div>
 							<div class="btn-b">MATRÍCULA</div>
 							<div class="btn-b">POSTO</div>
 						</div>
+						<!-- <table class="hidden" id="head-tabela-historico">
+							<thead>
+								<tr>
+									<th>TP</th>
+									<th>Status</th>
+									<th>Data</th>
+									<th>Hora</th>
+									<th>Piloto</th>
+									<th>Gerente</th>
+									<th>Posto</th>
+								</tr>
+							</thead>
+							<tbody id="tabela-historico">
+
+							</tbody>
+						</table> -->
 						<div class="canvas-busca">
-							<div class="busca-todos">
-								<table>
-									<thead>
-										<tr>
-											<th>TP</th>
-											<th>Status</th>
-											<th>Data</th>
-											<th>Hora</th>
-											<th>Piloto</th>
-											<th>Gerente</th>
-											<th>Posto</th>
-										</tr>
-									</thead>
-									<tbody id="tabela-historico">
-		
-									</tbody>
-								</table>
-							</div>
 							<div class="busca-data">Busca data</div>
 							<div class="busca-matricula">
 								<div class="form-matricula-buscar">
-									<input required maxlength="5" type="text" id="matricula-buscar" inputmode="numeric">
+									<input required maxlength="5" type="text" id="input-matricula-buscar" inputmode="numeric">
 									<label>Matrícula</label>
 									<span class="icon-busca" id="btn-buscar-matricula">
 										<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
 											<g>
-											 <title>Layer 1</title>
 											 <ellipse fill="#000000" cx="18.53125" cy="11.53125" id="svg_2" rx="10.90625" ry="10.90625" stroke="#173d72" fill-opacity="0"/>
 											 <line fill="none" stroke="#173d72" x1="-0.03125" y1="30.0625" x2="10.74388" y2="19.28736" id="svg_6" stroke-width="3"/>
 											</g>
@@ -145,7 +138,9 @@
 									</span>
 								</div>
 							</div>
-							<div class="busca-posto">Busca posto</div>
+							<div class="busca-posto">
+								Busca posto
+							</div>
 						</div>
 					</div>
 					<div class="screen" id="controle">

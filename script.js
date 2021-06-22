@@ -59,6 +59,7 @@ const ajustarHora = () => {
 }
 
 function updateGrid() {
+	title.classList.add('disable')
 	firebase
 		.auth()
 		.signInAnonymously()
@@ -109,6 +110,7 @@ function updateGrid() {
 				})
 				loading.classList.add('hidden')
 				grid.classList.remove('hidden')
+				title.classList.remove('disable')
 				document.querySelector('.legend').classList.remove('hidden')
 			})
 		})
@@ -376,42 +378,43 @@ btnBusca.addEventListener('click', () => Navigate(busca))
 btnSenhas.addEventListener('click', () => Navigate(senhas))
 btnControle.addEventListener('click', () => {
 	Navigate(controle)
-	ajustarHora().then(() => {
-		realtime.ref('tps').on('value', (snap) => {
-			const tps = Object.values(snap.val())
-			updateTime.innerHTML = 'Atualizado em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString()
-			tabelaControle.innerHTML = ''
-			tps.map(tp => {
-				var status = tp.status.status
-				var hoje = new Date().getTime()
-				var evento = new Date(tp.status.data).getTime()
-				var diferencaEmMs = hoje - evento
-				var umDiaEmMs = 1000 * 3600 * 24
-				var dias = Math.floor(diferencaEmMs / umDiaEmMs)
-				var className
-				switch (status) {
-					case 'Em uso':
-						if (dias == 0 || dias == 1) {
-							className = 'tr-green'
-						} else if (dias == 2 || dias == 3) {
-							className = 'tr-yellow'
-						} else if (dias > 3) {
-							className = 'tr-red'
-						}
-						break
-					case 'Devolvido':
-						className = 'tr-devolvido'
-						break
-					case 'Bloqueado':
-						className = 'tr-bloqueado'
-						break
-					case 'Transporte':
-						className = 'tr-transporte'
-						break
-					default:
-						break
+	ajustarHora()
+		.then(() => {
+			realtime.ref('tps').on('value', snap => {
+				const tps = Object.values(snap.val())
+				updateTime.innerHTML = 'Atualizado em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString()
+				tabelaControle.innerHTML = ''
+				tps.map(tp => {
+					var status = tp.status.status
+					var hoje = new Date().getTime()
+					var evento = new Date(tp.status.data).getTime()
+					var diferencaEmMs = hoje - evento
+					var umDiaEmMs = 1000 * 3600 * 24
+					var dias = Math.floor(diferencaEmMs / umDiaEmMs)
+					var className
+					switch (status) {
+						case 'Em uso':
+							if (dias == 0 || dias == 1) {
+								className = 'tr-green'
+							} else if (dias == 2 || dias == 3) {
+								className = 'tr-yellow'
+							} else if (dias > 3) {
+								className = 'tr-red'
+							}
+							break
+						case 'Devolvido':
+							className = 'tr-devolvido'
+							break
+						case 'Bloqueado':
+							className = 'tr-bloqueado'
+							break
+						case 'Transporte':
+							className = 'tr-transporte'
+							break
+						default:
+							break
 					}
-				var tr = `
+					var tr = `
 					<tr class="${className}">
 					<td><strong>${tp.tp}</strong></td>
 					<td>${tp.status.status}</td>
@@ -423,13 +426,14 @@ btnControle.addEventListener('click', () => {
 					<td>${tp.status.posto}</td>
 					</tr>
 				`
-				tabelaControle.innerHTML += tr
+					tabelaControle.innerHTML += tr
+				})
 			})
 		})
-	}).catch(e => {
-		alert(e)
-		reload()
-	})
+		.catch(e => {
+			alert(e)
+			reload()
+		})
 })
 
 title.children[0].addEventListener('click', () => Navigate(inicio))
@@ -464,50 +468,71 @@ function toggleMenu() {
 function Navigate(screen) {
 	activeMenu ? toggleMenu() : null
 	var screens = Array.from(document.querySelectorAll('.screen'))
-	screens.map(screen => screen.style.display = 'none')
+	screens.map(screen => (screen.style.display = 'none'))
 	screen.style.display = 'flex'
 }
-
 
 var buscaTodos = document.querySelector('.busca-todos')
 var buscaData = document.querySelector('.busca-data')
 var buscaMatricula = document.querySelector('.busca-matricula')
 var buscaPosto = document.querySelector('.busca-posto')
 
-
 function abrirBusca(tipo) {
 	var buscas = Array.from(document.querySelector('.canvas-busca').children)
-	buscas.map(busca => busca.style.display = 'none')
-	tipo.style.display = 'flex'	
+	buscas.map(busca => (busca.style.display = 'none'))
+	tipo.style.display = 'flex'
 }
 
-document.querySelector('.menu-busca').children[0].addEventListener('click', () => {
-	abrirBusca(buscaTodos)
-	ajustarHora().then(() => {
-		realtime.ref('historico').on('value', snap => {
-			var historico = Object.values(snap.val())
-			updateTime.innerHTML = 'Atualizado em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString()
-			tabelaHistorico.innerHTML = ''
-			historico.reverse().map(registro => {
-				var tr = `
-						<tr class="tr-devolvido">
-						<td><strong>${registro.tp}</strong></td>
-						<td>${registro.status}</td>
-						<td>${new Date(registro.data).toLocaleDateString()}</td>
-						<td>${new Date(registro.data).toLocaleTimeString()}</td>
-						<td>${registro.id}</td>
-						<td>${registro.gerente}</td>
-						<td>${registro.posto}</td>
-						</tr>
-					`
-				tabelaHistorico.innerHTML += tr
+function alerta(texto, action, r = false) {
+		document.querySelector('.text-message').innerText = texto
+		document.querySelector('.message').style.display = 'flex'
+		canvas.classList.toggle('disable')
+		if (r) {
+			setTimeout(() => {
+				document.querySelector('.message').style.animation = 'hideMessage 1s ease'
+				setTimeout(() => {
+					reload()
+				}, 900)
+			}, 5000)
+		} else {
+			setTimeout(() => {
+				document.querySelector('.message').style.animation = 'hideMessage 1s ease'
+				canvas.classList.toggle('disable')
+				setTimeout(() => {
+					document.querySelector('.message').style.display = 'none'
+					document.querySelector('.message').style.animation = 'showMessage 1s ease'
+					action()
+				}, 800)
+			}, 5000)
+		}
+}
+
+document.querySelector('.menu-busca').children[0].addEventListener('click', () => abrirBusca(buscaData))
+document.querySelector('.menu-busca').children[1].addEventListener('click', () => {
+	abrirBusca(buscaMatricula)
+	setTimeout(() => {
+		document.querySelector('#input-matricula-buscar').focus()
+	}, 200)
+	document.querySelector('#btn-buscar-matricula').addEventListener('click', e => {
+		e.preventDefault()
+		var matricula = document.querySelector('#input-matricula-buscar')
+		if (matricula.value.length > 2) {
+			realtime.ref('historico').once('value').then(snap => {
+				var historico = Object.values(snap.val())
+				var encontrar = i => i.matricula == matricula.value
+				var resultado = historico.reverse().filter(encontrar)
+				if (resultado.length > 0) {
+					alerta('Foram encontrados ' + resultado.length + ' resultados para o usuário ' + resultado[0].id)
+				} else {
+					alerta('Não foi encontrado nenhum registro para a matrícula ' + matricula.value, () => {
+						matricula.value = ''
+						matricula.focus()
+					})
+				}
 			})
-		})
-	}).catch(e => {
-		alert(e)
-		reload()
+		} else {
+			alerta('Preencha corretamente', () => matricula.focus())
+		}
 	})
 })
-document.querySelector('.menu-busca').children[1].addEventListener('click', () => abrirBusca(buscaData))
-document.querySelector('.menu-busca').children[2].addEventListener('click', () => abrirBusca(buscaMatricula))
-document.querySelector('.menu-busca').children[3].addEventListener('click', () => abrirBusca(buscaPosto))
+document.querySelector('.menu-busca').children[2].addEventListener('click', () => abrirBusca(buscaPosto))
