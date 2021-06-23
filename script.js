@@ -475,7 +475,7 @@ function Navigate(screen) {
 var buscaTodos = document.querySelector('.busca-todos')
 var buscaData = document.querySelector('.busca-data')
 var buscaMatricula = document.querySelector('.busca-matricula')
-var buscaPosto = document.querySelector('.busca-posto')
+var buscaTP = document.querySelector('.busca-tp')
 
 function abrirBusca(tipo) {
 	var buscas = Array.from(document.querySelector('.canvas-busca').children)
@@ -487,27 +487,29 @@ function alerta(texto, action, r = false) {
 		document.querySelector('.text-message').innerText = texto
 		document.querySelector('.message').style.display = 'flex'
 		canvas.classList.toggle('disable')
+		title.classList.toggle('disable')
 		if (r) {
 			setTimeout(() => {
-				document.querySelector('.message').style.animation = 'hideMessage 1s ease'
+				document.querySelector('.message').style.animation = 'hideMessage .6s ease'
 				setTimeout(() => {
 					reload()
 				}, 900)
 			}, 5000)
 		} else {
 			setTimeout(() => {
-				document.querySelector('.message').style.animation = 'hideMessage 1s ease'
+				document.querySelector('.message').style.animation = 'hideMessage .6s ease'
 				canvas.classList.toggle('disable')
+				title.classList.toggle('disable')
 				setTimeout(() => {
 					document.querySelector('.message').style.display = 'none'
-					document.querySelector('.message').style.animation = 'showMessage 1s ease'
+					document.querySelector('.message').style.animation = 'showMessage .6s ease'
 					action()
-				}, 800)
+				}, 500)
 			}, 5000)
 		}
 }
 
-document.querySelector('.menu-busca').children[0].addEventListener('click', () => abrirBusca(buscaData))
+document.querySelector('.menu-busca').children[0].addEventListener('click', () => abrirBusca(buscaTP))
 document.querySelector('.menu-busca').children[1].addEventListener('click', () => {
 	abrirBusca(buscaMatricula)
 	setTimeout(() => {
@@ -535,4 +537,4 @@ document.querySelector('.menu-busca').children[1].addEventListener('click', () =
 		}
 	})
 })
-document.querySelector('.menu-busca').children[2].addEventListener('click', () => abrirBusca(buscaPosto))
+document.querySelector('.menu-busca').children[2].addEventListener('click', () => abrirBusca(buscaData))

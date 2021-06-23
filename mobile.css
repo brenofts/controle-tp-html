@@ -98,7 +98,7 @@ body {
 .menu-busca {
 	display: flex;
 	align-items: center;
-	justify-content: space-evenly;
+	justify-content: center;
 	flex-direction: row;
 	gap: 3vw;
 	padding: 10px;
@@ -266,18 +266,18 @@ body {
 
 @keyframes showMessage {
 	from {
-		margin-top: -20vh;
+		bottom: -200%;
 	}
 	to {
-		margin-top: 0;
+		bottom: 50%;
 	}
 }
 @keyframes hideMessage {
 	from {
-		margin-top: 0;
+		opacity: 1;
 	}
 	to {
-		margin-top: -20vh;
+		opacity: 0;
 	}
 }
 
@@ -286,18 +286,17 @@ body {
 	justify-content: center;
 	align-items: center;
 	position: fixed;
-	top: 0;
+	bottom: 50%;
 	left: 50%;
 	margin-left: -250px;
-	height: 20%;
+	margin-bottom: -125px;
+	height: 250px;
 	width: 500px;
 	background-color: rgb(255,255,255,0.9);
+	box-shadow: 0px 6px 12px -6px rgba(0, 0, 0, 0.67);
 	border: 1px solid #173d72;
-	border-top: 0;
-	border-bottom-right-radius: 20px;
-	border-bottom-left-radius: 20px;
 	z-index: 4;
-	animation: showMessage 1s ease;
+	animation: showMessage .6s ease;
 }
 .text-message {
 	animation: fade 2.5s;
