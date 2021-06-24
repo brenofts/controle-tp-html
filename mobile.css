@@ -96,6 +96,10 @@ body {
 	width: 100%;
 }
 
+.canvas-busca {
+	width: 100%;
+}
+
 .busca-matricula {
 	display: flex;
 	flex-direction: column;
