@@ -582,7 +582,7 @@ document.querySelector('.menu-busca').children[1].addEventListener('click', () =
 						tabelaMatricula.classList.remove('hidden')
 					} else {
 						document.querySelector('.processando').classList.add('hidden')
-						alerta('Não foi encontrado nenhum registro para a matrícula ' + matricula.value, () => {
+						alerta('Não foi encontrado registro para a matrícula ' + matricula.value, () => {
 							matricula.value = ''
 							matricula.focus()
 						})
