@@ -449,30 +449,34 @@ function toggleMenu() {
 		left: 0,
 		behavior: 'smooth',
 	})
-	if (main.scrollTop == 0) {
-
-		document.body.style.overflow = 'hidden'
-		horizontal.classList.toggle('rotatex')
-		vertical.classList.toggle('rotatey')
-		canvas.classList.toggle('blur')
-		canvas.classList.toggle('disable')
-		if (!activeMenu) {
-			menu.style.animation = 'show-menu 0.5s'
+	console.log(main.offsetTop)
+	document.body.style.overflow = 'hidden'
+	horizontal.classList.toggle('rotatex')
+	vertical.classList.toggle('rotatey')
+	canvas.classList.toggle('blur')
+	canvas.classList.toggle('disable')
+	if (!activeMenu) {
+		menu.style.animation = 'show-menu 0.5s'
+		if (canvas.offsetHeight > 2000) {
+			setTimeout(() => {
+				menu.style.top = '45px'
+			}, 800)
+		} else {
 			setTimeout(() => {
 				menu.style.top = '45px'
 			}, 400)
-			activeMenu = true
-		} else {
-			menu.style.animation = 'hide-menu 0.5s'
-			document.body.style.overflow = 'scroll'
-			setTimeout(() => {
-				menu.style.top = -100 + 'vh'
-			}, 400)
-			activeMenu = false
 		}
+		activeMenu = true
+	} else {
+		menu.style.animation = 'hide-menu 0.5s'
+		document.body.style.overflow = 'scroll'
+		setTimeout(() => {
+			menu.style.top = -100 + 'vh'
+		}, 400)
+		activeMenu = false
 	}
-	}
-	
+}
+
 function Navigate(screen) {
 	activeMenu ? toggleMenu() : null
 	var screens = Array.from(document.querySelectorAll('.screen'))
