@@ -97,7 +97,7 @@
 							Bloqueado
 						</div>
 					</div>
-					<div class="screen" id="senhas">SENHAS</div>
+					<div class="screen" id="senhas"><span class="screen-title">SENHAS</span></div>
 					<div class="screen" id="busca">
 						<span class="screen-title">BUSCAS</span>
 						<div class="menu-busca">
@@ -125,7 +125,7 @@
 							<div class="busca-data">Busca data</div>
 							<div class="busca-matricula">
 								<div class="form-matricula-buscar">
-									<input required maxlength="5" type="text" id="input-matricula-buscar" inputmode="numeric">
+									<input required autocomplete="off" maxlength="5" type="text" id="input-matricula-buscar" inputmode="numeric">
 									<label>Matrícula</label>
 									<span class="icon-busca" id="btn-buscar-matricula">
 										<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
@@ -137,6 +137,24 @@
 										 </svg>
 									</span>
 								</div>
+								<span class="processando hidden">Processando...</span>
+								<table class="hidden" id="tabela-matricula">
+									<caption></caption>
+							<thead>
+								<tr>
+									<th>TP</th>
+									<th>Status</th>
+									<th>Data</th>
+									<th>Hora</th>
+									<th>Piloto</th>
+									<th>Gerente</th>
+									<th>Posto</th>
+								</tr>
+							</thead>
+							<tbody id="tabela-historico">
+
+							</tbody>
+						</table>
 							</div>
 							<div class="busca-tp">
 								Busca TP

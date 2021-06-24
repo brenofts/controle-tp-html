@@ -80,12 +80,28 @@ body {
 	color: rgb(232, 232, 236);
 }
 
+#senhas {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
 #busca {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	height: 100%;
+}
+
+.busca-matricula {
+	display: flex;
+	flex-direction: column;
+}
+
+.busca-matricula table {
+	margin-top: 4vh;
 }
 
 .screen-title {
@@ -98,14 +114,13 @@ body {
 .menu-busca {
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-evenly;
 	flex-direction: row;
-	gap: 3vw;
 	padding: 10px;
 	background: ghostwhite;
 	border-radius: 3px;
 	margin-bottom: 15px;
-	width: 60%;
+	width: 50%;
 }
 
 [class*='busca-'] {
@@ -165,6 +180,10 @@ body {
 
 .btn-b:active {
 	opacity: 0.7;
+}
+
+#btn-buscar-matricula {
+	padding: 15px;
 }
 
 .wait {
@@ -559,6 +578,18 @@ input[type='number'] {
 	justify-content: center;
 	flex-direction: column;
 	transition: all 0.5s;
+}
+
+.processando {
+	margin-top: 3vh;
+	font-family: monospace;
+}
+
+caption {
+	font-family: monospace;
+	color: grey;
+	letter-spacing: 1.5pt;
+	margin-bottom: 5px;
 }
 
 table {

@@ -298,9 +298,9 @@ window.addEventListener('click', e => {
 	}
 })
 
-btnUltimos.addEventListener('click', () => {
+btnUltimos.addEventListener('click', e => {
+	e.preventDefault()
 	loginCard.classList.add('blur', 'disable')
-	// ultimosCard.classList.remove('hidden')
 	ultimosList.innerHTML = ''
 	realtime
 		.ref('historico')
@@ -370,6 +370,11 @@ btnUltimos.addEventListener('click', () => {
 				}
 			})
 			ultimosCard.classList.remove('hidden')
+			ultimosList.scrollTo({
+				top: 0,
+				left: 0,
+				behavior: 'smooth',
+			})
 		})
 })
 
@@ -470,6 +475,17 @@ function Navigate(screen) {
 	var screens = Array.from(document.querySelectorAll('.screen'))
 	screens.map(screen => (screen.style.display = 'none'))
 	screen.style.display = 'flex'
+	if (screen != inicio) {
+		btnInicio.innerText = '⟪ Início'
+	} else {
+		btnInicio.innerText = 'Controle de TPs'
+	}
+	if (screen != inicio && screen != controle) {
+		updateTime.classList.add('hidden')
+	} else {
+		updateTime.classList.remove('hidden')
+	}
+	limparBusca()
 }
 
 var buscaTodos = document.querySelector('.busca-todos')
@@ -481,35 +497,47 @@ function abrirBusca(tipo) {
 	var buscas = Array.from(document.querySelector('.canvas-busca').children)
 	buscas.map(busca => (busca.style.display = 'none'))
 	tipo.style.display = 'flex'
+	limparBusca()
+}
+
+function limparBusca() {
+	tabelaMatricula.classList.add('hidden')
+	document.querySelector('#input-matricula-buscar').value = ''
+	document.querySelector('#input-matricula-buscar').focus()
 }
 
 function alerta(texto, action, r = false) {
-		document.querySelector('.text-message').innerText = texto
-		document.querySelector('.message').style.display = 'flex'
-		canvas.classList.toggle('disable')
-		title.classList.toggle('disable')
-		if (r) {
+	document.querySelector('.text-message').innerText = texto
+	document.querySelector('.message').style.display = 'flex'
+	canvas.classList.toggle('disable')
+	title.classList.toggle('disable')
+	if (r) {
+		setTimeout(() => {
+			document.querySelector('.message').style.animation = 'hideMessage .6s ease'
 			setTimeout(() => {
-				document.querySelector('.message').style.animation = 'hideMessage .6s ease'
-				setTimeout(() => {
-					reload()
-				}, 900)
-			}, 5000)
-		} else {
+				reload()
+			}, 900)
+		}, 5000)
+	} else {
+		setTimeout(() => {
+			document.querySelector('.message').style.animation = 'hideMessage .6s ease'
+			canvas.classList.toggle('disable')
+			title.classList.toggle('disable')
 			setTimeout(() => {
-				document.querySelector('.message').style.animation = 'hideMessage .6s ease'
-				canvas.classList.toggle('disable')
-				title.classList.toggle('disable')
-				setTimeout(() => {
-					document.querySelector('.message').style.display = 'none'
-					document.querySelector('.message').style.animation = 'showMessage .6s ease'
-					action()
-				}, 500)
-			}, 5000)
-		}
+				document.querySelector('.message').style.display = 'none'
+				document.querySelector('.message').style.animation = 'showMessage .6s ease'
+				action()
+			}, 500)
+		}, 5000)
+	}
 }
 
 document.querySelector('.menu-busca').children[0].addEventListener('click', () => abrirBusca(buscaTP))
+
+var tabelaMatricula = document.getElementById('tabela-matricula')
+
+// BUSCA POR MATRICULA
+
 document.querySelector('.menu-busca').children[1].addEventListener('click', () => {
 	abrirBusca(buscaMatricula)
 	setTimeout(() => {
@@ -519,19 +547,47 @@ document.querySelector('.menu-busca').children[1].addEventListener('click', () =
 		e.preventDefault()
 		var matricula = document.querySelector('#input-matricula-buscar')
 		if (matricula.value.length > 2) {
-			realtime.ref('historico').once('value').then(snap => {
-				var historico = Object.values(snap.val())
-				var encontrar = i => i.matricula == matricula.value
-				var resultado = historico.reverse().filter(encontrar)
-				if (resultado.length > 0) {
-					alerta('Foram encontrados ' + resultado.length + ' resultados para o usuário ' + resultado[0].id)
-				} else {
-					alerta('Não foi encontrado nenhum registro para a matrícula ' + matricula.value, () => {
-						matricula.value = ''
-						matricula.focus()
-					})
-				}
-			})
+			tabelaMatricula.classList.add('hidden')
+			document.querySelector('.processando').classList.remove('hidden')
+			realtime
+				.ref('historico')
+				.once('value')
+				.then(snap => {
+					var historico = Object.values(snap.val())
+					var encontrar = i => i.matricula == matricula.value
+					var resultado = historico.reverse().filter(encontrar)
+					if (resultado.length > 0) {
+						ajustarHora().then(() => {
+							var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
+							var horaDaBusca = `Busca realizada em ${hora} <br> ${resultado.length} registros`
+							// var horaDaBusca = 'Busca realizada em ' + hora + '. ' + resultado.length + ' registros.'
+							tabelaMatricula.children[0].innerHTML = horaDaBusca
+						})
+						tabelaMatricula.children[2].innerHTML = ''
+						resultado.map(registro => {
+							var tr = `
+									<tr class='tr-devolvido'>
+									<td><strong>${registro.tp}</strong></td>
+									<td>${registro.status}</td>
+									<td>${new Date(registro.data).toLocaleDateString()}</td>
+									<td>${new Date(registro.data).toLocaleTimeString()}</td>
+									<td>${registro.id}</td>
+									<td>${registro.gerente}</td>
+									<td>${registro.posto}</td>
+									</tr>
+								`
+							tabelaMatricula.children[2].innerHTML += tr
+						})
+						document.querySelector('.processando').classList.add('hidden')
+						tabelaMatricula.classList.remove('hidden')
+					} else {
+						document.querySelector('.processando').classList.add('hidden')
+						alerta('Não foi encontrado nenhum registro para a matrícula ' + matricula.value, () => {
+							matricula.value = ''
+							matricula.focus()
+						})
+					}
+				})
 		} else {
 			alerta('Preencha corretamente', () => matricula.focus())
 		}
