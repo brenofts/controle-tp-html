@@ -457,15 +457,9 @@ function toggleMenu() {
 	canvas.classList.toggle('disable')
 	if (!activeMenu) {
 		menu.style.animation = 'show-menu 0.5s'
-		if (canvas.offsetHeight > 2000) {
-			setTimeout(() => {
-				menu.style.top = '45px'
-			}, 800)
-		} else {
-			setTimeout(() => {
-				menu.style.top = '45px'
-			}, 400)
-		}
+		setTimeout(() => {
+			menu.style.top = '45px'
+		}, 400)
 		activeMenu = true
 	} else {
 		menu.style.animation = 'hide-menu 0.5s'
