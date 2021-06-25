@@ -109,6 +109,44 @@ body {
 	margin-top: 4vh;
 }
 
+.busca-tp {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+}
+
+.grid-tp-busca {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	align-items: center;
+	padding: 15px;
+	width: 90%;
+}
+
+.grid-tp-busca div {
+	width: 15%;
+	font-size: 15pt;
+	background: ghostwhite;
+	color: #173d72;
+	border: 1px #3771c2 solid;
+	border-radius: 4px;
+	margin: 3px;
+	padding: 5px 0;
+}
+
+.grid-tp-busca div:active {
+	opacity: 60%;
+}
+
+#tabela-tp {
+	width: 100%;
+	padding: 0 10px;
+}
+
 .screen-title {
 	margin: 10px;
 	padding: 5px;

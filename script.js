@@ -449,7 +449,6 @@ function toggleMenu() {
 		left: 0,
 		behavior: 'smooth',
 	})
-	console.log(main.offsetTop)
 	document.body.style.overflow = 'hidden'
 	horizontal.classList.toggle('rotatex')
 	vertical.classList.toggle('rotatey')
@@ -517,7 +516,7 @@ function alerta(texto, action, r = false) {
 			document.querySelector('.message').style.animation = 'hideMessage .6s ease'
 			setTimeout(() => {
 				reload()
-			}, 900)
+			}, 100)
 		}, 5000)
 	} else {
 		setTimeout(() => {
@@ -533,11 +532,77 @@ function alerta(texto, action, r = false) {
 	}
 }
 
-document.querySelector('.menu-busca').children[0].addEventListener('click', () => abrirBusca(buscaTP))
 
-var tabelaMatricula = document.getElementById('tabela-matricula')
+// BUSCA POR TP
+
+var gridTPBusca = document.querySelector('.grid-tp-busca')
+var tabelaTP = document.getElementById('tabela-tp')
+
+function buscarTP(numTP) {
+	gridTPBusca.classList.add('hidden')
+	tabelaTP.classList.add('hidden')
+	document.querySelector('.processando2').classList.remove('hidden')
+	tabelaTP.children[2].innerHTML = ''
+	realtime.ref('historico').once('value').then((snap) => {
+		var historico = Object.values(snap.val())
+		var encontrar = i => i.tp == numTP
+		var resultado = historico.reverse().filter(encontrar)
+		if (resultado.length > 0) {
+			ajustarHora().then(() => {
+				var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
+				var horaDaBusca = `Busca realizada em ${hora} <br> ${resultado.length} registros`
+				tabelaTP.children[0].innerHTML = horaDaBusca
+			})
+			resultado.map(registro => {
+				var tr = `
+				<tr class='tr-devolvido'>
+				<td><strong>${registro.tp}</strong></td>
+				<td>${registro.status}</td>
+				<td>${new Date(registro.data).toLocaleDateString()}</td>
+				<td>${new Date(registro.data).toLocaleTimeString()}</td>
+				<td>${registro.id}</td>
+				<td>${registro.gerente}</td>
+				<td>${registro.posto}</td>
+				</tr>
+				`
+				tabelaTP.children[2].innerHTML += tr
+			})
+			tabelaTP.classList.remove('hidden')
+		} else {
+			alerta('Não foi encontrado registro para o TP ' + numTP, () => {
+				gridTPBusca.classList.remove('hidden')
+				tabelaTP.classList.add('hidden')
+			})
+		}
+		document.querySelector('.processando2').classList.add('hidden')
+	}).catch(e => {
+		alerta(e.message, null, true)
+	})
+}
+
+document.querySelector('.menu-busca').children[0].addEventListener('click', () => {
+	abrirBusca(buscaTP)
+	tabelaTP.classList.add('hidden')
+	gridTPBusca.classList.remove('hidden')
+	gridTPBusca.innerHTML = ''
+	realtime.ref('tps').once('value').then((snap) => {
+		var tps = Object.values(snap.val())
+		tps.map(tp => {
+			var item = `
+				<div onclick='buscarTP(${tp.tp})'>${tp.tp}</div>
+			`
+			gridTPBusca.innerHTML += item
+		})
+	}).catch(e => () => {
+		alerta(e.message, null, true)
+	})
+})
+
+
+
 
 // BUSCA POR MATRICULA
+var tabelaMatricula = document.getElementById('tabela-matricula')
 
 document.querySelector('.menu-busca').children[1].addEventListener('click', () => {
 	abrirBusca(buscaMatricula)
@@ -561,7 +626,6 @@ document.querySelector('.menu-busca').children[1].addEventListener('click', () =
 						ajustarHora().then(() => {
 							var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
 							var horaDaBusca = `Busca realizada em ${hora} <br> ${resultado.length} registros`
-							// var horaDaBusca = 'Busca realizada em ' + hora + '. ' + resultado.length + ' registros.'
 							tabelaMatricula.children[0].innerHTML = horaDaBusca
 						})
 						tabelaMatricula.children[2].innerHTML = ''
