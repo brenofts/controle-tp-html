@@ -305,7 +305,7 @@ pin4.addEventListener('input', e => {
 })
 
 window.addEventListener('click', e => {
-	e.preventDefault()
+	//e.preventDefault()
 	if (e.target == modal) {
 		// clearInterval(timer)
 		if (loginCard.classList.contains('blur')) {
@@ -518,11 +518,14 @@ var buscaData = document.querySelector('.busca-data')
 var buscaMatricula = document.querySelector('.busca-matricula')
 var buscaTP = document.querySelector('.busca-tp')
 
-function abrirBusca(tipo) {
+function abrirBusca(tipo, botao) {
 	var buscas = Array.from(document.querySelector('.canvas-busca').children)
 	buscas.map(busca => (busca.style.display = 'none'))
 	tipo.style.display = 'flex'
 	limparBusca()
+	var botoesBusca = Array.from(document.querySelectorAll('.btn-b'))
+	botoesBusca.map(i => i.classList.remove('btn-b-active'))
+	botao.classList.add('btn-b-active')
 }
 
 function limparBusca() {
@@ -609,8 +612,11 @@ function buscarTP(numTP) {
 		})
 }
 
-document.querySelector('.menu-busca').children[0].addEventListener('click', () => {
-	abrirBusca(buscaTP)
+
+// MENU BUSCA
+
+document.querySelector('.menu-busca').children[0].addEventListener('click', e => {
+	abrirBusca(buscaTP, e.target)
 	tabelaTP.classList.add('hidden')
 	gridTPBusca.classList.remove('hidden')
 	gridTPBusca.innerHTML = ''
@@ -634,8 +640,8 @@ document.querySelector('.menu-busca').children[0].addEventListener('click', () =
 // BUSCA POR MATRICULA
 var tabelaMatricula = document.getElementById('tabela-matricula')
 
-document.querySelector('.menu-busca').children[1].addEventListener('click', () => {
-	abrirBusca(buscaMatricula)
+document.querySelector('.menu-busca').children[1].addEventListener('click', e => {
+	abrirBusca(buscaMatricula, e.target)
 	setTimeout(() => {
 		document.querySelector('#input-matricula-buscar').focus()
 	}, 200)
@@ -693,5 +699,5 @@ document.querySelector('.menu-busca').children[1].addEventListener('click', () =
 
 // BUSCA POR DATA
 
-document.querySelector('.menu-busca').children[2].addEventListener('click', () => abrirBusca(buscaData))
+document.querySelector('.menu-busca').children[2].addEventListener('click', e => abrirBusca(buscaData, e.target))
 
