@@ -122,7 +122,12 @@
 							</tbody>
 						</table> -->
 						<div class="canvas-busca">
-							<div class="busca-data">Busca data</div>
+							<div class="busca-data">
+								<label for="data-inicial">Data inicial</label>
+								<input type="date" name="data-inicial" id="data-inicial">
+								<label for="data-final">Data final</label>
+								<input type="date" name="data-final" id="data-final">
+							</div>
 							<div class="busca-matricula">
 								<div class="form-matricula-buscar">
 									<input required autocomplete="off" maxlength="5" type="text" id="input-matricula-buscar" inputmode="numeric">
@@ -223,6 +228,7 @@
 				<div class="text-message" id="text-message">Teste de alerta</div>
 			</div>
 			<div class="modal hidden" id="modal">
+				<!-- <div class="counter">COUNT</div> -->
 				<div class="login-card" id="loginCard">
 					<span id="ultimos"><strong>&#8646;<strong></span>
 					<div id="infoLogin">
