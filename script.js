@@ -141,25 +141,25 @@ function limparLogin() {
 
 var counter = document.querySelector('.counter')
 
-function session() {
-	var x = 10
-	counter.innerText = x
-	window.timer = setInterval(() => {
-		x = x - 1
-		counter.innerText = x
-		if (x < 0) {
-			realtime.ref('tps/' + buttonClicked).off('child_changed', cancel)
-			limparLogin()
-			clearInterval(timer)
-		}
-	}, 1000)
-}
+// function session() {
+// 	var x = 10
+// 	counter.innerText = x
+// 	window.timer = setInterval(() => {
+// 		x = x - 1
+// 		counter.innerText = x
+// 		if (x < 0) {
+// 			realtime.ref('tps/' + buttonClicked).off('child_changed', cancel)
+// 			limparLogin()
+// 			clearInterval(timer)
+// 		}
+// 	}, 1000)
+// }
 
 function cancel() {
-	limparLogin()
 	// clearInterval(timer)
-	alerta('O registro foi cancelado pois houve um registro para o mesmo TP em outro posto')
-	realtime.ref('tps/' + buttonClicked).off('child_changed', cancel)
+	limparLogin()
+	alerta('O registro foi cancelado pois houve um registro para o mesmo TP em outro posto', null, true)
+	// realtime.ref('tps/' + buttonClicked).off('child_changed', cancel)
 }
 
 function verificarTP(index) {
@@ -699,5 +699,58 @@ document.querySelector('.menu-busca').children[1].addEventListener('click', e =>
 
 // BUSCA POR DATA
 
-document.querySelector('.menu-busca').children[2].addEventListener('click', e => abrirBusca(buscaData, e.target))
+var btnBuscarData = document.querySelector('#btn-buscar-data')
+var tabelaData = document.getElementById('tabela-data')
 
+document.querySelector('.menu-busca').children[2].addEventListener('click', e => {
+	abrirBusca(buscaData, e.target)
+	var dataInicial = document.querySelector('#data-inicial')
+	var dataFinal = document.querySelector('#data-final')
+	var inicio, fim
+	var fuso = 10800000
+	// 24 horas - 1 ms (23h59min59.9999s)
+	var umDia = (1000 * 60 * 60 * 24) - 1
+	dataInicial.addEventListener('input', () => {
+		inicio = Date.parse(dataInicial.value) + fuso
+		btnBuscarData.classList.remove('hidden')
+		dataFinal.value = dataInicial.value
+		fim = Date.parse(dataInicial.value) + fuso + umDia
+	})
+	dataFinal.addEventListener('input', e => {
+		if (dataInicial.value) {
+			fim = Date.parse(dataFinal.value) + fuso + umDia
+		} else {
+			dataFinal.value = ''
+			dataInicial.focus()
+		}
+	})
+	btnBuscarData.addEventListener('click', () => {
+		btnBuscarData.classList.add('hidden')
+		tabelaData.classList.add('hidden')
+		document.querySelector('.processando3').classList.remove('hidden')
+		realtime.ref('historico').once('value').then(snap => {
+			var historico = Object.values(snap.val())
+			var dataBusca = i => i.data >= inicio && i.data <= fim
+			var registrosEncontrados = historico.filter(dataBusca)
+			console.log(registrosEncontrados)
+			if (registrosEncontrados.length > 0) {
+				document.querySelector('.processando3').classList.add('hidden')
+				ajustarHora().then(() => {
+					var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
+					var horaDaBusca = `Busca realizada em ${hora} <br> ${registrosEncontrados.length} registros`
+					tabelaData.children[0].innerHTML = horaDaBusca
+					tabelaData.classList.remove('hidden')
+				})
+				registrosEncontrados.map(i => {
+					// ************** CONTINUAR DAQUI
+				})
+			} else {
+				alerta('Não foram encontrados registros para o período ' + new Date(inicio).toLocaleString() + ' | ' + new Date(fim).toLocaleString())
+				document.querySelector('.processando3').classList.add('hidden')
+			}
+		}).catch(e => alerta(e.message, null, true))
+		//alerta(new Date(inicio).toLocaleString() + ' | ' + new Date(fim).toLocaleString())
+
+		//tabelaData.classList.remove('hidden')
+	})
+})
