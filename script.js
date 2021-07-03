@@ -532,6 +532,8 @@ function limparBusca() {
 	tabelaMatricula.classList.add('hidden')
 	document.querySelector('#input-matricula-buscar').value = ''
 	document.querySelector('#input-matricula-buscar').focus()
+	document.querySelector('#data-inicial').value = ''
+	document.querySelector('#data-final').value = ''
 }
 
 function alerta(texto, action, r = false) {
@@ -574,15 +576,19 @@ function buscarTP(numTP) {
 		.ref('historico')
 		.once('value')
 		.then(snap => {
-			console.log(Object.entries(snap.val()))
 			var historico = Object.values(snap.val())
 			var encontrar = i => i.tp == numTP
 			var resultado = historico.reverse().filter(encontrar)
 			if (resultado.length > 0) {
 				ajustarHora().then(() => {
 					var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
-					var horaDaBusca = `Busca realizada em ${hora} <br> ${resultado.length} registros`
-					tabelaTP.children[0].innerHTML = horaDaBusca
+					var resumoBusca = resultado.length + ' registros para o TP ' + numTP
+					var horaDaBusca = `<br> Busca realizada em ${hora}`
+					tabelaTP.children[0].innerHTML = resumoBusca
+					tabelaTP.children[0].innerHTML += horaDaBusca
+					// var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
+					// var horaDaBusca = `Busca realizada em ${hora} <br> ${resultado.length} registros`
+					// tabelaTP.children[0].innerHTML = horaDaBusca
 				})
 				resultado.map(registro => {
 					var tr = `
@@ -641,6 +647,7 @@ document.querySelector('.menu-busca').children[0].addEventListener('click', e =>
 var tabelaMatricula = document.getElementById('tabela-matricula')
 
 document.querySelector('.menu-busca').children[1].addEventListener('click', e => {
+	document.querySelector('.form-matricula-buscar').classList.remove('hidden')
 	abrirBusca(buscaMatricula, e.target)
 	setTimeout(() => {
 		document.querySelector('#input-matricula-buscar').focus()
@@ -662,14 +669,20 @@ document.querySelector('.menu-busca').children[1].addEventListener('click', e =>
 					if (resultado.length > 0) {
 						ajustarHora().then(() => {
 							var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
-							var horaDaBusca = `Busca realizada em ${hora} <br> ${resultado.length} registros`
-							tabelaMatricula.children[0].innerHTML = horaDaBusca
+							var resumoBusca = resultado.length + ' registros para a matrícula ' + matricula.value
+							var horaDaBusca = `<br> Busca realizada em ${hora}`
+							tabelaMatricula.children[0].innerHTML = resumoBusca
+							tabelaMatricula.children[0].innerHTML += horaDaBusca
+							// var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
+							// var horaDaBusca = `Busca realizada em ${hora} <br> ${resultado.length} registros`
+							// tabelaMatricula.children[0].innerHTML = horaDaBusca
 						})
+						document.querySelector('.form-matricula-buscar').classList.add('hidden')
 						tabelaMatricula.children[2].innerHTML = ''
 						resultado.map(registro => {
 							var tr = `
-									<tr class='tr-devolvido'>
-									<td><strong>${registro.tp}</strong></td>
+							<tr class='tr-devolvido'>
+							<td><strong>${registro.tp}</strong></td>
 									<td>${registro.status}</td>
 									<td>${new Date(registro.data).toLocaleDateString()}</td>
 									<td>${new Date(registro.data).toLocaleTimeString()}</td>
@@ -704,6 +717,8 @@ var tabelaData = document.getElementById('tabela-data')
 
 document.querySelector('.menu-busca').children[2].addEventListener('click', e => {
 	abrirBusca(buscaData, e.target)
+	tabelaData.classList.add('hidden')
+	document.querySelector('.div-form-data').classList.remove('hidden')
 	var dataInicial = document.querySelector('#data-inicial')
 	var dataFinal = document.querySelector('#data-final')
 	var inicio, fim
@@ -711,20 +726,29 @@ document.querySelector('.menu-busca').children[2].addEventListener('click', e =>
 	// 24 horas - 1 ms (23h59min59.9999s)
 	var umDia = (1000 * 60 * 60 * 24) - 1
 	dataInicial.addEventListener('input', () => {
-		inicio = Date.parse(dataInicial.value) + fuso
 		btnBuscarData.classList.remove('hidden')
+		tabelaData.classList.add('hidden')
 		dataFinal.value = dataInicial.value
+		inicio = Date.parse(dataInicial.value) + fuso
 		fim = Date.parse(dataInicial.value) + fuso + umDia
 	})
 	dataFinal.addEventListener('input', e => {
 		if (dataInicial.value) {
+			inicio = Date.parse(dataInicial.value) + fuso
 			fim = Date.parse(dataFinal.value) + fuso + umDia
+			if (inicio < fim) {
+				btnBuscarData.classList.remove('hidden')
+			} else {
+				alerta('Data inicial deve ser menor que data final')
+				btnBuscarData.classList.add('hidden')
+			}
 		} else {
 			dataFinal.value = ''
 			dataInicial.focus()
 		}
 	})
-	btnBuscarData.addEventListener('click', () => {
+	btnBuscarData.addEventListener('click', e => {
+		e.preventDefault()
 		btnBuscarData.classList.add('hidden')
 		tabelaData.classList.add('hidden')
 		document.querySelector('.processando3').classList.remove('hidden')
@@ -732,21 +756,37 @@ document.querySelector('.menu-busca').children[2].addEventListener('click', e =>
 			var historico = Object.values(snap.val())
 			var dataBusca = i => i.data >= inicio && i.data <= fim
 			var registrosEncontrados = historico.filter(dataBusca)
-			console.log(registrosEncontrados)
 			if (registrosEncontrados.length > 0) {
+				document.querySelector('.div-form-data').classList.add('hidden')
 				document.querySelector('.processando3').classList.add('hidden')
 				ajustarHora().then(() => {
 					var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
-					var horaDaBusca = `Busca realizada em ${hora} <br> ${registrosEncontrados.length} registros`
-					tabelaData.children[0].innerHTML = horaDaBusca
-					tabelaData.classList.remove('hidden')
+					var resumoBusca = registrosEncontrados.length + ' registros entre ' + new Date(inicio).toLocaleString() + ' e ' + new Date(fim).toLocaleString()
+					var horaDaBusca = `<br> Busca realizada em ${hora}`
+					tabelaData.children[0].innerHTML = resumoBusca
+					tabelaData.children[0].innerHTML += horaDaBusca
 				})
-				registrosEncontrados.map(i => {
-					// ************** CONTINUAR DAQUI
+				tabelaData.children[2].innerHTML = ''
+				registrosEncontrados.map(registro => {
+					var tr = `
+					<tr class='tr-devolvido'>
+					<td><strong>${registro.tp}</strong></td>
+					<td>${registro.status}</td>
+					<td>${new Date(registro.data).toLocaleDateString()}</td>
+					<td>${new Date(registro.data).toLocaleTimeString()}</td>
+					<td>${registro.id}</td>
+					<td>${registro.gerente}</td>
+					<td>${registro.posto}</td>
+					</tr>
+					`
+					tabelaData.children[2].innerHTML += tr
 				})
+				tabelaData.classList.remove('hidden')
+				//console.log(registrosEncontrados)
 			} else {
-				alerta('Não foram encontrados registros para o período ' + new Date(inicio).toLocaleString() + ' | ' + new Date(fim).toLocaleString())
+				alerta('Não foram encontrados registros para o período entre ' + new Date(inicio).toLocaleString() + ' e ' + new Date(fim).toLocaleString())
 				document.querySelector('.processando3').classList.add('hidden')
+				document.querySelector('.div-form-data').classList.remove('hidden')
 			}
 		}).catch(e => alerta(e.message, null, true))
 		//alerta(new Date(inicio).toLocaleString() + ' | ' + new Date(fim).toLocaleString())
