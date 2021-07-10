@@ -97,10 +97,40 @@
 							Bloqueado
 						</div>
 					</div>
-					<div class="screen" id="senhas"><span class="screen-title">SENHAS</span></div>
+					<div class="screen" id="senhas">
+						<span class="screen-title">SENHAS</span>
+						<div class="menu-senha" id="menu-senha">
+							<div class="btn-s" id="btn-s-esqueci">ESQUECI A SENHA</div>
+							<div class="btn-s" id="btn-s-atualizar">ATUALIZAR SENHA</div>
+						</div>
+						<div class="canvas-senha">
+							<div class="senha-esqueci">
+								<div class="form-esqueci">
+										<span>Você receberá uma senha provisória por e-mail</span>
+										<input required autocomplete="off" maxlength="5" type="text" id="input-matricula-esqueci" inputmode="numeric">
+										<label>Matrícula</label>
+										<button>ENVIAR</button>
+								</div>
+							</div>
+							<div class="senha-atualizar">
+								<div class="form-atualizar">
+									<span>LOGIN</span>
+									<div id="div-matricula-login">
+										<input required autocomplete="off" maxlength="5" type="text" id="input-matricula-login" inputmode="numeric">
+										<label>Matrícula</label>
+									</div>
+									<div id="div-senha-login">
+										<input required autocomplete="off" maxlength="4" type="password" id="input-senha-login" inputmode="numeric">
+										<label>Senha</label>
+									</div>
+									<button>ENTRAR</button>
+							</div>
+							</div>
+						</div>
+					</div>
 					<div class="screen" id="busca">
 						<span class="screen-title">BUSCAS</span>
-						<div class="menu-busca">
+						<div class="menu-busca" id="menu-busca">
 							<div class="btn-b" id="btn-b-tp">TP</div>
 							<div class="btn-b">MATRÍCULA</div>
 							<div class="btn-b" id="btn-b-data">DATA</div>
@@ -112,7 +142,7 @@
 									<th>Status</th>
 									<th>Data</th>
 									<th>Hora</th>
-									<th>Piloto</th>
+									<th>Empregado</th>
 									<th>Gerente</th>
 									<th>Posto</th>
 								</tr>
@@ -151,8 +181,8 @@
 									<th>Status</th>
 									<th>Data</th>
 									<th>Hora</th>
-									<th>Piloto</th>
-									<th>Gerente</th>
+									<th>Empregado</th>
+									<th>Gerente / IT</th>
 									<th>Posto</th>
 								</tr>
 							</thead>
@@ -182,8 +212,8 @@
 											<th>Status</th>
 											<th>Data</th>
 											<th>Hora</th>
-											<th>Piloto</th>
-											<th>Gerente</th>
+											<th>Empregado</th>
+											<th>Gerente / IT</th>
 											<th>Posto</th>
 										</tr>
 									</thead>
@@ -201,8 +231,8 @@
 									<th>Status</th>
 									<th>Data</th>
 									<th>Hora</th>
-									<th>Piloto</th>
-									<th>Gerente</th>
+									<th>Empregado</th>
+									<th>Gerente / IT</th>
 									<th>Posto</th>
 								</tr>
 							</thead>
@@ -220,8 +250,8 @@
 									<th>Dias</th>
 									<th>Data</th>
 									<th>Hora</th>
-									<th>Piloto</th>
-									<th>Gerente</th>
+									<th>Empregado</th>
+									<th>Gerente / IT</th>
 									<th>Posto</th>
 								</tr>
 							</thead>

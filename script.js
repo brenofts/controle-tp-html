@@ -339,6 +339,8 @@ btnUltimos.addEventListener('click', e => {
 					var className
 					var listItem
 					switch (tp.status) {
+						case 'Transporte':
+						case 'Bloqueado':
 						case 'Devolvido':
 							className = 'item-devolvido'
 							listItem = `
@@ -528,6 +530,7 @@ function abrirBusca(tipo, botao) {
 	botao.classList.add('btn-b-active')
 }
 
+
 function limparBusca() {
 	tabelaMatricula.classList.add('hidden')
 	document.querySelector('#input-matricula-buscar').value = ''
@@ -621,7 +624,7 @@ function buscarTP(numTP) {
 
 // MENU BUSCA
 
-document.querySelector('.menu-busca').children[0].addEventListener('click', e => {
+document.querySelector('#menu-busca').children[0].addEventListener('click', e => {
 	abrirBusca(buscaTP, e.target)
 	tabelaTP.classList.add('hidden')
 	gridTPBusca.classList.remove('hidden')
@@ -646,7 +649,7 @@ document.querySelector('.menu-busca').children[0].addEventListener('click', e =>
 // BUSCA POR MATRICULA
 var tabelaMatricula = document.getElementById('tabela-matricula')
 
-document.querySelector('.menu-busca').children[1].addEventListener('click', e => {
+document.querySelector('#menu-busca').children[1].addEventListener('click', e => {
 	document.querySelector('.form-matricula-buscar').classList.remove('hidden')
 	abrirBusca(buscaMatricula, e.target)
 	setTimeout(() => {
@@ -715,7 +718,7 @@ document.querySelector('.menu-busca').children[1].addEventListener('click', e =>
 var btnBuscarData = document.querySelector('#btn-buscar-data')
 var tabelaData = document.getElementById('tabela-data')
 
-document.querySelector('.menu-busca').children[2].addEventListener('click', e => {
+document.querySelector('#menu-busca').children[2].addEventListener('click', e => {
 	abrirBusca(buscaData, e.target)
 	tabelaData.classList.add('hidden')
 	document.querySelector('.div-form-data').classList.remove('hidden')
@@ -793,4 +796,48 @@ document.querySelector('.menu-busca').children[2].addEventListener('click', e =>
 
 		//tabelaData.classList.remove('hidden')
 	})
+})
+
+// SENHAS
+
+function limparSenha() {
+	return null
+}
+
+function abrirSenha(tipo, botao) {
+	var senhas = Array.from(document.querySelector('.canvas-senha').children)
+	senhas.map(tela => (tela.style.display = 'none'))
+	tipo.style.display = 'flex'
+	limparSenha()
+	var botoesSenha = Array.from(document.querySelectorAll('.btn-s'))
+	botoesSenha.map(i => i.classList.remove('btn-s-active'))
+	botao.classList.add('btn-s-active')
+}
+
+document.querySelector('#menu-senha').children[0].addEventListener('click', e => {
+	var esqueci = document.querySelector('.senha-esqueci')
+	var btnEsqueci = document.querySelector('#btn-s-esqueci')
+	abrirSenha(esqueci, btnEsqueci)
+})
+document.querySelector('#menu-senha').children[1].addEventListener('click', e => {
+	var atualizar = document.querySelector('.senha-atualizar')
+	var btnAtualizar = document.querySelector('#btn-s-atualizar')
+	abrirSenha(atualizar, btnAtualizar)
+})
+
+var matriculaLogin = document.querySelector('#input-matricula-login')
+matriculaLogin.addEventListener('focus', e => {
+	senhaLogin.value = ''
+})
+matriculaLogin.addEventListener('input', e => {
+	if(e.target.value.length == 5) {
+		senhaLogin.focus()
+	}
+})
+
+var senhaLogin = document.querySelector('#input-senha-login')
+senhaLogin.addEventListener('input', e => {
+	if (e.target.value.length == 4) {
+		e.target.blur()
+	}
 })

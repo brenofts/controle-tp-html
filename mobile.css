@@ -188,23 +188,31 @@ body {
 	border-bottom: #f29206 2px solid;
 }
 
-.menu-busca {
+.menu-busca, .menu-senha {
 	display: flex;
 	align-items: center;
 	justify-content: space-evenly;
 	flex-direction: row;
 	padding: 10px;
 	background: ghostwhite;
+	border-bottom: 1px solid rgb(231, 231, 231);
 	border-radius: 3px;
 	margin-bottom: 15px;
 	width: 50%;
 }
 
-[class*='busca-'] {
+.menu-senha {
+	width: 60%;
+}
+
+[class*='busca-'], [class*='senha-'] {
 	display: none;
 }
 
-.form-matricula-buscar {
+.form-matricula-buscar, 
+.form-esqueci, 
+.form-atualizar,
+.form-atualizar div {
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -213,7 +221,8 @@ body {
 	margin-top: 20px;
 }
 
-.form-matricula-buscar label {
+.form-matricula-buscar label,
+.form-esqueci label {
 	position: absolute;
 	color: #173d72;
 	pointer-events: none;
@@ -221,7 +230,9 @@ body {
 	font-size: 12pt;
 }
 
-.form-matricula-buscar input {
+.form-matricula-buscar input,
+.form-esqueci input,
+.form-atualizar input {
 	background: rgb(232, 232, 236);
 	border: lightgray 1px solid;
 	border-bottom: 3px solid #173d72;
@@ -244,10 +255,86 @@ body {
 .form-matricula-buscar span {
 	position: absolute;
 	transform: translateX(5rem);
-	
 }
 
-.btn-b {
+.form-esqueci label {
+	transform: translateY(2px);
+	position: absolute;
+	color: #173d72;
+	pointer-events: none;
+	transition: all .3s ;
+	font-size: 12pt;
+}
+
+.form-esqueci input:focus ~ label,
+.form-esqueci input:valid ~ label {
+	transform: translateY(40px);
+	color: lightgray;
+	font-size: 11pt;
+}
+
+.form-esqueci span {
+	font-family: monospace;
+	padding-bottom: 15px;
+}
+
+.form-esqueci button,
+.form-atualizar button {
+	font-family: monospace;
+	transform: translateY(30px);
+	padding: 7px;
+	border-radius: 4px;
+	width: 100px;
+	font-size: 8pt;
+	letter-spacing: 1pt;
+	border-bottom: rgb(218, 218, 218) 2px solid;
+}
+
+.form-esqueci button:active,
+.form-atualizar button:active {
+	opacity: .5;
+	transform: translateY(32px) translateX(1px);
+}
+
+.form-atualizar span {
+	font-family: monospace;
+	font-size: large;
+	letter-spacing: 1pt;
+	color: grey;
+	border-bottom: grey 1px solid;
+	width: 120px;
+	padding-bottom: 7px;
+	margin-bottom: 10px;
+}
+
+#div-matricula-login label, 
+#div-senha-login label {
+	position: absolute;
+	pointer-events: none;
+	transition: all .2s;
+	color: #173d72;
+	letter-spacing: .3pt;
+}
+
+#div-matricula-login input:focus ~ label,
+#div-matricula-login input:valid ~ label {
+	transform: translateX(-70px) translateY(-35px);
+	font-size: small;
+	color: grey;
+}
+
+#div-senha-login input {
+	letter-spacing: 4pt;
+}
+
+#div-senha-login input:focus ~ label,
+#div-senha-login input:valid ~ label {
+	transform: translateX(-80px) translateY(-35px);
+	font-size: small;
+	color: grey;
+}
+
+.btn-b, .btn-s {
 	padding: 5px 10px;
 	border-radius: 3px;
 	font-size: 10pt;
@@ -256,11 +343,11 @@ body {
 	background: white;
 }
 
-.btn-b-active {
+.btn-b-active, .btn-s-active {
 	border-bottom: #f29206 2px solid;
 }
 
-.btn-b:active {
+.btn-b:active, .btn-s:active {
 	opacity: 0.7;
 }
 
@@ -492,13 +579,12 @@ body {
 	max-height: 280px;
 	width: 275px;
 	background-color: gray;
-	color: black;
 	position: fixed;
 	z-index: 2;
 	top: 10vh;
 	padding-top: 20px;
 	font-size: 20pt;
-	border: solid 3px #f29206;
+	border: solid 2px #f29206;
 	border-radius: 2%;
 	box-shadow: 0px 6px 12px -6px rgba(0, 0, 0, 0.67);
 	/* animation: animatecard 0.4s; */
