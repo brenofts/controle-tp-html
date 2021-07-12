@@ -403,7 +403,6 @@ btnUltimos.addEventListener('click', e => {
 		})
 })
 
-
 // MENU
 plusSign.addEventListener('click', () => toggleMenu())
 btnBusca.addEventListener('click', () => Navigate(busca))
@@ -530,7 +529,6 @@ function abrirBusca(tipo, botao) {
 	botao.classList.add('btn-b-active')
 }
 
-
 function limparBusca() {
 	tabelaMatricula.classList.add('hidden')
 	document.querySelector('#input-matricula-buscar').value = ''
@@ -542,8 +540,9 @@ function limparBusca() {
 function alerta(texto, action, r = false) {
 	document.querySelector('.text-message').innerText = texto
 	document.querySelector('.message').style.display = 'flex'
-	canvas.classList.toggle('disable')
-	title.classList.toggle('disable')
+	// canvas.classList.toggle('disable')
+	// title.classList.toggle('disable')
+	main.classList.add('disable')
 	if (r) {
 		setTimeout(() => {
 			document.querySelector('.message').style.animation = 'hideMessage .6s ease'
@@ -554,8 +553,9 @@ function alerta(texto, action, r = false) {
 	} else {
 		setTimeout(() => {
 			document.querySelector('.message').style.animation = 'hideMessage .6s ease'
-			canvas.classList.toggle('disable')
-			title.classList.toggle('disable')
+			// canvas.classList.toggle('disable')
+			// title.classList.toggle('disable')
+			main.classList.remove('disable')
 			setTimeout(() => {
 				document.querySelector('.message').style.display = 'none'
 				document.querySelector('.message').style.animation = 'showMessage .6s ease'
@@ -620,7 +620,6 @@ function buscarTP(numTP) {
 			alerta(e.message, null, true)
 		})
 }
-
 
 // MENU BUSCA
 
@@ -712,7 +711,6 @@ document.querySelector('#menu-busca').children[1].addEventListener('click', e =>
 	})
 })
 
-
 // BUSCA POR DATA
 
 var btnBuscarData = document.querySelector('#btn-buscar-data')
@@ -727,7 +725,7 @@ document.querySelector('#menu-busca').children[2].addEventListener('click', e =>
 	var inicio, fim
 	var fuso = 10800000
 	// 24 horas - 1 ms (23h59min59.9999s)
-	var umDia = (1000 * 60 * 60 * 24) - 1
+	var umDia = 1000 * 60 * 60 * 24 - 1
 	dataInicial.addEventListener('input', () => {
 		btnBuscarData.classList.remove('hidden')
 		tabelaData.classList.add('hidden')
@@ -755,23 +753,31 @@ document.querySelector('#menu-busca').children[2].addEventListener('click', e =>
 		btnBuscarData.classList.add('hidden')
 		tabelaData.classList.add('hidden')
 		document.querySelector('.processando3').classList.remove('hidden')
-		realtime.ref('historico').once('value').then(snap => {
-			var historico = Object.values(snap.val())
-			var dataBusca = i => i.data >= inicio && i.data <= fim
-			var registrosEncontrados = historico.filter(dataBusca)
-			if (registrosEncontrados.length > 0) {
-				document.querySelector('.div-form-data').classList.add('hidden')
-				document.querySelector('.processando3').classList.add('hidden')
-				ajustarHora().then(() => {
-					var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
-					var resumoBusca = registrosEncontrados.length + ' registros entre ' + new Date(inicio).toLocaleString() + ' e ' + new Date(fim).toLocaleString()
-					var horaDaBusca = `<br> Busca realizada em ${hora}`
-					tabelaData.children[0].innerHTML = resumoBusca
-					tabelaData.children[0].innerHTML += horaDaBusca
-				})
-				tabelaData.children[2].innerHTML = ''
-				registrosEncontrados.map(registro => {
-					var tr = `
+		realtime
+			.ref('historico')
+			.once('value')
+			.then(snap => {
+				var historico = Object.values(snap.val())
+				var dataBusca = i => i.data >= inicio && i.data <= fim
+				var registrosEncontrados = historico.filter(dataBusca)
+				if (registrosEncontrados.length > 0) {
+					document.querySelector('.div-form-data').classList.add('hidden')
+					document.querySelector('.processando3').classList.add('hidden')
+					ajustarHora().then(() => {
+						var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
+						var resumoBusca =
+							registrosEncontrados.length +
+							' registros entre ' +
+							new Date(inicio).toLocaleString() +
+							' e ' +
+							new Date(fim).toLocaleString()
+						var horaDaBusca = `<br> Busca realizada em ${hora}`
+						tabelaData.children[0].innerHTML = resumoBusca
+						tabelaData.children[0].innerHTML += horaDaBusca
+					})
+					tabelaData.children[2].innerHTML = ''
+					registrosEncontrados.map(registro => {
+						var tr = `
 					<tr class='tr-devolvido'>
 					<td><strong>${registro.tp}</strong></td>
 					<td>${registro.status}</td>
@@ -782,26 +788,46 @@ document.querySelector('#menu-busca').children[2].addEventListener('click', e =>
 					<td>${registro.posto}</td>
 					</tr>
 					`
-					tabelaData.children[2].innerHTML += tr
-				})
-				tabelaData.classList.remove('hidden')
-				//console.log(registrosEncontrados)
-			} else {
-				alerta('Não foram encontrados registros para o período entre ' + new Date(inicio).toLocaleString() + ' e ' + new Date(fim).toLocaleString())
-				document.querySelector('.processando3').classList.add('hidden')
-				document.querySelector('.div-form-data').classList.remove('hidden')
-			}
-		}).catch(e => alerta(e.message, null, true))
+						tabelaData.children[2].innerHTML += tr
+					})
+					tabelaData.classList.remove('hidden')
+					//console.log(registrosEncontrados)
+				} else {
+					alerta(
+						'Não foram encontrados registros para o período entre ' +
+							new Date(inicio).toLocaleString() +
+							' e ' +
+							new Date(fim).toLocaleString()
+					)
+					document.querySelector('.processando3').classList.add('hidden')
+					document.querySelector('.div-form-data').classList.remove('hidden')
+				}
+			})
+			.catch(e => alerta(e.message, null, true))
 		//alerta(new Date(inicio).toLocaleString() + ' | ' + new Date(fim).toLocaleString())
 
 		//tabelaData.classList.remove('hidden')
 	})
 })
 
+// e-mail
+
+var id, mensagem, email, chave
+var url =
+	'https://script.google.com/macros/s/AKfycbzUQLSyejfxRXZLwSIk929bwhpFlk7zjApdfGO76ENLhIi4tWijyNmhSGoOmU6PfwminA/exec'
+var fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+var header = {
+	method: 'POST',
+	mode: 'no-cors',
+}
+
 // SENHAS
+var matriculaEsqueci = document.querySelector('#input-matricula-esqueci')
 
 function limparSenha() {
-	return null
+	senhaLogin.value = ''
+	matriculaLogin.value = ''
+	matriculaEsqueci.value = ''
 }
 
 function abrirSenha(tipo, botao) {
@@ -814,30 +840,179 @@ function abrirSenha(tipo, botao) {
 	botao.classList.add('btn-s-active')
 }
 
+// ESQUECI
+
 document.querySelector('#menu-senha').children[0].addEventListener('click', e => {
 	var esqueci = document.querySelector('.senha-esqueci')
 	var btnEsqueci = document.querySelector('#btn-s-esqueci')
 	abrirSenha(esqueci, btnEsqueci)
+	var btnEnviarEsqueci = document.querySelector('#btn-enviar-esqueci')
+	btnEnviarEsqueci.addEventListener('click', e => {
+		var active = true
+		function disable() {
+			if (active) {
+			e.target.setAttribute('disabled', true)
+			e.target.innerText = 'Enviando...'
+			matriculaEsqueci.style.color = 'grey'
+			main.classList.add('disable')
+			active = false
+		} else {
+				e.target.removeAttribute('disabled')
+				e.target.innerText = 'ENVIAR'
+				matriculaEsqueci.style.color = '#173d72'
+				main.classList.remove('disable')
+				active = true
+			}
+		}
+		if (matriculaEsqueci.value.length > 2) {
+			disable()
+			realtime
+				.ref('usuarios')
+				.once('value')
+				.then(snap => {
+					var usuarios = Object.values(snap.val())
+					var encontrarUsuario = i => i.matricula == matriculaEsqueci.value
+					var usuarioEncontrado = usuarios.find(encontrarUsuario)
+					if (usuarioEncontrado != undefined) {
+						var novaSenha = (Math.random().toString().slice(3, 7))
+						realtime
+							.ref('usuarios/' + usuarioEncontrado.id.replace('.', '_') + '/p')
+							.set(novaSenha * 1993)
+							.then(() => {
+								id = usuarioEncontrado.id
+								chave = realtime.ref().child('usuarios').push().key
+								mensagem = 'Utilize o código ' + novaSenha + ' como senha provisória.'
+								email = id + '@metro.df.gov.br'
+								fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+								fetch(encodeURI(fetchUrl), header)
+									.then(response => {
+										console.log(response)
+										alerta('Senha enviada para ' + usuarioEncontrado.id + '@metro.df.gov.br', null, true)
+										btnEnviarEsqueci.innerText = 'ENVIAR'
+									})
+									.catch(e => alerta('Erro ao enviar e-mail: ' + e, null, true))
+							})
+							.catch(e => alerta(e.message, null, true))
+					} else {
+						disable()
+						alerta('Matrícula ' + matriculaEsqueci.value + ' não encontrada')
+					}
+				})
+				.catch(e => alerta(e.message, null, true))
+		} else {
+			alerta('Preencha corretamente')
+		}
+	})
 })
+
+// ATUALIZAR
+var matriculaLogin = document.querySelector('#input-matricula-login')
+var senhaLogin = document.querySelector('#input-senha-login')
+var btnEntrar = document.querySelector('#btn-entrar')
+
+var clickAtualizar = 0
 document.querySelector('#menu-senha').children[1].addEventListener('click', e => {
 	var atualizar = document.querySelector('.senha-atualizar')
 	var btnAtualizar = document.querySelector('#btn-s-atualizar')
 	abrirSenha(atualizar, btnAtualizar)
+	if (clickAtualizar == 0) {
+	matriculaLogin.addEventListener('focus', e => {
+		senhaLogin.value = ''
+	})
+	matriculaLogin.addEventListener('input', e => {
+		if (e.target.value.length == 5) {
+			senhaLogin.focus()
+		}
+	})
+	senhaLogin.addEventListener('input', e => {
+		if (e.target.value.length == 4) {
+			e.target.blur()
+		}
+	})
+
+	btnEntrar.addEventListener('click', e => {
+		var active = true
+	function disable() {
+		if (active) {
+		e.target.setAttribute('disabled', true)
+		e.target.innerText = 'Aguarde...'
+		matriculaLogin.style.color = 'grey'
+		senhaLogin.style.color = 'grey'
+		main.classList.add('disable')
+		active = false
+	} else {
+			e.target.removeAttribute('disabled')
+			e.target.innerText = 'ENTRAR'
+			matriculaLogin.style.color = '#173d72'
+			senhaLogin.style.color = '#173d72'
+			main.classList.remove('disable')
+			active = true
+		}
+	}
+		if (matriculaLogin.value.length > 2 && senhaLogin.value.length == 4) {
+			disable()
+			realtime.ref('usuarios').once('value').then(snap => {
+				var usuarios = Object.values(snap.val())
+				var encontrarUsuario = i => i.matricula == matriculaLogin.value
+				var usuarioEncontrado = usuarios.find(encontrarUsuario)
+				if (usuarioEncontrado != undefined) {
+					if (usuarioEncontrado.p / 1993 == senhaLogin.value) {
+						e.target.style.display = 'none'
+						disable()
+						document.querySelector('.menu-senha').classList.add('disable')
+						title.style.pointerEvents = 'none'
+						document.querySelector('.form-atualizar').querySelector('span').innerText = usuarioEncontrado.id
+						setTimeout(() => {
+							matriculaLogin.focus()
+						}, 500);
+						matriculaLogin.value = ''
+						matriculaLogin.setAttribute('maxlength', 4)
+						matriculaLogin.setAttribute('type', 'password')
+						document.querySelectorAll('.nova-senha')[0].classList.remove('hidden')
+						document.querySelectorAll('.nova-senha')[1].classList.remove('hidden')
+						matriculaLogin.style.letterSpacing = '4pt'
+						document.querySelector('#div-matricula-login').querySelector('label').style.display = 'none'
+						document.querySelector('#div-senha-login').querySelector('label').style.display = 'none'
+						senhaLogin.value = ''
+						document.querySelector('#div-botoes-atualizar').classList.remove('hidden')
+						document.querySelector('#btn-atualizar').addEventListener('click', e => {
+							if (matriculaLogin.value.length == 4 && senhaLogin.value.length == 4) {
+								if (matriculaLogin.value == senhaLogin.value) {
+									//main.classList.add('disable')
+									disable()
+									document.querySelector('#btn-cancelar').setAttribute('disabled', true)
+									e.target.setAttribute('disabled', true)
+									e.target.innerText = 'Aguarde...'
+									realtime.ref('usuarios/' + usuarioEncontrado.id.replace('.', '_') + '/p').set(senhaLogin.value * 1993).then(() => {
+										alerta('Senha atualizada com sucesso', null, true)
+									}).catch(e => alerta(e.message, null, true))
+								} else {
+									alerta ('Senhas não conferem')
+								}
+							} else {
+								alerta('Preencha corretamente')
+							}
+						})
+						//document.querySelector('#div-senha-login').querySelector('label').innerText = 'Nova senha'
+
+					} else {
+						alerta('Senha incorreta')
+						disable()
+						senhaLogin.value = ''
+						senhaLogin.focus()
+					}
+				} else {
+					alerta('Matrícula ' + matriculaLogin.value + ' não encontrada')
+					disable()
+				}
+			}).catch(e => alerta(e.message, null, true))
+		} else {
+			alerta('Preencha corretamente')
+		}
+	})
+	
+	clickAtualizar ++
+}
+
 })
 
-var matriculaLogin = document.querySelector('#input-matricula-login')
-matriculaLogin.addEventListener('focus', e => {
-	senhaLogin.value = ''
-})
-matriculaLogin.addEventListener('input', e => {
-	if(e.target.value.length == 5) {
-		senhaLogin.focus()
-	}
-})
-
-var senhaLogin = document.querySelector('#input-senha-login')
-senhaLogin.addEventListener('input', e => {
-	if (e.target.value.length == 4) {
-		e.target.blur()
-	}
-})

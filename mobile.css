@@ -302,7 +302,7 @@ body {
 	letter-spacing: 1pt;
 	color: grey;
 	border-bottom: grey 1px solid;
-	width: 120px;
+	min-width: 120px;
 	padding-bottom: 7px;
 	margin-bottom: 10px;
 }
@@ -331,6 +331,11 @@ body {
 #div-senha-login input:valid ~ label {
 	transform: translateX(-80px) translateY(-35px);
 	font-size: small;
+	color: grey;
+}
+
+.nova-senha {
+	font-family: monospace;
 	color: grey;
 }
 
@@ -1020,3 +1025,4 @@ td {
 .hidden {
 	display: none;
 }
+

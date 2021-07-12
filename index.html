@@ -109,7 +109,7 @@
 										<span>Você receberá uma senha provisória por e-mail</span>
 										<input required autocomplete="off" maxlength="5" type="text" id="input-matricula-esqueci" inputmode="numeric">
 										<label>Matrícula</label>
-										<button>ENVIAR</button>
+										<button id="btn-enviar-esqueci">ENVIAR</button>
 								</div>
 							</div>
 							<div class="senha-atualizar">
@@ -118,12 +118,18 @@
 									<div id="div-matricula-login">
 										<input required autocomplete="off" maxlength="5" type="text" id="input-matricula-login" inputmode="numeric">
 										<label>Matrícula</label>
+										<p class="nova-senha hidden">Nova senha</p>
 									</div>
 									<div id="div-senha-login">
 										<input required autocomplete="off" maxlength="4" type="password" id="input-senha-login" inputmode="numeric">
 										<label>Senha</label>
+										<p class="nova-senha hidden">Nova senha</p>
 									</div>
-									<button>ENTRAR</button>
+									<button id="btn-entrar">ENTRAR</button>
+									<nav class="hidden" id="div-botoes-atualizar">
+										<button id="btn-cancelar" onclick="reload()">CANCELAR</button>
+										<button id="btn-atualizar">ATUALIZAR</button>
+									</nav>
 							</div>
 							</div>
 						</div>
