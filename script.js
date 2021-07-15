@@ -139,31 +139,13 @@ function limparLogin() {
 	document.getElementById('idEmUso').classList.add('hidden')
 }
 
-var counter = document.querySelector('.counter')
-
-// function session() {
-// 	var x = 10
-// 	counter.innerText = x
-// 	window.timer = setInterval(() => {
-// 		x = x - 1
-// 		counter.innerText = x
-// 		if (x < 0) {
-// 			realtime.ref('tps/' + buttonClicked).off('child_changed', cancel)
-// 			limparLogin()
-// 			clearInterval(timer)
-// 		}
-// 	}, 1000)
-// }
 
 function cancel() {
-	// clearInterval(timer)
 	limparLogin()
 	alerta('O registro foi cancelado pois houve um registro para o mesmo TP em outro posto', null, true)
-	// realtime.ref('tps/' + buttonClicked).off('child_changed', cancel)
 }
 
 function verificarTP(index) {
-	//session()
 	document.body.style.overflow = 'hidden'
 	var tp = tps[index].status
 	buttonClicked = tp.tp
@@ -172,12 +154,17 @@ function verificarTP(index) {
 	document.getElementById('numeroTP').innerText = tp.tp
 	switch (tp.status) {
 		case 'Em uso':
+			tipoRegistro = 2
+			tpDevolver = tp.tp
 			document.getElementById('action').innerText = 'Devolver'
 			document.getElementById('idEmUso').innerText = tp.id
+			id = tp.id
 			document.getElementById('idEmUso').classList.remove('hidden')
 			console.warn('Devolver', tp.tp, tp.id)
 			break
 		case 'Devolvido':
+			tipoRegistro = 1
+			tpRetirar = tp.tp
 			document.getElementById('action').innerText = 'Retirar'
 			console.warn('Retirar', tp.tp)
 			break
@@ -220,8 +207,17 @@ inputMatricula.addEventListener('keydown', e => {
 	}
 })
 
+function limparPin() {
+	pin1.value = ''
+	pin2.value = ''
+	pin3.value = ''
+	pin4.value = ''
+	pin1.focus()
+}
+
 pin1.addEventListener('focus', e => {
 	e.preventDefault()
+	matricula = inputMatricula.value
 	if (pin1.value.length == 1) {
 		pin1.value = ''
 	}
@@ -289,20 +285,219 @@ pin3.addEventListener('input', e => {
 	}
 })
 
+
 pin4.addEventListener('input', e => {
 	e.preventDefault()
 	if (pin4.value.length == 1) {
 		pin4.blur()
+		pin = pin1.value.toString() + pin2.value.toString() + pin3.value.toString() + pin4.value.toString()
+		switch (tipoRegistro) {
+			case 1:
+				verificarUsuario()
+				break;
+			case 2:
+				verificarGerente()
+				break;
+		
+			default:
+				break;
+		}
 		setTimeout(() => {
-			// message.style.display = 'flex'
-			// modal.style.display = 'none'
-			// clearInterval(timer)
 			realtime.ref('tps/' + buttonClicked).off('child_changed', cancel)
-			alert('Registro efetivado')
-			limparLogin()
 		}, 100)
 	}
 })
+
+
+
+var tipoRegistro, tpRetirar, tpDevolver, matricula, gerente
+var posto = 'T-PAS'
+
+function verificarUsuario() {
+	registrando()
+	realtime.ref('usuarios').once('value').then(snap => {
+		var usuarios = Object.values(snap.val())
+		var encontrarUsuario = i => i.matricula == matricula
+		var usuarioEncontrado = usuarios.find(encontrarUsuario)
+		if (usuarioEncontrado != undefined) {
+			if (usuarioEncontrado.p == pin * 1993) {
+				if (usuarioEncontrado.livre) {
+					id = usuarioEncontrado.id
+					ajustarHora().then(() => retirar())
+				} else {
+					document.querySelector('body').classList.remove('disable')
+					document.querySelector('.registrando').classList.add('hidden')
+					alerta('Consta TP ' + usuarioEncontrado.tp + ' em nome de ' + usuarioEncontrado.id, limparLogin)
+				}
+			} else {
+				registrando()
+				alerta('Senha incorreta', limparPin)
+			}
+		} else {
+			registrando()
+			alerta('Matrícula ' + matricula + ' não encontrada', function () {
+				limparPin()
+				inputPassword.classList.add('hidden')
+				matricula = undefined
+				inputMatricula.value = ''
+				inputMatricula.focus()
+			})
+		}
+	}).catch(e => alerta(e.message, null, true))
+}
+
+function retirar() {
+	chave = realtime.ref().child('historico').push().key
+	
+	var registro = {
+		status: 'Em uso',
+		id: id,
+		matricula: matricula,
+		tp: tpRetirar,
+		posto: 'T-PAS',
+		gerente: '-',
+		data: new Date().getTime() + diferencaHora,
+		key: chave
+	}
+
+	var updates = {}
+	updates['/tps/' + tpRetirar + '/status/'] = registro
+	updates['/historico/' + chave] = registro
+	updates['/usuarios/' + id.replace('.', '_') + '/livre/'] = false
+	updates['/usuarios/' + id.replace('.', '_') + '/tp/'] = tpRetirar
+
+	var msgAlert = tpRetirar + ' retirado por ' + id + ' em ' + posto + '\n \n' + new Date(
+		registro.data
+	).toLocaleString() + '\n \n' + 'Registro ' + chave
+	
+	mensagem = 'TP ' + tpRetirar + ' retirado por ' + id + ' em ' + posto + '<br>' + new Date(registro.data).toLocaleString()
+	email = id + '@metro.df.gov.br'
+	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+
+	// retorna chamando o firebase para escrever as atualizacoes
+	return realtime
+		.ref()
+		.update(updates)
+		.then(
+			fetch(encodeURI(fetchUrl), header)
+				.then(response => {
+					console.log(response)
+				})
+				.catch(e => alerta('Erro ao enviar e-mail: ' + e, null, true))
+		)
+		.then(() => {
+			registroFim(msgAlert, 6)
+		})
+		.catch(e => {
+			return alerta(e.message)
+		})
+}
+
+
+function verificarGerente() {
+	registrando()
+	realtime.ref('usuarios').once('value').then(snap => {
+		var usuarios = Object.values(snap.val())
+		var encontrarGerente = i => i.matricula == matricula
+		var gerenteEncontrado = usuarios.find(encontrarGerente)
+		if (gerenteEncontrado != undefined) {
+			if (pin == gerenteEncontrado.p / 1993) {
+				if (gerenteEncontrado.gerente) {
+					gerente = gerenteEncontrado.id
+					devolver()
+				} else {
+					document.querySelector('body').classList.remove('disable')
+					document.querySelector('.registrando').classList.add('hidden')
+					alerta('Autorizado somente para Gerentes / IT', limparLogin)
+				}
+			} else {
+				registrando()
+				alerta('Senha incorreta', limparPin)
+			}
+		} else {
+			registrando()
+			alerta('Matrícula ' + matricula + ' não encontrada', function () {
+				limparPin()
+				inputPassword.classList.add('hidden')
+				matricula = undefined
+				inputMatricula.value = ''
+				inputMatricula.focus()
+			})
+		}
+	}).catch(e => alerta(e.message, null, true))
+}
+
+
+function devolver() {
+	chave = realtime.ref().child('historico').push().key
+	
+	var registro = {
+		status: 'Devolvido',
+		id: id,
+		matricula: matricula,
+		tp: tpDevolver,
+		posto: 'T-PAS',
+		gerente: gerente,
+		data: new Date().getTime() + diferencaHora,
+		key: chave
+	}
+
+	var updates = {}
+	updates['/tps/' + tpDevolver + '/status/'] = registro
+	updates['/historico/' + chave] = registro
+	updates['/usuarios/' + id.replace('.', '_') + '/livre/'] = true
+	updates['/usuarios/' + id.replace('.', '_') + '/tp/'] = '-'
+
+	var msgAlert = tpDevolver + ' devolvido por ' + id + ' para ' + gerente + ' em ' + posto + '\n \n' + new Date(
+		registro.data
+	).toLocaleString() + '\n \n' + 'Registro ' + chave
+	
+	mensagem = 'TP ' + tpDevolver + ' devolvido por ' + id + ' para ' + gerente + ' em ' + posto + '<br>' + new Date(registro.data).toLocaleString()
+	email = id + '@metro.df.gov.br, ' + gerente + '@metro.df.gov.br'
+	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+
+	// retorna chamando o firebase para escrever as atualizacoes e enviar e-mail
+	return realtime
+		.ref()
+		.update(updates)
+		.then(
+			fetch(encodeURI(fetchUrl), header)
+				.then(response => {
+					console.log(response)
+				})
+				.catch(e => alerta('Erro ao enviar e-mail: ' + e, null, true))
+		)
+		.then(() => {
+			registroFim(msgAlert, 4)
+		})
+		.catch(e => {
+			return alerta(e.message)
+		})
+}
+
+function registrando() {
+	document.querySelector('body').classList.toggle('disable')
+	loginCard.classList.toggle('blur')
+	document.querySelector('.registrando').classList.toggle('hidden')
+}
+
+function registroFim(texto, tempo) {
+	document.querySelector('.registrando').classList.toggle('hidden')
+	document.querySelector('.text-message').innerText = texto
+	document.querySelector('.message').style.display = 'flex'
+	setTimeout(() => {
+		document.querySelector('.message').style.animation = 'hideMessage .6s ease'
+		main.classList.remove('disable')
+		setTimeout(() => {
+			limparLogin()
+			document.querySelector('.message').style.display = 'none'
+			document.querySelector('.message').style.animation = 'showMessage .6s ease'
+			document.querySelector('body').classList.toggle('disable')
+			}, 500)
+		}, tempo * 1000)
+		id, tpRetirar, tpDevolver, matricula = undefined
+}
+
 
 window.addEventListener('click', e => {
 	//e.preventDefault()
@@ -984,7 +1179,15 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 									e.target.setAttribute('disabled', true)
 									e.target.innerText = 'Aguarde...'
 									realtime.ref('usuarios/' + usuarioEncontrado.id.replace('.', '_') + '/p').set(senhaLogin.value * 1993).then(() => {
-										alerta('Senha atualizada com sucesso', null, true)
+										ajustarHora().then(() => {
+										chave = realtime.ref().child('usuarios').push().key
+          					mensagem = 'Sua senha foi alterada em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString() + ' no posto ' + posto + '. Caso não tenha alterado sua senha, favor entrar em contato com a Gerência.'
+          					email = usuarioEncontrado.id + '@metro.df.gov.br'
+										fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+										fetch(encodeURI(fetchUrl), header).then(() => {
+											alerta('Senha atualizada com sucesso', null, true)
+										})
+										})
 									}).catch(e => alerta(e.message, null, true))
 								} else {
 									alerta ('Senhas não conferem')
