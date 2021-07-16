@@ -156,6 +156,7 @@ function verificarTP(index) {
 		case 'Em uso':
 			tipoRegistro = 2
 			tpDevolver = tp.tp
+			matricula = tp.matricula
 			document.getElementById('action').innerText = 'Devolver'
 			document.getElementById('idEmUso').innerText = tp.id
 			id = tp.id
@@ -217,7 +218,9 @@ function limparPin() {
 
 pin1.addEventListener('focus', e => {
 	e.preventDefault()
-	matricula = inputMatricula.value
+	if (tipoRegistro == 1) {
+		matricula = inputMatricula.value
+	}
 	if (pin1.value.length == 1) {
 		pin1.value = ''
 	}
@@ -398,7 +401,7 @@ function verificarGerente() {
 	registrando()
 	realtime.ref('usuarios').once('value').then(snap => {
 		var usuarios = Object.values(snap.val())
-		var encontrarGerente = i => i.matricula == matricula
+		var encontrarGerente = i => i.matricula == inputMatricula.value
 		var gerenteEncontrado = usuarios.find(encontrarGerente)
 		if (gerenteEncontrado != undefined) {
 			if (pin == gerenteEncontrado.p / 1993) {
