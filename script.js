@@ -392,7 +392,8 @@ function retirar() {
 				.catch(e => alerta('Erro ao enviar e-mail: ' + e, null, true))
 		)
 		.then(() => {
-			registroFim(msgAlert, 6)
+			document.querySelector('.registrando').classList.add('hidden')
+			alerta(msgAlert, null, true)
 		})
 		.catch(e => {
 			return alerta(e.message)
@@ -503,7 +504,6 @@ function registroFim(texto, tempo) {
 			}, 500)
 		}, tempo * 1000)
 		id, tpRetirar, tpDevolver, matricula = undefined
-		updateGrid()
 }
 
 
