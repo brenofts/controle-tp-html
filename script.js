@@ -680,7 +680,7 @@ function toggleMenu() {
 	document.body.style.overflow = 'hidden'
 	horizontal.classList.toggle('rotatex')
 	vertical.classList.toggle('rotatey')
-	canvas.classList.toggle('blur')
+	//canvas.classList.toggle('blur')
 	canvas.classList.toggle('disable')
 	if (!activeMenu) {
 		menu.style.animation = 'show-menu 0.5s'

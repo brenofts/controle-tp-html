@@ -16,7 +16,7 @@ body {
 .title {
 	font-family: arial;
 	position: fixed;
-	z-index: 3;
+	z-index: 4;
 	top: 0;
 	width: 100%;
 	font-size: 18pt;
@@ -38,7 +38,7 @@ body {
 	justify-content: space-evenly;
 	align-items: flex-end;
 	position: absolute;
-	z-index: 2;
+	z-index: 3;
 	height: 16.5vh;
 	top: -100vh;
 	width: auto;
