@@ -157,6 +157,7 @@ function verificarTP(index) {
 			tipoRegistro = 2
 			tpDevolver = tp.tp
 			matricula = tp.matricula
+			emailPiloto = tp.email
 			document.getElementById('action').innerText = 'Devolver'
 			document.getElementById('idEmUso').innerText = tp.id
 			id = tp.id
@@ -326,6 +327,7 @@ function verificarUsuario() {
 			if (usuarioEncontrado.p == pin * 1993) {
 				if (usuarioEncontrado.livre) {
 					id = usuarioEncontrado.id
+					emailPiloto = usuarioEncontrado.email
 					ajustarHora().then(() => retirar())
 				} else {
 					document.querySelector('body').classList.remove('disable')
@@ -360,7 +362,8 @@ function retirar() {
 		posto: 'T-PAS',
 		gerente: '-',
 		data: new Date().getTime() + diferencaHora,
-		key: chave
+		key: chave,
+		email: emailPiloto
 	}
 
 	var updates = {}
@@ -374,7 +377,7 @@ function retirar() {
 	).toLocaleString() + '\n \n' + 'Registro ' + chave
 	
 	mensagem = 'TP ' + tpRetirar + ' retirado por ' + id + ' em ' + posto + '<br>' + new Date(registro.data).toLocaleString()
-	email = id + '@metro.df.gov.br'
+	email = emailPiloto
 	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
 
 	// retorna chamando o firebase para escrever as atualizacoes
@@ -407,6 +410,7 @@ function verificarGerente() {
 			if (pin == gerenteEncontrado.p / 1993) {
 				if (gerenteEncontrado.gerente) {
 					gerente = gerenteEncontrado.id
+					emailGerente = gerenteEncontrado.email
 					devolver()
 				} else {
 					document.querySelector('body').classList.remove('disable')
@@ -456,7 +460,7 @@ function devolver() {
 	).toLocaleString() + '\n \n' + 'Registro ' + chave
 	
 	mensagem = 'TP ' + tpDevolver + ' devolvido por ' + id + ' para ' + gerente + ' em ' + posto + '<br>' + new Date(registro.data).toLocaleString()
-	email = id + '@metro.df.gov.br, ' + gerente + '@metro.df.gov.br'
+	email = emailPiloto + ',' + emailGerente
 	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
 
 	// retorna chamando o firebase para escrever as atualizacoes e enviar e-mail
@@ -1010,7 +1014,7 @@ document.querySelector('#menu-busca').children[2].addEventListener('click', e =>
 
 // e-mail
 
-var id, mensagem, email, chave
+var id, mensagem, email, chave, emailPiloto, emailGerente
 var url =
 	'https://script.google.com/macros/s/AKfycbzUQLSyejfxRXZLwSIk929bwhpFlk7zjApdfGO76ENLhIi4tWijyNmhSGoOmU6PfwminA/exec'
 var fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
