@@ -82,7 +82,7 @@ function updateGrid() {
 					var agora = new Date().getTime()
 					var periodoEmMS = agora - data
 					var umDiaEmMS = 1000 * 60 * 60 * 24
-					var dias = Math.floor(periodoEmMS / umDiaEmMS)
+					var dias = Math.floor( periodoEmMS / umDiaEmMS )
 					switch (status) {
 						case 'Em uso':
 							if (dias == 0 || dias == 1) {
@@ -503,6 +503,7 @@ function registroFim(texto, tempo) {
 			}, 500)
 		}, tempo * 1000)
 		id, tpRetirar, tpDevolver, matricula = undefined
+		updateGrid()
 }
 
 
