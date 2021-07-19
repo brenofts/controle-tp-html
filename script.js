@@ -369,8 +369,8 @@ function retirar() {
 	var updates = {}
 	updates['/tps/' + tpRetirar + '/status/'] = registro
 	updates['/historico/' + chave] = registro
-	updates['/usuarios/' + id.replace('.', '_') + '/livre/'] = false
-	updates['/usuarios/' + id.replace('.', '_') + '/tp/'] = tpRetirar
+	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/livre/'] = false
+	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/tp/'] = tpRetirar
 
 	var msgAlert = tpRetirar + ' retirado por ' + id + ' em ' + posto + '\n \n' + new Date(
 		registro.data
@@ -452,8 +452,8 @@ function devolver() {
 	var updates = {}
 	updates['/tps/' + tpDevolver + '/status/'] = registro
 	updates['/historico/' + chave] = registro
-	updates['/usuarios/' + id.replace('.', '_') + '/livre/'] = true
-	updates['/usuarios/' + id.replace('.', '_') + '/tp/'] = '-'
+	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/livre/'] = true
+	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/tp/'] = '-'
 
 	var msgAlert = tpDevolver + ' devolvido por ' + id + ' para ' + gerente + ' em ' + posto + '\n \n' + new Date(
 		registro.data
@@ -1078,18 +1078,18 @@ document.querySelector('#menu-senha').children[0].addEventListener('click', e =>
 					if (usuarioEncontrado != undefined) {
 						var novaSenha = (Math.random().toString().slice(3, 7))
 						realtime
-							.ref('usuarios/' + usuarioEncontrado.id.replace('.', '_') + '/p')
+							.ref('usuarios/' + usuarioEncontrado.email.split('@')[0].replace('.', '_') + '/p')
 							.set(novaSenha * 1993)
 							.then(() => {
 								id = usuarioEncontrado.id
 								chave = realtime.ref().child('usuarios').push().key
 								mensagem = 'Utilize o código ' + novaSenha + ' como senha provisória.'
-								email = id + '@metro.df.gov.br'
+								email = usuarioEncontrado.email
 								fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
 								fetch(encodeURI(fetchUrl), header)
 									.then(response => {
 										console.log(response)
-										alerta('Senha enviada para ' + usuarioEncontrado.id + '@metro.df.gov.br', null, true)
+										alerta('Senha enviada para ' + usuarioEncontrado.email, null, true)
 										btnEnviarEsqueci.innerText = 'ENVIAR'
 									})
 									.catch(e => alerta('Erro ao enviar e-mail: ' + e, null, true))
@@ -1185,11 +1185,11 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 									document.querySelector('#btn-cancelar').setAttribute('disabled', true)
 									e.target.setAttribute('disabled', true)
 									e.target.innerText = 'Aguarde...'
-									realtime.ref('usuarios/' + usuarioEncontrado.id.replace('.', '_') + '/p').set(senhaLogin.value * 1993).then(() => {
+									realtime.ref('usuarios/' + usuarioEncontrado.email.split('@')[0].replace('.', '_') + '/p').set(senhaLogin.value * 1993).then(() => {
 										ajustarHora().then(() => {
 										chave = realtime.ref().child('usuarios').push().key
           					mensagem = 'Sua senha foi alterada em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString() + ' no posto ' + posto + '. Caso não tenha alterado sua senha, favor entrar em contato com a Gerência.'
-          					email = usuarioEncontrado.id + '@metro.df.gov.br'
+          					email = usuarioEncontrado.email
 										fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
 										fetch(encodeURI(fetchUrl), header).then(() => {
 											alerta('Senha atualizada com sucesso', null, true)
