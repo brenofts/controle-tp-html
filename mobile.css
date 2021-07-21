@@ -2,6 +2,7 @@
 	margin: 0;
 	border: none;
 	user-select: none;
+	outline-style: none;
 }
 
 body {
@@ -500,7 +501,6 @@ body {
 	margin-bottom: -125px;
 	height: 250px;
 	width: 500px;
-	padding: 15px;
 	font-family: monospace;
 	font-size: 17pt;
 	color: #173d72;
@@ -730,6 +730,10 @@ input[type='number'] {
 	-webkit-text-security: disc;
 	caret-color: transparent;
 	color: white;
+}
+
+.disc {
+	-webkit-text-security: disc
 }
 
 .password {
@@ -1022,6 +1026,9 @@ td {
 
 #blue {
 	background-color: #173d72;
+}
+#blue2 {
+	background-color: white;
 }
 
 #lightblue {

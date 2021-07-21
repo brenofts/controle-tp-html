@@ -96,12 +96,12 @@ function updateGrid() {
 						case 'Devolvido':
 							className = 'devolvido'
 							break
-						case 'Bloqueado':
-							className = 'bloqueado'
-							break
-						case 'Transporte':
-							className = 'transporte'
-							break
+						// case 'Bloqueado':
+						// 	className = 'bloqueado'
+						// 	break
+						// case 'Transporte':
+						// 	className = 'transporte'
+						// 	break
 						default:
 							break
 					}
@@ -392,8 +392,7 @@ function retirar() {
 				.catch(e => alerta('Erro ao enviar e-mail: ' + e, null, true))
 		)
 		.then(() => {
-			document.querySelector('.registrando').classList.add('hidden')
-			alerta(msgAlert, null, true)
+			registroFim(msgAlert, 6)
 		})
 		.catch(e => {
 			return alerta(e.message)
@@ -494,6 +493,7 @@ function registroFim(texto, tempo) {
 	document.querySelector('.text-message').innerText = texto
 	document.querySelector('.message').style.display = 'flex'
 	setTimeout(() => {
+		updateGrid()
 		document.querySelector('.message').style.animation = 'hideMessage .6s ease'
 		main.classList.remove('disable')
 		setTimeout(() => {
@@ -857,62 +857,71 @@ document.querySelector('#menu-busca').children[1].addEventListener('click', e =>
 	setTimeout(() => {
 		document.querySelector('#input-matricula-buscar').focus()
 	}, 200)
-	document.querySelector('#btn-buscar-matricula').addEventListener('click', e => {
-		e.preventDefault()
-		var matricula = document.querySelector('#input-matricula-buscar')
-		if (matricula.value.length > 2) {
-			tabelaMatricula.classList.add('hidden')
-			document.querySelector('.processando').classList.remove('hidden')
-			realtime
-				.ref('historico')
-				.once('value')
-				.then(snap => {
-					//var chaves = Object.keys(snap.val()).reverse()
-					var historico = Object.values(snap.val())
-					var encontrar = i => i.matricula == matricula.value
-					var resultado = historico.reverse().filter(encontrar)
-					if (resultado.length > 0) {
-						ajustarHora().then(() => {
-							var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
-							var resumoBusca = resultado.length + ' registros para a matrícula ' + matricula.value
-							var horaDaBusca = `<br> Busca realizada em ${hora}`
-							tabelaMatricula.children[0].innerHTML = resumoBusca
-							tabelaMatricula.children[0].innerHTML += horaDaBusca
-							// var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
-							// var horaDaBusca = `Busca realizada em ${hora} <br> ${resultado.length} registros`
-							// tabelaMatricula.children[0].innerHTML = horaDaBusca
-						})
-						document.querySelector('.form-matricula-buscar').classList.add('hidden')
-						tabelaMatricula.children[2].innerHTML = ''
-						resultado.map(registro => {
-							var tr = `
-							<tr class='tr-devolvido'>
-							<td><strong>${registro.tp}</strong></td>
-									<td>${registro.status}</td>
-									<td>${new Date(registro.data).toLocaleDateString()}</td>
-									<td>${new Date(registro.data).toLocaleTimeString()}</td>
-									<td>${registro.id}</td>
-									<td>${registro.gerente}</td>
-									<td>${registro.posto}</td>
-									</tr>
-								`
-							tabelaMatricula.children[2].innerHTML += tr
-						})
-						document.querySelector('.processando').classList.add('hidden')
-						tabelaMatricula.classList.remove('hidden')
-					} else {
-						document.querySelector('.processando').classList.add('hidden')
-						alerta('Não foi encontrado registro para a matrícula ' + matricula.value, () => {
-							matricula.value = ''
-							matricula.focus()
-						})
-					}
-				})
-		} else {
-			alerta('Preencha corretamente', () => matricula.focus())
+	document.querySelector('#btn-buscar-matricula').addEventListener('click', buscarMatricula)
+	document.querySelector('#input-matricula-buscar').addEventListener('keyup', e => {
+		if (e.target.value.length > 2) {
+			var key = e.which || e.keyCode;
+  	if (key == 13) {
+    buscarMatricula()
 		}
+	}
 	})
 })
+
+function buscarMatricula() {
+	var matricula = document.querySelector('#input-matricula-buscar')
+	if (matricula.value.length > 2) {
+		tabelaMatricula.classList.add('hidden')
+		document.querySelector('.processando').classList.remove('hidden')
+		realtime
+			.ref('historico')
+			.once('value')
+			.then(snap => {
+				//var chaves = Object.keys(snap.val()).reverse()
+				var historico = Object.values(snap.val())
+				var encontrar = i => i.matricula == matricula.value
+				var resultado = historico.reverse().filter(encontrar)
+				if (resultado.length > 0) {
+					ajustarHora().then(() => {
+						var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
+						var resumoBusca = resultado.length + ' registros para a matrícula ' + matricula.value
+						var horaDaBusca = `<br> Busca realizada em ${hora}`
+						tabelaMatricula.children[0].innerHTML = resumoBusca
+						tabelaMatricula.children[0].innerHTML += horaDaBusca
+						// var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
+						// var horaDaBusca = `Busca realizada em ${hora} <br> ${resultado.length} registros`
+						// tabelaMatricula.children[0].innerHTML = horaDaBusca
+					})
+					document.querySelector('.form-matricula-buscar').classList.add('hidden')
+					tabelaMatricula.children[2].innerHTML = ''
+					resultado.map(registro => {
+						var tr = `
+						<tr class='tr-devolvido'>
+						<td><strong>${registro.tp}</strong></td>
+								<td>${registro.status}</td>
+								<td>${new Date(registro.data).toLocaleDateString()}</td>
+								<td>${new Date(registro.data).toLocaleTimeString()}</td>
+								<td>${registro.id}</td>
+								<td>${registro.gerente}</td>
+								<td>${registro.posto}</td>
+								</tr>
+							`
+						tabelaMatricula.children[2].innerHTML += tr
+					})
+					document.querySelector('.processando').classList.add('hidden')
+					tabelaMatricula.classList.remove('hidden')
+				} else {
+					document.querySelector('.processando').classList.add('hidden')
+					alerta('Não foi encontrado registro para a matrícula ' + matricula.value, () => {
+						matricula.value = ''
+						matricula.focus()
+					})
+				}
+			})
+	} else {
+		alerta('Preencha corretamente', () => matricula.focus())
+	}
+}
 
 // BUSCA POR DATA
 
@@ -1170,7 +1179,8 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 						}, 500);
 						matriculaLogin.value = ''
 						matriculaLogin.setAttribute('maxlength', 4)
-						matriculaLogin.setAttribute('type', 'password')
+						//matriculaLogin.setAttribute('type', 'password')
+						matriculaLogin.classList.add('disc')
 						document.querySelectorAll('.nova-senha')[0].classList.remove('hidden')
 						document.querySelectorAll('.nova-senha')[1].classList.remove('hidden')
 						matriculaLogin.style.letterSpacing = '4pt'
