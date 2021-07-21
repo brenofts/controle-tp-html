@@ -1136,9 +1136,22 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 			senhaLogin.focus()
 		}
 	})
+	matriculaLogin.addEventListener('keyup', e => {
+		var key = e.which || e.keyCode
+		if (key == 194 || key == 109) {
+			e.target.value = ''
+		}
+	})
+
 	senhaLogin.addEventListener('input', e => {
 		if (e.target.value.length == 4) {
 			e.target.blur()
+		}
+	})
+	senhaLogin.addEventListener('keyup', e => {
+		var key = e.which || e.keyCode
+		if (key == 194 || key == 109) {
+			e.target.value = ''
 		}
 	})
 
