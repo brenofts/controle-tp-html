@@ -1138,7 +1138,7 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 	})
 	matriculaLogin.addEventListener('keyup', e => {
 		var key = e.which || e.keyCode
-		if (key == 194 || key == 109) {
+		if (key == 110 || key == 189) {
 			e.target.value = ''
 		}
 	})
@@ -1150,7 +1150,7 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 	})
 	senhaLogin.addEventListener('keyup', e => {
 		var key = e.which || e.keyCode
-		if (key == 194 || key == 109) {
+		if (key == 110 || key == 189) {
 			e.target.value = ''
 		}
 	})
