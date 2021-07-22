@@ -497,7 +497,7 @@ body {
 	position: fixed;
 	bottom: 50%;
 	left: 50%;
-	margin-left: -250px;
+	margin-left: -265px;
 	margin-bottom: -125px;
 	height: 250px;
 	width: 500px;
@@ -509,6 +509,7 @@ body {
 	border: 1px solid #173d72;
 	z-index: 11;
 	animation: showMessage .6s ease;
+	padding: 15px;
 }
 .text-message {
 	animation: fade 2.5s;
