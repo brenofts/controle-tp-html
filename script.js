@@ -1230,10 +1230,11 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 						//document.querySelector('#div-senha-login').querySelector('label').innerText = 'Nova senha'
 
 					} else {
-						alerta('Senha incorreta')
 						disable()
-						senhaLogin.value = ''
-						senhaLogin.focus()
+						alerta('Senha incorreta', function () {
+							senhaLogin.value = ''
+							senhaLogin.focus()
+						})
 					}
 				} else {
 					alerta('Matrícula ' + matriculaLogin.value + ' não encontrada')
