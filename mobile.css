@@ -814,12 +814,14 @@ td {
 	font-size: 9pt;
 	text-align: center;
 	padding: 2px;
+	cursor: pointer;
 }
 
-.tr-devolvido td{
+.tr-devolvido td, .tr-devolvido div{
 	color: #173d72;
 	border-bottom: 2px solid whitesmoke;
 }
+
 .tr-bloqueado td{
 	color: grey;
 	border-bottom: 2px solid whitesmoke;
@@ -961,6 +963,60 @@ td {
 
 #senhas, #busca, #outros, #controle {
 	display: none;
+}
+
+.text-obs {
+	width: 100vw;
+	position: fixed;
+	top: 0;
+	z-index: 11;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+	padding-top: 10px;
+	background: lightgray;
+}
+
+.text-obs span {
+	font-size: 12pt;
+	font-family: monospace;
+	color: #173d72;
+	font-weight: bold;
+}
+.text-obs p {
+	font-size: 8pt;
+	color: grey;
+}
+
+.text-obs textarea {
+	width: 80%;
+	padding: 20px;
+	margin-top: 5px;
+	font-size: 18pt;
+}
+
+.text-obs button {
+	margin: 5px;
+	width: max-content;
+}
+
+.obs-controle {
+	position: absolute;
+	height: 7px;
+	width: 7px;
+	background: red;
+	margin-left: -3px;
+	margin-top: 5px;
+	border-radius: 50%;
+	cursor: pointer;
+	animation: scale infinite 1s;
+}
+
+@keyframes scale {
+	0% {transform: scale(0,0);}
+	50% {transform: scale(1.6,1.6);}
+	100% {transform: scale(0,0);}
 }
 
 .registrando {

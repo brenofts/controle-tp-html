@@ -41,6 +41,7 @@ var tabelaControle = document.querySelector('#tabela-controle')
 var tabelaHistorico = document.querySelector('#tabela-historico')
 var updateTime = document.querySelector('.update-time')
 var main = document.querySelector('.main')
+var element = (id) => document.getElementById(id)
 
 const reload = () => document.location.reload()
 var diferencaHora
@@ -508,9 +509,7 @@ function registroFim(texto, tempo) {
 
 
 window.addEventListener('click', e => {
-	//e.preventDefault()
 	if (e.target == modal) {
-		// clearInterval(timer)
 		if (loginCard.classList.contains('blur')) {
 			loginCard.classList.remove('blur')
 			loginCard.classList.remove('disable')
@@ -606,6 +605,26 @@ btnUltimos.addEventListener('click', e => {
 		})
 })
 
+function lerObs(numTP) {
+	element('div-obs').classList.remove('hidden')
+	realtime.ref('tps/').once('value').then(snap => {
+		var resultado = Object.values(snap.val())
+		var tpEncontrado = resultado.find(i => i.tp == numTP)
+		element('text-obs').value = tpEncontrado.obs_controle
+	})
+	element('num-tp-obs').innerText = numTP
+	element('text-obs').focus()
+}
+
+function escreverObs() {
+	realtime.ref('tps/' + element('num-tp-obs').innerText + '/obs_controle').set(element('text-obs').value).then(e => fecharObs())
+}
+
+function fecharObs() {
+	element('text-obs').value = ''
+	element('div-obs').classList.add('hidden')
+}
+
 // MENU
 plusSign.addEventListener('click', () => toggleMenu())
 btnBusca.addEventListener('click', () => Navigate(busca))
@@ -620,12 +639,15 @@ btnControle.addEventListener('click', () => {
 				tabelaControle.innerHTML = ''
 				tps.map(tp => {
 					var status = tp.status.status
+					if (tp.obs_controle != "") {
+						obsTP = 'obs-controle'
+					}
 					var hoje = new Date().getTime()
 					var evento = new Date(tp.status.data).getTime()
 					var diferencaEmMs = hoje - evento
 					var umDiaEmMs = 1000 * 3600 * 24
 					var dias = Math.floor(diferencaEmMs / umDiaEmMs)
-					var className
+					var className, obsTP
 					switch (status) {
 						case 'Em uso':
 							if (dias == 0 || dias == 1) {
@@ -649,7 +671,8 @@ btnControle.addEventListener('click', () => {
 							break
 					}
 					var tr = `
-					<tr class="${className}">
+					<div class="${obsTP}" ></div>
+					<tr class="${className}" onclick="lerObs(${tp.tp})">
 					<td><strong>${tp.tp}</strong></td>
 					<td>${tp.status.status}</td>
 					<td>${dias}</td>
@@ -658,6 +681,7 @@ btnControle.addEventListener('click', () => {
 					<td>${tp.status.id}</td>
 					<td>${tp.status.gerente}</td>
 					<td>${tp.status.posto}</td>
+					<div class="add-obs"></div>
 					</tr>
 				`
 					tabelaControle.innerHTML += tr
