@@ -605,6 +605,14 @@ btnUltimos.addEventListener('click', e => {
 		})
 })
 
+
+// var x = 58601
+
+// while (x <= 58605) {
+// 	realtime.ref('tps/' + x + '/obs_controle').set('* Sem observações')
+// 	x++
+// }
+
 var obsPre
 
 function lerObs(numTP) {
@@ -617,7 +625,7 @@ function lerObs(numTP) {
 		element('text-obs').value = tpEncontrado.obs_controle
 	})
 	element('num-tp-obs').innerText = numTP
-	element('text-obs').focus()
+	element('text-nova-obs').focus()
 }
 
 
@@ -628,18 +636,36 @@ function x() {
 
 function escreverObs() {
 	var text
-	if (obsPre == "") {
+	if (obsPre.includes('*')) {
 		text = '[' + new Date().toLocaleString() + ' - ' + element('text-nova-obs').value.toUpperCase() + ']'
 	} else {
-		text = obsPre + '\n[' + new Date().toLocaleString() + ' - ' + element('text-nova-obs').value.toUpperCase() + ']'	
+		text = '[' + new Date().toLocaleString() + ' - ' + element('text-nova-obs').value.toUpperCase() + ']\n' + obsPre	
 	}
-	realtime.ref('tps/' + element('num-tp-obs').innerText + '/obs_controle').set(text).then(e => fecharObs())
+	if (element('text-nova-obs').value != '') {
+		realtime.ref('tps/' + element('num-tp-obs').innerText + '/obs_controle').set(text).then(e => fecharObs())
+	} else {
+		alerta('Preencha corretamente')
+	}
 }
 
 function fecharObs() {
 	element('text-nova-obs').value = ''
 	element('div-obs').classList.add('hidden')
 	element('legend-controle').classList.remove('hidden')
+}
+
+function limparObs() {
+	var chave = realtime.ref('obs_historico').push().key
+	var numTP = element('num-tp-obs').innerText
+	var text = '* Observações apagadas em ' + new Date().toLocaleString() + ' por fulano'
+	var obs_historico = {}
+	obs_historico['tp'] = numTP
+	obs_historico['obs_apagadas'] = obsPre
+	obs_historico['registro'] = text
+	var updates = {}
+	updates['obs_historico/' + chave] = obs_historico
+	updates['tps/' + element('num-tp-obs').innerText + '/obs_controle'] = text
+	realtime.ref().update(updates).then(e => fecharObs())
 }
 
 // MENU
@@ -656,7 +682,7 @@ btnControle.addEventListener('click', () => {
 				tabelaControle.innerHTML = ''
 				tps.map(tp => {
 					var status = tp.status.status
-					if (tp.obs_controle != "") {
+					if (!tp.obs_controle.includes('*')) {
 						obsTP = 'obs-controle'
 					}
 					var hoje = new Date().getTime()
