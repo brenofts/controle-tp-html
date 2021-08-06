@@ -248,10 +248,17 @@
 						</div>
 					</div>
 					<div class="screen" id="controle">
+						<div class="login-obs-div">
+							<div class="login-obs">
+								<input placeholder="Matrícula" autocomplete="off" maxlength="5" type="text" id="input-matricula-obs" inputmode="numeric">
+								<input class="disc" placeholder="Senha" autocomplete="off" maxlength="4" type="text" id="input-senha-obs" inputmode="numeric">
+							</div>
+						</div>
 						<div class="text-obs hidden" id="div-obs">
 							<p>OBSERVAÇÕES</p>
 							<span id="num-tp-obs"></span>
-							<textarea placeholder="Sem observações" name="text-obs" id="text-obs" cols="30" rows="4"></textarea>
+							<textarea readonly placeholder="Sem observações" name="text-obs" id="text-obs" cols="30" rows="4"></textarea>
+							<textarea placeholder="Nova observação (nome, data e hora inseridos automaticamente)" name="text-nova-obs" id="text-nova-obs" cols="30" rows="2"></textarea>
 							<div>
 								<button class="btn-b" onclick="escreverObs()">Salvar</button>
 							<button class="btn-b" onclick="fecharObs()">Fechar</button>
@@ -274,7 +281,7 @@
 
 							</tbody>
 						</table>
-						<div class="legend">
+						<div id="legend-controle" class="legend">
 							<span class="legend-item" id="um-dia"></span>
 							1 dia
 							<span class="legend-item" id="tres-dias"></span>

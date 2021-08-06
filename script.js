@@ -605,24 +605,41 @@ btnUltimos.addEventListener('click', e => {
 		})
 })
 
+var obsPre
+
 function lerObs(numTP) {
+	element('legend-controle').classList.add('hidden')
 	element('div-obs').classList.remove('hidden')
 	realtime.ref('tps/').once('value').then(snap => {
 		var resultado = Object.values(snap.val())
 		var tpEncontrado = resultado.find(i => i.tp == numTP)
+		obsPre = tpEncontrado.obs_controle
 		element('text-obs').value = tpEncontrado.obs_controle
 	})
 	element('num-tp-obs').innerText = numTP
 	element('text-obs').focus()
 }
 
+
+function x() {
+	
+}
+
+
 function escreverObs() {
-	realtime.ref('tps/' + element('num-tp-obs').innerText + '/obs_controle').set(element('text-obs').value).then(e => fecharObs())
+	var text
+	if (obsPre == "") {
+		text = '[' + new Date().toLocaleString() + ' - ' + element('text-nova-obs').value.toUpperCase() + ']'
+	} else {
+		text = obsPre + '\n[' + new Date().toLocaleString() + ' - ' + element('text-nova-obs').value.toUpperCase() + ']'	
+	}
+	realtime.ref('tps/' + element('num-tp-obs').innerText + '/obs_controle').set(text).then(e => fecharObs())
 }
 
 function fecharObs() {
-	element('text-obs').value = ''
+	element('text-nova-obs').value = ''
 	element('div-obs').classList.add('hidden')
+	element('legend-controle').classList.remove('hidden')
 }
 
 // MENU

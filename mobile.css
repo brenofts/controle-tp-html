@@ -965,6 +965,49 @@ td {
 	display: none;
 }
 
+.login-obs-div {
+	position: fixed;
+	z-index: 11;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	padding-top: 50px;
+	background: transparent;
+}
+
+.login-obs {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+	width: 200px;
+	height: 140px;
+	border: #173d72 solid 1px;
+	border-radius: 4px;
+	background: ghostwhite;
+}
+
+.login-obs input {
+	text-align: center;
+	width: 60%;
+	font-size: 14pt;
+	font-family: monospace;
+	letter-spacing: 1.5pt;
+	color: grey;
+	padding: 4px;
+	margin: 6px;
+	border-radius: 4px;
+	box-shadow: lightgray 0px 1px 2px;
+}
+
+.login-obs input:focus {
+	font-size: 15pt;
+	width: 63%;
+	color: #173d72;
+}
+
 .text-obs {
 	width: 100vw;
 	position: fixed;
@@ -975,6 +1018,7 @@ td {
 	justify-content: center;
 	align-items: center;
 	padding-top: 10px;
+	padding-bottom: 20px;
 	background: lightgray;
 }
 
@@ -991,9 +1035,15 @@ td {
 
 .text-obs textarea {
 	width: 80%;
-	padding: 20px;
+	padding: 10px;
 	margin-top: 5px;
-	font-size: 18pt;
+	font-size: 15pt;
+	background: ghostwhite;
+}
+
+#text-nova-obs {
+	font-size: 12pt;
+	background: white;
 }
 
 .text-obs button {
