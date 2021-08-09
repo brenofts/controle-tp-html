@@ -161,14 +161,16 @@ function verificarTP(index) {
 			emailPiloto = tp.email
 			document.getElementById('action').innerText = 'Devolver'
 			document.getElementById('idEmUso').innerText = tp.id
+			element('inputMatricula').setAttribute('placeholder', 'Gerente/IT')
 			id = tp.id
 			document.getElementById('idEmUso').classList.remove('hidden')
 			console.warn('Devolver', tp.tp, tp.id)
 			break
-		case 'Devolvido':
-			tipoRegistro = 1
-			tpRetirar = tp.tp
-			document.getElementById('action').innerText = 'Retirar'
+			case 'Devolvido':
+				tipoRegistro = 1
+				tpRetirar = tp.tp
+				document.getElementById('action').innerText = 'Retirar'
+				element('inputMatricula').setAttribute('placeholder', 'Matrícula')
 			console.warn('Retirar', tp.tp)
 			break
 		default:
@@ -424,7 +426,7 @@ function verificarGerente() {
 			}
 		} else {
 			registrando()
-			alerta('Matrícula ' + matricula + ' não encontrada', function () {
+			alerta('Matrícula ' + inputMatricula.value + ' não encontrada', function () {
 				limparPin()
 				inputPassword.classList.add('hidden')
 				matricula = undefined
@@ -629,10 +631,26 @@ function lerObs(numTP) {
 }
 
 
-function x() {
-	
-}
+function loginObs(tipo) {
+	element('div-login-obs').classList.remove('hidden')
+	element('input-matricula-obs').focus()
+	element('text-nova-obs').setAttribute('readonly', true)
 
+	element('input-senha-obs').addEventListener('input', e => {
+		if (e.target.value.length == 4) {
+			e.target.blur()
+			if (element('input-matricula-obs').value.length > 2) {
+				setTimeout(() => {
+					alerta('senha digitada')
+				}, 100);
+			} else {
+				alerta('Preencha corretamente')
+			}
+		}
+	})
+
+	// tipo == 0 ? limparObs() : escreverObs()
+}
 
 function escreverObs() {
 	var text
@@ -652,6 +670,8 @@ function fecharObs() {
 	element('text-nova-obs').value = ''
 	element('div-obs').classList.add('hidden')
 	element('legend-controle').classList.remove('hidden')
+	element('text-nova-obs').removeAttribute('readonly')
+	element('div-login-obs').classList.add('hidden')
 }
 
 function limparObs() {

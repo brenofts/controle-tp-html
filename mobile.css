@@ -507,7 +507,7 @@ body {
 	background-color: rgb(255,255,255,0.99);
 	box-shadow: 0px 6px 12px -6px rgba(0, 0, 0, 0.67);
 	border: 1px solid #173d72;
-	z-index: 11;
+	z-index: 20;
 	animation: showMessage .6s ease;
 	padding: 15px;
 }
@@ -967,7 +967,7 @@ td {
 
 .login-obs-div {
 	position: fixed;
-	z-index: 11;
+	z-index: 12;
 	top: 0;
 	display: flex;
 	align-items: center;
