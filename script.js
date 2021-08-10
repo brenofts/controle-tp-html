@@ -317,7 +317,7 @@ pin4.addEventListener('input', e => {
 
 
 
-var tipoRegistro, tpRetirar, tpDevolver, matricula, gerente
+var tipoRegistro, tpRetirar, tpDevolver, matricula, gerente, matricula_gerente
 var posto = 'T-PAS'
 
 function verificarUsuario() {
@@ -361,6 +361,7 @@ function retirar() {
 		status: 'Em uso',
 		id: id,
 		matricula: matricula,
+		matricula_gerente: '-',
 		tp: tpRetirar,
 		posto: 'T-PAS',
 		gerente: '-',
@@ -414,6 +415,7 @@ function verificarGerente() {
 				if (gerenteEncontrado.gerente) {
 					gerente = gerenteEncontrado.id
 					emailGerente = gerenteEncontrado.email
+					matricula_gerente = gerenteEncontrado.matricula
 					devolver()
 				} else {
 					document.querySelector('body').classList.remove('disable')
@@ -445,6 +447,7 @@ function devolver() {
 		status: 'Devolvido',
 		id: id,
 		matricula: matricula,
+		matricula_gerente: matricula_gerente,
 		tp: tpDevolver,
 		posto: 'T-PAS',
 		gerente: gerente,
@@ -807,6 +810,7 @@ function Navigate(screen) {
 var buscaTodos = document.querySelector('.busca-todos')
 var buscaData = document.querySelector('.busca-data')
 var buscaMatricula = document.querySelector('.busca-matricula')
+var buscaGerente = document.querySelector('.busca-gerente')
 var buscaTP = document.querySelector('.busca-tp')
 
 function abrirBusca(tipo, botao) {
@@ -913,7 +917,7 @@ function buscarTP(numTP) {
 
 // MENU BUSCA
 
-document.querySelector('#menu-busca').children[0].addEventListener('click', e => {
+element('btn-b-tp').addEventListener('click', e => {
 	abrirBusca(buscaTP, e.target)
 	tabelaTP.classList.add('hidden')
 	gridTPBusca.classList.remove('hidden')
@@ -938,7 +942,7 @@ document.querySelector('#menu-busca').children[0].addEventListener('click', e =>
 // BUSCA POR MATRICULA
 var tabelaMatricula = document.getElementById('tabela-matricula')
 
-document.querySelector('#menu-busca').children[1].addEventListener('click', e => {
+element('btn-b-matricula').addEventListener('click', e => {
 	document.querySelector('.form-matricula-buscar').classList.remove('hidden')
 	abrirBusca(buscaMatricula, e.target)
 	setTimeout(() => {
@@ -1010,12 +1014,21 @@ function buscarMatricula() {
 	}
 }
 
+// BUSCA POR GERENTE
+
+element('btn-b-gerente').addEventListener('click', e => {
+	abrirBusca(buscaGerente, e.target)
+	setTimeout(() => {
+		document.querySelector('#input-gerente-buscar').focus()
+	}, 200)
+})
+
 // BUSCA POR DATA
 
 var btnBuscarData = document.querySelector('#btn-buscar-data')
 var tabelaData = document.getElementById('tabela-data')
 
-document.querySelector('#menu-busca').children[2].addEventListener('click', e => {
+element('btn-b-data').addEventListener('click', e => {
 	abrirBusca(buscaData, e.target)
 	tabelaData.classList.add('hidden')
 	document.querySelector('.div-form-data').classList.remove('hidden')

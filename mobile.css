@@ -199,7 +199,7 @@ body {
 	border-bottom: 1px solid rgb(231, 231, 231);
 	border-radius: 3px;
 	margin-bottom: 15px;
-	width: 50%;
+	width: 60%;
 }
 
 .menu-senha {
@@ -210,6 +210,13 @@ body {
 	display: none;
 }
 
+.busca-gerente {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.form-gerente-buscar,
 .form-matricula-buscar, 
 .form-esqueci, 
 .form-atualizar,
@@ -222,6 +229,7 @@ body {
 	margin-top: 20px;
 }
 
+.form-gerente-buscar label,
 .form-matricula-buscar label,
 .form-esqueci label {
 	position: absolute;
@@ -231,6 +239,11 @@ body {
 	font-size: 12pt;
 }
 
+.form-gerente-buscar label {
+	font-size: 10pt;
+}
+
+.form-gerente-buscar input,
 .form-matricula-buscar input,
 .form-esqueci input,
 .form-atualizar input {
@@ -246,6 +259,8 @@ body {
 	outline: none;
 }
 
+.form-gerente-buscar input:focus ~ label,
+.form-gerente-buscar input:valid ~ label,
 .form-matricula-buscar input:focus ~ label,
 .form-matricula-buscar input:valid ~ label {
 	transform: translateY(38px);
@@ -253,6 +268,7 @@ body {
 	font-size: 11pt;
 }
 
+.form-gerente-buscar span,
 .form-matricula-buscar span {
 	position: absolute;
 	transform: translateX(5rem);
@@ -808,6 +824,7 @@ th {
 
 td {
 	border-radius: 3px;
+	padding: 4px 2px;
 }
 
 [class*='tr-'] {
@@ -815,6 +832,7 @@ td {
 	text-align: center;
 	padding: 2px;
 	cursor: pointer;
+	
 }
 
 .tr-devolvido td, .tr-devolvido div{
