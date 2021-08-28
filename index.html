@@ -241,6 +241,22 @@
 										 </svg>
 									</span>
 								</div>
+								<span class="processando hidden" id="processando-gerente">Processando...</span>
+								<table class="hidden" id="tabela-gerente">
+									<caption></caption>
+									<thead>
+										<tr>
+											<th>TP</th>
+											<th>Status</th>
+											<th>Data</th>
+											<th>Hora</th>
+											<th>Empregado</th>
+											<th>Gerente / IT</th>
+											<th>Posto</th>
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
 							</div>
 							<div class="busca-tp">
 								<div class="grid-tp-busca"></div>
@@ -266,6 +282,7 @@
 					<div class="screen" id="controle">
 						<div class="login-obs-div hidden" id="div-login-obs">
 							<div class="login-obs">
+								<span>LOGIN</span>
 								<input placeholder="Matrícula" autocomplete="off" maxlength="5" type="text" id="input-matricula-obs" inputmode="numeric">
 								<input class="disc" placeholder="Senha" autocomplete="off" maxlength="4" type="text" id="input-senha-obs" inputmode="numeric">
 								<button class="btn-b" onclick="fecharObs()">Cancelar</button>

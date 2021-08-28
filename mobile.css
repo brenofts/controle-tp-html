@@ -65,7 +65,6 @@ body {
 		top: -100vh;
 	}
 }
-
 .btn {
 	display: flex;
 	flex-direction: column;
@@ -212,8 +211,7 @@ body {
 
 .busca-gerente {
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	flex-direction: column;
 }
 
 .form-gerente-buscar,
@@ -1005,6 +1003,10 @@ td {
 	border: #173d72 solid 1px;
 	border-radius: 4px;
 	background: ghostwhite;
+}
+
+.login-obs span {
+	font-family: monospace;
 }
 
 .login-obs input {

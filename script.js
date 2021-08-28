@@ -1,5 +1,5 @@
 if (new Date().getTimezoneOffset() !== 180) {
-	alert('Verifique as configurações de fuso horário.')
+	alerta('Verifique as configurações de fuso horário.')
 	reload()
 }
 
@@ -41,7 +41,7 @@ var tabelaControle = document.querySelector('#tabela-controle')
 var tabelaHistorico = document.querySelector('#tabela-historico')
 var updateTime = document.querySelector('.update-time')
 var main = document.querySelector('.main')
-var element = (id) => document.getElementById(id)
+var element = id => document.getElementById(id)
 
 const reload = () => document.location.reload()
 var diferencaHora
@@ -83,7 +83,7 @@ function updateGrid() {
 					var agora = new Date().getTime()
 					var periodoEmMS = agora - data
 					var umDiaEmMS = 1000 * 60 * 60 * 24
-					var dias = Math.floor( periodoEmMS / umDiaEmMS )
+					var dias = Math.floor(periodoEmMS / umDiaEmMS)
 					switch (status) {
 						case 'Em uso':
 							if (dias == 0 || dias == 1) {
@@ -140,7 +140,6 @@ function limparLogin() {
 	document.getElementById('idEmUso').classList.add('hidden')
 }
 
-
 function cancel() {
 	limparLogin()
 	alerta('O registro foi cancelado pois houve um registro para o mesmo TP em outro posto', null, true)
@@ -166,11 +165,11 @@ function verificarTP(index) {
 			document.getElementById('idEmUso').classList.remove('hidden')
 			console.warn('Devolver', tp.tp, tp.id)
 			break
-			case 'Devolvido':
-				tipoRegistro = 1
-				tpRetirar = tp.tp
-				document.getElementById('action').innerText = 'Retirar'
-				element('inputMatricula').setAttribute('placeholder', 'Matrícula')
+		case 'Devolvido':
+			tipoRegistro = 1
+			tpRetirar = tp.tp
+			document.getElementById('action').innerText = 'Retirar'
+			element('inputMatricula').setAttribute('placeholder', 'Matrícula')
 			console.warn('Retirar', tp.tp)
 			break
 		default:
@@ -292,7 +291,6 @@ pin3.addEventListener('input', e => {
 	}
 })
 
-
 pin4.addEventListener('input', e => {
 	e.preventDefault()
 	if (pin4.value.length == 1) {
@@ -301,13 +299,13 @@ pin4.addEventListener('input', e => {
 		switch (tipoRegistro) {
 			case 1:
 				verificarUsuario()
-				break;
+				break
 			case 2:
 				verificarGerente()
-				break;
-		
+				break
+
 			default:
-				break;
+				break
 		}
 		setTimeout(() => {
 			realtime.ref('tps/' + buttonClicked).off('child_changed', cancel)
@@ -315,48 +313,50 @@ pin4.addEventListener('input', e => {
 	}
 })
 
-
-
-var tipoRegistro, tpRetirar, tpDevolver, matricula, gerente, matricula_gerente
+var tipoRegistro, tpRetirar, tpDevolver, matricula, gerente, matricula_gerente, nome
 var posto = 'T-PAS'
 
 function verificarUsuario() {
 	registrando()
-	realtime.ref('usuarios').once('value').then(snap => {
-		var usuarios = Object.values(snap.val())
-		var encontrarUsuario = i => i.matricula == matricula
-		var usuarioEncontrado = usuarios.find(encontrarUsuario)
-		if (usuarioEncontrado != undefined) {
-			if (usuarioEncontrado.p == pin * 1993) {
-				if (usuarioEncontrado.livre) {
-					id = usuarioEncontrado.id
-					emailPiloto = usuarioEncontrado.email
-					ajustarHora().then(() => retirar())
+	realtime
+		.ref('usuarios')
+		.once('value')
+		.then(snap => {
+			var usuarios = Object.values(snap.val())
+			var encontrarUsuario = i => i.matricula == matricula
+			var usuarioEncontrado = usuarios.find(encontrarUsuario)
+			if (usuarioEncontrado != undefined) {
+				if (usuarioEncontrado.p == pin * 1993) {
+					if (usuarioEncontrado.livre) {
+						id = usuarioEncontrado.id
+						emailPiloto = usuarioEncontrado.email
+						ajustarHora().then(() => retirar())
+					} else {
+						document.querySelector('body').classList.remove('disable')
+						document.querySelector('.registrando').classList.add('hidden')
+						alerta('Consta TP ' + usuarioEncontrado.tp + ' em nome de ' + usuarioEncontrado.id, limparLogin)
+					}
 				} else {
-					document.querySelector('body').classList.remove('disable')
-					document.querySelector('.registrando').classList.add('hidden')
-					alerta('Consta TP ' + usuarioEncontrado.tp + ' em nome de ' + usuarioEncontrado.id, limparLogin)
+					registrando()
+					alerta('Senha incorreta', limparPin)
 				}
 			} else {
 				registrando()
-				alerta('Senha incorreta', limparPin)
+				alerta('Matrícula ' + matricula + ' não encontrada', function () {
+					limparPin()
+					inputPassword.classList.add('hidden')
+					matricula = undefined
+					inputMatricula.value = ''
+					inputMatricula.focus()
+				})
 			}
-		} else {
-			registrando()
-			alerta('Matrícula ' + matricula + ' não encontrada', function () {
-				limparPin()
-				inputPassword.classList.add('hidden')
-				matricula = undefined
-				inputMatricula.value = ''
-				inputMatricula.focus()
-			})
-		}
-	}).catch(e => alerta(e.message, null, true))
+		})
+		.catch(e => alerta(e.message, null, true))
 }
 
 function retirar() {
 	chave = realtime.ref().child('historico').push().key
-	
+
 	var registro = {
 		status: 'Em uso',
 		id: id,
@@ -367,7 +367,7 @@ function retirar() {
 		gerente: '-',
 		data: new Date().getTime() + diferencaHora,
 		key: chave,
-		email: emailPiloto
+		email: emailPiloto,
 	}
 
 	var updates = {}
@@ -376,11 +376,20 @@ function retirar() {
 	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/livre/'] = false
 	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/tp/'] = tpRetirar
 
-	var msgAlert = tpRetirar + ' retirado por ' + id + ' em ' + posto + '\n \n' + new Date(
-		registro.data
-	).toLocaleString() + '\n \n' + 'Registro ' + chave
-	
-	mensagem = 'TP ' + tpRetirar + ' retirado por ' + id + ' em ' + posto + '<br>' + new Date(registro.data).toLocaleString()
+	var msgAlert =
+		tpRetirar +
+		' retirado por ' +
+		id +
+		' em ' +
+		posto +
+		'\n \n' +
+		new Date(registro.data).toLocaleString() +
+		'\n \n' +
+		'Registro ' +
+		chave
+
+	mensagem =
+		'TP ' + tpRetirar + ' retirado por ' + id + ' em ' + posto + '<br>' + new Date(registro.data).toLocaleString()
 	email = emailPiloto
 	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
 
@@ -403,46 +412,48 @@ function retirar() {
 		})
 }
 
-
 function verificarGerente() {
 	registrando()
-	realtime.ref('usuarios').once('value').then(snap => {
-		var usuarios = Object.values(snap.val())
-		var encontrarGerente = i => i.matricula == inputMatricula.value
-		var gerenteEncontrado = usuarios.find(encontrarGerente)
-		if (gerenteEncontrado != undefined) {
-			if (pin == gerenteEncontrado.p / 1993) {
-				if (gerenteEncontrado.gerente) {
-					gerente = gerenteEncontrado.id
-					emailGerente = gerenteEncontrado.email
-					matricula_gerente = gerenteEncontrado.matricula
-					devolver()
+	realtime
+		.ref('usuarios')
+		.once('value')
+		.then(snap => {
+			var usuarios = Object.values(snap.val())
+			var encontrarGerente = i => i.matricula == inputMatricula.value
+			var gerenteEncontrado = usuarios.find(encontrarGerente)
+			if (gerenteEncontrado != undefined) {
+				if (pin == gerenteEncontrado.p / 1993) {
+					if (gerenteEncontrado.gerente) {
+						gerente = gerenteEncontrado.id
+						emailGerente = gerenteEncontrado.email
+						matricula_gerente = gerenteEncontrado.matricula
+						devolver()
+					} else {
+						document.querySelector('body').classList.remove('disable')
+						document.querySelector('.registrando').classList.add('hidden')
+						alerta('Autorizado somente para Gerentes / IT', limparLogin)
+					}
 				} else {
-					document.querySelector('body').classList.remove('disable')
-					document.querySelector('.registrando').classList.add('hidden')
-					alerta('Autorizado somente para Gerentes / IT', limparLogin)
+					registrando()
+					alerta('Senha incorreta', limparPin)
 				}
 			} else {
 				registrando()
-				alerta('Senha incorreta', limparPin)
+				alerta('Matrícula ' + inputMatricula.value + ' não encontrada', function () {
+					limparPin()
+					inputPassword.classList.add('hidden')
+					matricula = undefined
+					inputMatricula.value = ''
+					inputMatricula.focus()
+				})
 			}
-		} else {
-			registrando()
-			alerta('Matrícula ' + inputMatricula.value + ' não encontrada', function () {
-				limparPin()
-				inputPassword.classList.add('hidden')
-				matricula = undefined
-				inputMatricula.value = ''
-				inputMatricula.focus()
-			})
-		}
-	}).catch(e => alerta(e.message, null, true))
+		})
+		.catch(e => alerta(e.message, null, true))
 }
-
 
 function devolver() {
 	chave = realtime.ref().child('historico').push().key
-	
+
 	var registro = {
 		status: 'Devolvido',
 		id: id,
@@ -452,7 +463,7 @@ function devolver() {
 		posto: 'T-PAS',
 		gerente: gerente,
 		data: new Date().getTime() + diferencaHora,
-		key: chave
+		key: chave,
 	}
 
 	var updates = {}
@@ -461,11 +472,31 @@ function devolver() {
 	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/livre/'] = true
 	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/tp/'] = '-'
 
-	var msgAlert = tpDevolver + ' devolvido por ' + id + ' para ' + gerente + ' em ' + posto + '\n \n' + new Date(
-		registro.data
-	).toLocaleString() + '\n \n' + 'Registro ' + chave
-	
-	mensagem = 'TP ' + tpDevolver + ' devolvido por ' + id + ' para ' + gerente + ' em ' + posto + '<br>' + new Date(registro.data).toLocaleString()
+	var msgAlert =
+		tpDevolver +
+		' devolvido por ' +
+		id +
+		' para ' +
+		gerente +
+		' em ' +
+		posto +
+		'\n \n' +
+		new Date(registro.data).toLocaleString() +
+		'\n \n' +
+		'Registro ' +
+		chave
+
+	mensagem =
+		'TP ' +
+		tpDevolver +
+		' devolvido por ' +
+		id +
+		' para ' +
+		gerente +
+		' em ' +
+		posto +
+		'<br>' +
+		new Date(registro.data).toLocaleString()
 	email = emailPiloto + ',' + emailGerente
 	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
 
@@ -507,11 +538,10 @@ function registroFim(texto, tempo) {
 			document.querySelector('.message').style.display = 'none'
 			document.querySelector('.message').style.animation = 'showMessage .6s ease'
 			document.querySelector('body').classList.toggle('disable')
-			}, 500)
-		}, tempo * 1000)
-		id, tpRetirar, tpDevolver, matricula = undefined
+		}, 500)
+	}, tempo * 1000)
+	id, tpRetirar, tpDevolver, (matricula = undefined)
 }
-
 
 window.addEventListener('click', e => {
 	if (e.target == modal) {
@@ -610,7 +640,6 @@ btnUltimos.addEventListener('click', e => {
 		})
 })
 
-
 // var x = 58601
 
 // while (x <= 58605) {
@@ -623,53 +652,93 @@ var obsPre
 function lerObs(numTP) {
 	element('legend-controle').classList.add('hidden')
 	element('div-obs').classList.remove('hidden')
-	realtime.ref('tps/').once('value').then(snap => {
-		var resultado = Object.values(snap.val())
-		var tpEncontrado = resultado.find(i => i.tp == numTP)
-		obsPre = tpEncontrado.obs_controle
-		element('text-obs').value = tpEncontrado.obs_controle
-	})
+	realtime
+		.ref('tps/')
+		.once('value')
+		.then(snap => {
+			var resultado = Object.values(snap.val())
+			var tpEncontrado = resultado.find(i => i.tp == numTP)
+			obsPre = tpEncontrado.obs_controle
+			element('text-obs').value = tpEncontrado.obs_controle
+		})
 	element('num-tp-obs').innerText = numTP
 	element('text-nova-obs').focus()
 }
 
-
 function loginObs(tipo) {
-	element('div-login-obs').classList.remove('hidden')
-	element('input-matricula-obs').focus()
-	element('text-nova-obs').setAttribute('readonly', true)
-
-	element('input-senha-obs').addEventListener('input', e => {
-		if (e.target.value.length == 4) {
-			e.target.blur()
-			if (element('input-matricula-obs').value.length > 2) {
-				setTimeout(() => {
-					alerta('senha digitada')
-				}, 100);
-			} else {
-				alerta('Preencha corretamente')
+		element('div-login-obs').classList.remove('hidden')
+		element('input-matricula-obs').focus()
+		element('text-nova-obs').setAttribute('readonly', true)
+		element('input-matricula-obs').addEventListener('input', e => {
+			if (e.target.value.length == 5) {
+				element('input-senha-obs').focus()
 			}
-		}
-	})
+		})
+		element('input-senha-obs').addEventListener('focus', e => {
+			if (element('input-matricula-obs').value.length > 2) {
+				element('input-senha-obs').addEventListener('input', e => {
+					if (e.target.value.length == 4) {
+						e.target.blur()
+						realtime
+							.ref('usuarios')
+							.once('value')
+							.then(snap => {
+								var usuarios = Object.values(snap.val())
+								matricula = element('input-matricula-obs').value
+								var pin = e.target.value
+								var encontrarUsuario = i => i.matricula == matricula
+								var usuarioEncontrado = usuarios.find(encontrarUsuario)
+								if (usuarioEncontrado != undefined) {
+									nome = usuarioEncontrado.id
+									if (usuarioEncontrado.p == pin * 1993) {
+										tipo == 1 ? escreverObs() : limparObs()
+									} else {
+										alerta('Senha incorreta', function () {
+											element('input-senha-obs').value = ''
+											element('input-senha-obs').focus()
+										})
+									}
+								} else {
+									alerta('Matrícula ' + matricula + ' não encontrada', function () {
+										element('input-senha-obs').value = ''
+										element('input-matricula-obs').focus()
+									})
+								}
+							})
+							.catch(e => alerta(e.message, null, true))
+					}
+				})
+			} else {
+				alerta('Preencha a matrícula corretamente', () => {
+					element('input-matricula-obs').focus()
+				})
+			}
+		})
 
-	// tipo == 0 ? limparObs() : escreverObs()
+		// tipo == 0 ? limparObs() : escreverObs()
 }
 
 function escreverObs() {
 	var text
 	if (obsPre.includes('*')) {
-		text = '[' + new Date().toLocaleString() + ' - ' + element('text-nova-obs').value.toUpperCase() + ']'
+		text = '[' + new Date().toLocaleString() + ' - ' + nome + ' - ' + posto + ' | ' + element('text-nova-obs').value.toUpperCase() + ']'
 	} else {
-		text = '[' + new Date().toLocaleString() + ' - ' + element('text-nova-obs').value.toUpperCase() + ']\n' + obsPre	
+		text = '[' + new Date().toLocaleString() + ' - ' + nome + ' - ' + posto + ' | '  + element('text-nova-obs').value.toUpperCase() + ']\n' + obsPre
 	}
 	if (element('text-nova-obs').value != '') {
-		realtime.ref('tps/' + element('num-tp-obs').innerText + '/obs_controle').set(text).then(e => fecharObs())
+		realtime
+			.ref('tps/' + element('num-tp-obs').innerText + '/obs_controle')
+			.set(text)
+			.then(() => alerta('Observação registrada com sucesso', fecharObs))
 	} else {
-		alerta('Preencha corretamente')
+		alerta('Preencha corretamente', fecharObs)
 	}
+	
 }
 
 function fecharObs() {
+	element('input-matricula-obs').value = ''
+	element('input-senha-obs').value = ''
 	element('text-nova-obs').value = ''
 	element('div-obs').classList.add('hidden')
 	element('legend-controle').classList.remove('hidden')
@@ -680,7 +749,7 @@ function fecharObs() {
 function limparObs() {
 	var chave = realtime.ref('obs_historico').push().key
 	var numTP = element('num-tp-obs').innerText
-	var text = '* Observações apagadas em ' + new Date().toLocaleString() + ' por fulano'
+	var text = '* Observações apagadas em ' + new Date().toLocaleString() + ' | ' + nome + ' - ' + posto
 	var obs_historico = {}
 	obs_historico['tp'] = numTP
 	obs_historico['obs_apagadas'] = obsPre
@@ -688,7 +757,10 @@ function limparObs() {
 	var updates = {}
 	updates['obs_historico/' + chave] = obs_historico
 	updates['tps/' + element('num-tp-obs').innerText + '/obs_controle'] = text
-	realtime.ref().update(updates).then(e => fecharObs())
+	realtime
+		.ref()
+		.update(updates)
+		.then(() => alerta('Observações apagadas com sucesso', fecharObs))
 }
 
 // MENU
@@ -754,10 +826,7 @@ btnControle.addEventListener('click', () => {
 				})
 			})
 		})
-		.catch(e => {
-			alert(e)
-			reload()
-		})
+		.catch(e => alerta(e.message, null, true))
 })
 
 title.children[0].addEventListener('click', () => Navigate(inicio))
@@ -825,17 +894,16 @@ function abrirBusca(tipo, botao) {
 
 function limparBusca() {
 	tabelaMatricula.classList.add('hidden')
-	document.querySelector('#input-matricula-buscar').value = ''
-	document.querySelector('#input-matricula-buscar').focus()
-	document.querySelector('#data-inicial').value = ''
-	document.querySelector('#data-final').value = ''
+	tabelaGerente.classList.add('hidden')
+	element('input-matricula-buscar').value = ''
+	element('input-gerente-buscar').value = ''
+	element('data-inicial').value = ''
+	element('data-final').value = ''
 }
 
-function alerta(texto, action, r = false) {
+function alerta(texto, action = null, r = false) {
 	document.querySelector('.text-message').innerText = texto
 	document.querySelector('.message').style.display = 'flex'
-	// canvas.classList.toggle('disable')
-	// title.classList.toggle('disable')
 	main.classList.add('disable')
 	if (r) {
 		setTimeout(() => {
@@ -951,11 +1019,11 @@ element('btn-b-matricula').addEventListener('click', e => {
 	document.querySelector('#btn-buscar-matricula').addEventListener('click', buscarMatricula)
 	document.querySelector('#input-matricula-buscar').addEventListener('keyup', e => {
 		if (e.target.value.length > 2) {
-			var key = e.which || e.keyCode;
-  	if (key == 13) {
-    buscarMatricula()
+			var key = e.which || e.keyCode
+			if (key == 13) {
+				buscarMatricula()
+			}
 		}
-	}
 	})
 })
 
@@ -1016,12 +1084,75 @@ function buscarMatricula() {
 
 // BUSCA POR GERENTE
 
+var tabelaGerente = document.getElementById('tabela-gerente')
+
 element('btn-b-gerente').addEventListener('click', e => {
+	document.querySelector('.form-gerente-buscar').classList.remove('hidden')
 	abrirBusca(buscaGerente, e.target)
 	setTimeout(() => {
-		document.querySelector('#input-gerente-buscar').focus()
+		element('input-gerente-buscar').focus()
 	}, 200)
+	element('btn-buscar-gerente').addEventListener('click', buscarGerente)
+	element('input-gerente-buscar').addEventListener('keyup', e => {
+		if (e.target.value.length > 2) {
+			var key = e.which || e.keyCode
+			if (key == 13) {
+				buscarGerente()
+			}
+		}
+	})
 })
+
+function buscarGerente() {
+	var matricula = element('input-gerente-buscar')
+	if (matricula.value.length > 2) {
+		tabelaGerente.classList.add('hidden')
+		element('processando-gerente').classList.remove('hidden')
+		realtime
+			.ref('historico')
+			.once('value')
+			.then(snap => {
+				var historico = Object.values(snap.val())
+				var encontrar = i => i.matricula_gerente == matricula.value
+				var resultado = historico.reverse().filter(encontrar)
+				if (resultado.length > 0) {
+					ajustarHora().then(() => {
+						var hora = new Date(new Date().getTime() + diferencaHora).toLocaleString()
+						var resumoBusca = resultado.length + ' registros para a matrícula ' + matricula.value
+						var horaDaBusca = `<br> Busca realizada em ${hora}`
+						tabelaGerente.children[0].innerHTML = resumoBusca
+						tabelaGerente.children[0].innerHTML += horaDaBusca
+					})
+					document.querySelector('.form-gerente-buscar').classList.add('hidden')
+					tabelaGerente.children[2].innerHTML = ''
+					resultado.map(registro => {
+						var tr = `
+						<tr class='tr-devolvido'>
+						<td><strong>${registro.tp}</strong></td>
+								<td>${registro.status}</td>
+								<td>${new Date(registro.data).toLocaleDateString()}</td>
+								<td>${new Date(registro.data).toLocaleTimeString()}</td>
+								<td>${registro.id}</td>
+								<td>${registro.gerente}</td>
+								<td>${registro.posto}</td>
+								</tr>
+							`
+						tabelaGerente.children[2].innerHTML += tr
+					})
+					element('processando-gerente').classList.add('hidden')
+					tabelaGerente.classList.remove('hidden')
+				} else {
+					element('processando-gerente').classList.add('hidden')
+					alerta('Não foi encontrado registro para a matrícula ' + matricula.value, () => {
+						matricula.value = ''
+						matricula.focus()
+					})
+				}
+			})
+	} else {
+		alerta('Preencha corretamente', () => matricula.focus())
+	}
+}
 
 // BUSCA POR DATA
 
@@ -1163,12 +1294,12 @@ document.querySelector('#menu-senha').children[0].addEventListener('click', e =>
 		var active = true
 		function disable() {
 			if (active) {
-			e.target.setAttribute('disabled', true)
-			e.target.innerText = 'Enviando...'
-			matriculaEsqueci.style.color = 'grey'
-			main.classList.add('disable')
-			active = false
-		} else {
+				e.target.setAttribute('disabled', true)
+				e.target.innerText = 'Enviando...'
+				matriculaEsqueci.style.color = 'grey'
+				main.classList.add('disable')
+				active = false
+			} else {
 				e.target.removeAttribute('disabled')
 				e.target.innerText = 'ENVIAR'
 				matriculaEsqueci.style.color = '#173d72'
@@ -1186,7 +1317,7 @@ document.querySelector('#menu-senha').children[0].addEventListener('click', e =>
 					var encontrarUsuario = i => i.matricula == matriculaEsqueci.value
 					var usuarioEncontrado = usuarios.find(encontrarUsuario)
 					if (usuarioEncontrado != undefined) {
-						var novaSenha = (Math.random().toString().slice(3, 7))
+						var novaSenha = Math.random().toString().slice(3, 7)
 						realtime
 							.ref('usuarios/' + usuarioEncontrado.email.split('@')[0].replace('.', '_') + '/p')
 							.set(novaSenha * 1993)
@@ -1228,126 +1359,136 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 	var btnAtualizar = document.querySelector('#btn-s-atualizar')
 	abrirSenha(atualizar, btnAtualizar)
 	if (clickAtualizar == 0) {
-	matriculaLogin.addEventListener('focus', e => {
-		senhaLogin.value = ''
-	})
-	matriculaLogin.addEventListener('input', e => {
-		if (e.target.value.length == 5) {
-			senhaLogin.focus()
-		}
-	})
-	matriculaLogin.addEventListener('keyup', e => {
-		var key = e.which || e.keyCode
-		if (key == 156 || key == 157) {
-			e.target.value = ''
-		}
-	})
+		matriculaLogin.addEventListener('focus', e => {
+			senhaLogin.value = ''
+		})
+		matriculaLogin.addEventListener('input', e => {
+			if (e.target.value.length == 5) {
+				senhaLogin.focus()
+			}
+		})
+		matriculaLogin.addEventListener('keyup', e => {
+			var key = e.which || e.keyCode
+			if (key == 156 || key == 157) {
+				e.target.value = ''
+			}
+		})
 
-	senhaLogin.addEventListener('input', e => {
-		if (e.target.value.length == 4) {
-			e.target.blur()
-		}
-	})
-	senhaLogin.addEventListener('keyup', e => {
-		var key = e.which || e.keyCode
-		if (key == 156 || key == 157) {
-			e.target.value = ''
-		}
-	})
+		senhaLogin.addEventListener('input', e => {
+			if (e.target.value.length == 4) {
+				e.target.blur()
+			}
+		})
+		senhaLogin.addEventListener('keyup', e => {
+			var key = e.which || e.keyCode
+			if (key == 156 || key == 157) {
+				e.target.value = ''
+			}
+		})
 
-	btnEntrar.addEventListener('click', e => {
-		var active = true
-	function disable() {
-		if (active) {
-		e.target.setAttribute('disabled', true)
-		e.target.innerText = 'Aguarde...'
-		matriculaLogin.style.color = 'grey'
-		senhaLogin.style.color = 'grey'
-		main.classList.add('disable')
-		active = false
-	} else {
-			e.target.removeAttribute('disabled')
-			e.target.innerText = 'ENTRAR'
-			matriculaLogin.style.color = '#173d72'
-			senhaLogin.style.color = '#173d72'
-			main.classList.remove('disable')
-			active = true
-		}
-	}
-		if (matriculaLogin.value.length > 2 && senhaLogin.value.length == 4) {
-			disable()
-			realtime.ref('usuarios').once('value').then(snap => {
-				var usuarios = Object.values(snap.val())
-				var encontrarUsuario = i => i.matricula == matriculaLogin.value
-				var usuarioEncontrado = usuarios.find(encontrarUsuario)
-				if (usuarioEncontrado != undefined) {
-					if (usuarioEncontrado.p / 1993 == senhaLogin.value) {
-						e.target.style.display = 'none'
-						disable()
-						document.querySelector('.menu-senha').classList.add('disable')
-						title.style.pointerEvents = 'none'
-						document.querySelector('.form-atualizar').querySelector('span').innerText = usuarioEncontrado.id
-						setTimeout(() => {
-							matriculaLogin.focus()
-						}, 500);
-						matriculaLogin.value = ''
-						matriculaLogin.setAttribute('maxlength', 4)
-						//matriculaLogin.setAttribute('type', 'password')
-						matriculaLogin.classList.add('disc')
-						document.querySelectorAll('.nova-senha')[0].classList.remove('hidden')
-						document.querySelectorAll('.nova-senha')[1].classList.remove('hidden')
-						matriculaLogin.style.letterSpacing = '4pt'
-						document.querySelector('#div-matricula-login').querySelector('label').style.display = 'none'
-						document.querySelector('#div-senha-login').querySelector('label').style.display = 'none'
-						senhaLogin.value = ''
-						document.querySelector('#div-botoes-atualizar').classList.remove('hidden')
-						document.querySelector('#btn-atualizar').addEventListener('click', e => {
-							if (matriculaLogin.value.length == 4 && senhaLogin.value.length == 4) {
-								if (matriculaLogin.value == senhaLogin.value) {
-									//main.classList.add('disable')
-									disable()
-									document.querySelector('#btn-cancelar').setAttribute('disabled', true)
-									e.target.setAttribute('disabled', true)
-									e.target.innerText = 'Aguarde...'
-									realtime.ref('usuarios/' + usuarioEncontrado.email.split('@')[0].replace('.', '_') + '/p').set(senhaLogin.value * 1993).then(() => {
-										ajustarHora().then(() => {
-										chave = realtime.ref().child('usuarios').push().key
-          					mensagem = 'Sua senha foi alterada em ' + new Date(new Date().getTime() + diferencaHora).toLocaleString() + ' no posto ' + posto + '. Caso não tenha alterado sua senha, favor entrar em contato com a Gerência.'
-          					email = usuarioEncontrado.email
-										fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
-										fetch(encodeURI(fetchUrl), header).then(() => {
-											alerta('Senha atualizada com sucesso', null, true)
-										})
-										})
-									}).catch(e => alerta(e.message, null, true))
-								} else {
-									alerta ('Senhas não conferem')
-								}
-							} else {
-								alerta('Preencha corretamente')
-							}
-						})
-						//document.querySelector('#div-senha-login').querySelector('label').innerText = 'Nova senha'
-
-					} else {
-						disable()
-						alerta('Senha incorreta', function () {
-							senhaLogin.value = ''
-							senhaLogin.focus()
-						})
-					}
+		btnEntrar.addEventListener('click', e => {
+			var active = true
+			function disable() {
+				if (active) {
+					e.target.setAttribute('disabled', true)
+					e.target.innerText = 'Aguarde...'
+					matriculaLogin.style.color = 'grey'
+					senhaLogin.style.color = 'grey'
+					main.classList.add('disable')
+					active = false
 				} else {
-					alerta('Matrícula ' + matriculaLogin.value + ' não encontrada')
-					disable()
+					e.target.removeAttribute('disabled')
+					e.target.innerText = 'ENTRAR'
+					matriculaLogin.style.color = '#173d72'
+					senhaLogin.style.color = '#173d72'
+					main.classList.remove('disable')
+					active = true
 				}
-			}).catch(e => alerta(e.message, null, true))
-		} else {
-			alerta('Preencha corretamente')
-		}
-	})
-	
-	clickAtualizar ++
-}
+			}
+			if (matriculaLogin.value.length > 2 && senhaLogin.value.length == 4) {
+				disable()
+				realtime
+					.ref('usuarios')
+					.once('value')
+					.then(snap => {
+						var usuarios = Object.values(snap.val())
+						var encontrarUsuario = i => i.matricula == matriculaLogin.value
+						var usuarioEncontrado = usuarios.find(encontrarUsuario)
+						if (usuarioEncontrado != undefined) {
+							if (usuarioEncontrado.p / 1993 == senhaLogin.value) {
+								e.target.style.display = 'none'
+								disable()
+								document.querySelector('.menu-senha').classList.add('disable')
+								title.style.pointerEvents = 'none'
+								document.querySelector('.form-atualizar').querySelector('span').innerText = usuarioEncontrado.id
+								setTimeout(() => {
+									matriculaLogin.focus()
+								}, 500)
+								matriculaLogin.value = ''
+								matriculaLogin.setAttribute('maxlength', 4)
+								//matriculaLogin.setAttribute('type', 'password')
+								matriculaLogin.classList.add('disc')
+								document.querySelectorAll('.nova-senha')[0].classList.remove('hidden')
+								document.querySelectorAll('.nova-senha')[1].classList.remove('hidden')
+								matriculaLogin.style.letterSpacing = '4pt'
+								document.querySelector('#div-matricula-login').querySelector('label').style.display = 'none'
+								document.querySelector('#div-senha-login').querySelector('label').style.display = 'none'
+								senhaLogin.value = ''
+								document.querySelector('#div-botoes-atualizar').classList.remove('hidden')
+								document.querySelector('#btn-atualizar').addEventListener('click', e => {
+									if (matriculaLogin.value.length == 4 && senhaLogin.value.length == 4) {
+										if (matriculaLogin.value == senhaLogin.value) {
+											//main.classList.add('disable')
+											disable()
+											document.querySelector('#btn-cancelar').setAttribute('disabled', true)
+											e.target.setAttribute('disabled', true)
+											e.target.innerText = 'Aguarde...'
+											realtime
+												.ref('usuarios/' + usuarioEncontrado.email.split('@')[0].replace('.', '_') + '/p')
+												.set(senhaLogin.value * 1993)
+												.then(() => {
+													ajustarHora().then(() => {
+														chave = realtime.ref().child('usuarios').push().key
+														mensagem =
+															'Sua senha foi alterada em ' +
+															new Date(new Date().getTime() + diferencaHora).toLocaleString() +
+															' no posto ' +
+															posto +
+															'. Caso não tenha alterado sua senha, favor entrar em contato com a Gerência.'
+														email = usuarioEncontrado.email
+														fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+														fetch(encodeURI(fetchUrl), header).then(() => {
+															alerta('Senha atualizada com sucesso', null, true)
+														})
+													})
+												})
+												.catch(e => alerta(e.message, null, true))
+										} else {
+											alerta('Senhas não conferem')
+										}
+									} else {
+										alerta('Preencha corretamente')
+									}
+								})
+								//document.querySelector('#div-senha-login').querySelector('label').innerText = 'Nova senha'
+							} else {
+								disable()
+								alerta('Senha incorreta', function () {
+									senhaLogin.value = ''
+									senhaLogin.focus()
+								})
+							}
+						} else {
+							alerta('Matrícula ' + matriculaLogin.value + ' não encontrada')
+							disable()
+						}
+					})
+					.catch(e => alerta(e.message, null, true))
+			} else {
+				alerta('Preencha corretamente')
+			}
+		})
 
+		clickAtualizar++
+	}
 })
-
