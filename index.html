@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="mobile.css" />
-		<!-- <link rel="stylesheet" href="desktop.css" /> -->
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
@@ -294,9 +293,9 @@
 							<textarea readonly placeholder="Sem observações" name="text-obs" id="text-obs" cols="30" rows="4"></textarea>
 							<textarea placeholder="Nova observação (nome, data e hora inseridos automaticamente)" name="text-nova-obs" id="text-nova-obs" cols="30" rows="2"></textarea>
 							<div>
-								<button class="btn-b" onclick="loginObs(1)">Salvar</button>
+								<button class="btn-b" id="btn-escrever-obs" onclick="abrirLogin('escrever')">Salvar</button>
 								<button class="btn-b" onclick="fecharObs()">Fechar</button>
-								<button class="btn-b" onclick="loginObs(0)">Limpar TODAS</button>
+								<button class="btn-b" id="btn-limpar-obs" onclick="abrirLogin('limpar')">Limpar TODAS</button>
 							</div>
 						</div>
 						<table>

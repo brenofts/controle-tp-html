@@ -665,91 +665,83 @@ function lerObs(numTP) {
 	element('text-nova-obs').focus()
 }
 
-function loginObs(tipo) {
-		element('div-login-obs').classList.remove('hidden')
-		element('input-matricula-obs').focus()
-		element('text-nova-obs').setAttribute('readonly', true)
-		element('input-matricula-obs').addEventListener('input', e => {
-			if (e.target.value.length == 5) {
-				element('input-senha-obs').focus()
-			}
-		})
-		element('input-senha-obs').addEventListener('focus', e => {
-			if (element('input-matricula-obs').value.length > 2) {
-				element('input-senha-obs').addEventListener('input', e => {
-					if (e.target.value.length == 4) {
-						e.target.blur()
-						realtime
-							.ref('usuarios')
-							.once('value')
-							.then(snap => {
-								var usuarios = Object.values(snap.val())
-								matricula = element('input-matricula-obs').value
-								var pin = e.target.value
-								var encontrarUsuario = i => i.matricula == matricula
-								var usuarioEncontrado = usuarios.find(encontrarUsuario)
-								if (usuarioEncontrado != undefined) {
-									nome = usuarioEncontrado.id
-									if (usuarioEncontrado.p == pin * 1993) {
-										tipo == 1 ? escreverObs() : limparObs()
-									} else {
-										alerta('Senha incorreta', function () {
-											element('input-senha-obs').value = ''
-											element('input-senha-obs').focus()
-										})
-									}
-								} else {
-									alerta('Matrícula ' + matricula + ' não encontrada', function () {
-										element('input-senha-obs').value = ''
-										element('input-matricula-obs').focus()
-									})
-								}
-							})
-							.catch(e => alerta(e.message, null, true))
-					}
-				})
-			} else {
-				alerta('Preencha a matrícula corretamente', () => {
-					element('input-matricula-obs').focus()
-				})
-			}
-		})
+var escrever = new Boolean()
 
-		// tipo == 0 ? limparObs() : escreverObs()
+function abrirLogin(action) {
+	element('text-nova-obs').setAttribute('readonly', true)
+	element('div-login-obs').classList.remove('hidden')
+	element('input-matricula-obs').focus()
+	element('input-matricula-obs').setAttribute('placeholder', 'Matrícula')
+	switch (action) {
+		case 'escrever':
+			if (element('text-nova-obs').value != '') {
+				escrever = true
+			} else {
+				element('div-login-obs').classList.add('hidden')
+				element('text-nova-obs').removeAttribute('readonly')
+				element('text-nova-obs').focus()
+			}
+			break
+		case 'limpar':
+			escrever = false
+			element('input-matricula-obs').setAttribute('placeholder', 'Gerente/IT')
+			break
+
+		default:
+			break
+	}
 }
 
-function escreverObs() {
+element('input-matricula-obs').addEventListener('input', e => {
+	if (e.target.value.length == 5) {
+		element('input-senha-obs').focus()
+	}
+})
+
+element('input-senha-obs').addEventListener('focus', () => {
+	if (element('input-matricula-obs').value.length <= 2) {
+		element('input-matricula-obs').focus()
+	}
+})
+
+function escreverObs(usuario) {
 	var text
 	if (obsPre.includes('*')) {
-		text = '[' + new Date().toLocaleString() + ' - ' + nome + ' - ' + posto + ' | ' + element('text-nova-obs').value.toUpperCase() + ']'
+		text =
+			'[' +
+			new Date().toLocaleString() +
+			' - ' +
+			usuario.id +
+			' - ' +
+			posto +
+			' | ' +
+			element('text-nova-obs').value.toUpperCase() +
+			']'
 	} else {
-		text = '[' + new Date().toLocaleString() + ' - ' + nome + ' - ' + posto + ' | '  + element('text-nova-obs').value.toUpperCase() + ']\n' + obsPre
+		text =
+			'[' +
+			new Date().toLocaleString() +
+			' - ' +
+			usuario.id +
+			' - ' +
+			posto +
+			' | ' +
+			element('text-nova-obs').value.toUpperCase() +
+			']\n' +
+			obsPre
 	}
-	if (element('text-nova-obs').value != '') {
+	
 		realtime
 			.ref('tps/' + element('num-tp-obs').innerText + '/obs_controle')
 			.set(text)
 			.then(() => alerta('Observação registrada com sucesso', fecharObs))
-	} else {
-		alerta('Preencha corretamente', fecharObs)
-	}
 	
 }
 
-function fecharObs() {
-	element('input-matricula-obs').value = ''
-	element('input-senha-obs').value = ''
-	element('text-nova-obs').value = ''
-	element('div-obs').classList.add('hidden')
-	element('legend-controle').classList.remove('hidden')
-	element('text-nova-obs').removeAttribute('readonly')
-	element('div-login-obs').classList.add('hidden')
-}
-
-function limparObs() {
+function limparObs(usuario) {
 	var chave = realtime.ref('obs_historico').push().key
 	var numTP = element('num-tp-obs').innerText
-	var text = '* Observações apagadas em ' + new Date().toLocaleString() + ' | ' + nome + ' - ' + posto
+	var text = '* Observações apagadas em ' + new Date().toLocaleString() + ' | ' + usuario.id + ' - ' + posto
 	var obs_historico = {}
 	obs_historico['tp'] = numTP
 	obs_historico['obs_apagadas'] = obsPre
@@ -761,6 +753,94 @@ function limparObs() {
 		.ref()
 		.update(updates)
 		.then(() => alerta('Observações apagadas com sucesso', fecharObs))
+}
+
+element('input-senha-obs').addEventListener('input', e => {
+	if (e.target.value.length == 4) {
+		e.target.blur()
+		var matricula = element('input-matricula-obs').value
+		var pin = e.target.value
+		loginObs(matricula, pin)
+			.then(usuario => {
+				if (escrever) {
+					escreverObs(usuario)
+				} else {
+					if(usuario.gerente) {
+						limparObs(usuario)
+					} else {
+						alerta('Autorizado somente para IT/Gerente', function () {
+							element('input-senha-obs').value = ''
+							element('input-matricula-obs').value = ''
+							element('input-matricula-obs').focus()
+						})
+					}
+				}
+			})
+			.catch(e => {
+				if (e.code == 01) {
+					alerta(e.message, function () {
+						element('input-senha-obs').value = ''
+						element('input-senha-obs').focus()
+					})
+				} else {
+					if (e.code == 00) {
+						alerta(e.message, function () {
+							element('input-senha-obs').value = ''
+							element('input-matricula-obs').focus()
+						})
+					}
+				}
+			})
+	}
+})
+
+function loginObs(matricula, pin) {
+	return new Promise((res, rej) => {
+		realtime
+			.ref('usuarios')
+			.once('value')
+			.then(snap => {
+				var usuarios = Object.values(snap.val())
+				var encontrar_usuario = i => i.matricula == matricula
+				var usuario_encontrado = usuarios.find(encontrar_usuario)
+				if (usuario_encontrado != undefined) {
+					if (usuario_encontrado.p == pin * 1993) {
+						res(usuario_encontrado)
+					} else {
+						var err = {
+							code: 01,
+							message: 'Senha incorreta',
+						}
+						rej(err)
+					}
+				} else {
+					var err = {
+						code: 00,
+						message: 'Matrícula ' + matricula + ' não encontrada',
+					}
+					rej(err)
+				}
+			})
+	})
+}
+
+function removeListeners(id) {
+	return new Promise(res => {
+		var element = document.getElementById(id)
+		var new_element = element.cloneNode(true)
+		element.parentNode.replaceChild(new_element, element)
+		res(new_element)
+	})
+}
+
+function fecharObs() {
+	element('input-matricula-obs').value = ''
+	element('input-senha-obs').value = ''
+	element('text-nova-obs').value = ''
+	element('div-obs').classList.add('hidden')
+	element('legend-controle').classList.remove('hidden')
+	element('text-nova-obs').removeAttribute('readonly')
+	element('div-login-obs').classList.add('hidden')
 }
 
 // MENU
