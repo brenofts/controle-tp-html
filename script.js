@@ -59,6 +59,22 @@ const ajustarHora = () => {
 	})
 }
 
+
+// e-mail
+
+var id, mensagem, email, chave, emailPiloto, emailGerente
+var url_mail = 'https://script.google.com/macros/s/AKfycbzxOSF9HlUU_urUxS2LT2Poi7pEa30Ij1E_sZkxeAyR6MEvc_JuFkBqRFeVyBtfBrkELQ/exec'
+var url =
+	'https://script.google.com/macros/s/AKfycbzxAB1XqFHuYHdF4ybeCeG4wMdjw_NUl5G_tw1d_mFTyFjik346tqQ59Sx4nWNRpKrM5Q/exec'
+var fetchUrl
+// var fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+var header = {
+	method: 'POST',
+	mode: 'no-cors',
+}
+
+
+
 function updateGrid() {
 	title.classList.add('disable')
 	firebase
@@ -388,10 +404,14 @@ function retirar() {
 		'Registro ' +
 		chave
 
+	var dia_hora = new Date(registro.data).toLocaleString().split(' ')
+	var dia = dia_hora[0]
+	var hora = dia_hora[1]
+	
 	mensagem =
 		'TP ' + tpRetirar + ' retirado por ' + id + ' em ' + posto + '<br>' + new Date(registro.data).toLocaleString()
 	email = emailPiloto
-	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave + '&data=' + dia + '&hora=' + hora + '&posto=' + posto + '&tp=' + tpRetirar + '&piloto=' + id + '&gerente=-' + '&status=EM USO' 
 
 	// retorna chamando o firebase para escrever as atualizacoes
 	return realtime
@@ -472,6 +492,10 @@ function devolver() {
 	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/livre/'] = true
 	updates['/usuarios/' + emailPiloto.split('@')[0].replace('.', '_') + '/tp/'] = '-'
 
+	var dia_hora = new Date(registro.data).toLocaleString().split(' ')
+	var dia = dia_hora[0]
+	var hora = dia_hora[1]
+
 	var msgAlert =
 		tpDevolver +
 		' devolvido por ' +
@@ -498,7 +522,7 @@ function devolver() {
 		'<br>' +
 		new Date(registro.data).toLocaleString()
 	email = emailPiloto + ',' + emailGerente
-	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+	fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave + '&data=' + dia + '&hora=' + hora + '&posto=' + posto + '&tp=' + tpDevolver + '&piloto=' + id + '&gerente='+ gerente + '&status=DEVOLVIDO' 
 
 	// retorna chamando o firebase para escrever as atualizacoes e enviar e-mail
 	return realtime
@@ -652,6 +676,7 @@ var obsPre
 function lerObs(numTP) {
 	element('legend-controle').classList.add('hidden')
 	element('div-obs').classList.remove('hidden')
+	main.classList.add('hidden')
 	realtime
 		.ref('tps/')
 		.once('value')
@@ -837,10 +862,13 @@ function fecharObs() {
 	element('input-matricula-obs').value = ''
 	element('input-senha-obs').value = ''
 	element('text-nova-obs').value = ''
-	element('div-obs').classList.add('hidden')
 	element('legend-controle').classList.remove('hidden')
 	element('text-nova-obs').removeAttribute('readonly')
 	element('div-login-obs').classList.add('hidden')
+	main.classList.remove('hidden')
+	setTimeout(() => {
+		element('div-obs').classList.add('hidden')
+	}, 100);
 }
 
 // MENU
@@ -1333,17 +1361,6 @@ element('btn-b-data').addEventListener('click', e => {
 	})
 })
 
-// e-mail
-
-var id, mensagem, email, chave, emailPiloto, emailGerente
-var url =
-	'https://script.google.com/macros/s/AKfycbzUQLSyejfxRXZLwSIk929bwhpFlk7zjApdfGO76ENLhIi4tWijyNmhSGoOmU6PfwminA/exec'
-var fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
-var header = {
-	method: 'POST',
-	mode: 'no-cors',
-}
-
 // SENHAS
 var matriculaEsqueci = document.querySelector('#input-matricula-esqueci')
 
@@ -1406,7 +1423,7 @@ document.querySelector('#menu-senha').children[0].addEventListener('click', e =>
 								chave = realtime.ref().child('usuarios').push().key
 								mensagem = 'Utilize o código ' + novaSenha + ' como senha provisória.'
 								email = usuarioEncontrado.email
-								fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+								fetchUrl = url_mail + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
 								fetch(encodeURI(fetchUrl), header)
 									.then(response => {
 										console.log(response)
@@ -1536,7 +1553,7 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 															posto +
 															'. Caso não tenha alterado sua senha, favor entrar em contato com a Gerência.'
 														email = usuarioEncontrado.email
-														fetchUrl = url + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
+														fetchUrl = url_mail + '?mensagem=' + mensagem + '&email=' + email + '&chave=' + chave
 														fetch(encodeURI(fetchUrl), header).then(() => {
 															alerta('Senha atualizada com sucesso', null, true)
 														})
@@ -1572,3 +1589,4 @@ document.querySelector('#menu-senha').children[1].addEventListener('click', e =>
 		clickAtualizar++
 	}
 })
+

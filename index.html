@@ -90,10 +90,7 @@
 							4+ dias
 							<span class="legend-item" id="blue"></span>
 							Devolvido
-							<!-- <span class="legend-item" id="lightblue"></span>
-							Transporte
-							<span class="legend-item" id="grey"></span>
-							Bloqueado -->
+							
 						</div>
 					</div>
 					<div class="screen" id="senhas">
@@ -141,22 +138,6 @@
 							<div class="btn-b" id="btn-b-gerente">GERENTE/IT</div>
 							<div class="btn-b" id="btn-b-data">DATA</div>
 						</div>
-						<!-- <table class="hidden" id="head-tabela-historico">
-							<thead>
-								<tr>
-									<th>TP</th>
-									<th>Status</th>
-									<th>Data</th>
-									<th>Hora</th>
-									<th>Empregado</th>
-									<th>Gerente</th>
-									<th>Posto</th>
-								</tr>
-							</thead>
-							<tbody id="tabela-historico">
-
-							</tbody>
-						</table> -->
 						<div class="canvas-busca">
 							<div class="busca-data">
 								<div class="div-form-data">
@@ -279,25 +260,7 @@
 						</div>
 					</div>
 					<div class="screen" id="controle">
-						<div class="login-obs-div hidden" id="div-login-obs">
-							<div class="login-obs">
-								<span>LOGIN</span>
-								<input placeholder="Matrícula" autocomplete="off" maxlength="5" type="text" id="input-matricula-obs" inputmode="numeric">
-								<input class="disc" placeholder="Senha" autocomplete="off" maxlength="4" type="text" id="input-senha-obs" inputmode="numeric">
-								<button class="btn-b" onclick="fecharObs()">Cancelar</button>
-							</div>
-						</div>
-						<div class="text-obs hidden" id="div-obs">
-							<p>OBSERVAÇÕES</p>
-							<span id="num-tp-obs"></span>
-							<textarea readonly placeholder="Sem observações" name="text-obs" id="text-obs" cols="30" rows="4"></textarea>
-							<textarea placeholder="Nova observação (nome, data e hora inseridos automaticamente)" name="text-nova-obs" id="text-nova-obs" cols="30" rows="2"></textarea>
-							<div>
-								<button class="btn-b" id="btn-escrever-obs" onclick="abrirLogin('escrever')">Salvar</button>
-								<button class="btn-b" onclick="fecharObs()">Fechar</button>
-								<button class="btn-b" id="btn-limpar-obs" onclick="abrirLogin('limpar')">Limpar TODAS</button>
-							</div>
-						</div>
+						
 						<table>
 							<thead>
 								<tr>
@@ -331,6 +294,25 @@
 						</div>
 					</div>
 					<div class="screen" id="outros">OUTROS</div>
+				</div>
+			</div>
+			<div class="login-obs-div hidden" id="div-login-obs">
+				<div class="login-obs">
+					<span>LOGIN</span>
+					<input placeholder="Matrícula" autocomplete="off" maxlength="5" type="text" id="input-matricula-obs" inputmode="numeric">
+					<input class="disc" placeholder="Senha" autocomplete="off" maxlength="4" type="text" id="input-senha-obs" inputmode="numeric">
+					<button class="btn-b" onclick="fecharObs()">Cancelar</button>
+				</div>
+			</div>
+			<div class="text-obs hidden" id="div-obs">
+				<p>OBSERVAÇÕES</p>
+				<span id="num-tp-obs"></span>
+				<textarea readonly placeholder="Sem observações" name="text-obs" id="text-obs" cols="30" rows="4"></textarea>
+				<textarea placeholder="Nova observação (nome, data e hora inseridos automaticamente)" name="text-nova-obs" id="text-nova-obs" cols="30" rows="2"></textarea>
+				<div>
+					<button class="btn-b" id="btn-escrever-obs" onclick="abrirLogin('escrever')">Salvar</button>
+					<button class="btn-b" onclick="fecharObs()">Fechar</button>
+					<button class="btn-b" id="btn-limpar-obs" onclick="abrirLogin('limpar')">Limpar TODAS</button>
 				</div>
 			</div>
 			<div class="registrando hidden"><p>Aguarde...</p></div>
@@ -377,13 +359,6 @@
 		<script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
 
 		<script>
-			// var firebaseConfig = {
-  		// 		apiKey: 'AIzaSyB1rkLkF8gQsQNaiXdBt6zzpy2fYSm-64I',
-			// 		authDomain: 'controle-tp-web.firebaseapp.com',
-			// 		databaseURL: 'https://controle-tp-web.firebaseio.com',
-			// 		projectId: 'controle-tp-web',
-			// 		storageBucket: 'controle-tp-web.appspot.com',
-			// 	}
 			var firebaseConfig = {
 					apiKey: "AIzaSyDyQRNWG4P6aXq5y3mbXsYs9XuAEeZLU_4",
 					authDomain: "controle-tp-ogcot.firebaseapp.com",
